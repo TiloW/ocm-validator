@@ -1,0 +1,38 @@
+{
+	"leaves": [
+		{
+			"fixedVariables": [
+				{
+					"value": 0,
+					"segments": [
+						{
+							"edge": 0,
+							"segment": 0
+						},
+						{
+							"edge": 0,
+							"segment": 1
+						}
+					]
+				}
+			]
+		},
+		{
+			"fixedVariables": [
+				{
+					"value": 1,
+					"segments": [
+						{
+							"edge": 0,
+							"segment": 0
+						},
+						{
+							"edge": 0,
+							"segment": 1
+						}
+					]
+				}
+			]
+		}
+	]
+}
