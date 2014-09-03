@@ -1,9 +1,11 @@
 apply plugin: 'java'
 apply plugin: 'eclipse'
+apply plugin: 'jacoco'
+apply plugin: 'cobertura'
+apply plugin: 'com.github.kt3k.coveralls'
 
 ext.libraries = []
 libraries.push('org.json:json:20140107')
-libraries.push('org.mockito:mockito-all:1.9.5')
 
 repositories {
   mavenCentral()
@@ -13,3 +15,16 @@ dependencies {
   compile libraries
   testCompile group: 'junit', name: 'junit', version: '4.+'
 }
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'net.saliman:gradle-cobertura-plugin:2.0.0'
+        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.0.0'
+    }
+}
+
+cobertura.coverageFormats = ['html', 'xml']
