@@ -1,0 +1,15 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+ext.libraries = []
+libraries.push('org.json:json:20140107')
+libraries.push('org.mockito:mockito-all:1.9.5')
+
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  compile libraries
+  testCompile group: 'junit', name: 'junit', version: '4.+'
+}
