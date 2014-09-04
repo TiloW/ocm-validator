@@ -36,6 +36,11 @@ public class BranchCoverageTest extends ResourceBasedTest {
   }
 
   @Test(expected = InvalidCoverageException.class)
+  public void testValidate_invalidMultipleVariables() throws InvalidCoverageException, IOException {
+    coverageValidator.validate(loadJSON("invalid/multi-vars"));
+  }
+
+  @Test(expected = InvalidCoverageException.class)
   public void testValidate_overlappingCoverage() throws InvalidCoverageException, IOException {
     coverageValidator.validate(loadJSON("invalid/overlapping"));
   }
