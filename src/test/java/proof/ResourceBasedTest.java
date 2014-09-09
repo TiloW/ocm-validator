@@ -1,4 +1,4 @@
-package proof.validator;
+package proof;
 
 import static org.junit.Assert.fail;
 

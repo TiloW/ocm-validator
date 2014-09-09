@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.junit.Test;
 
+import proof.ResourceBasedTest;
 import proof.exception.InvalidCoverageException;
 
 public class BranchCoverageValidatorTest extends ResourceBasedTest {

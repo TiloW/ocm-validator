@@ -1,0 +1,23 @@
+{
+	"numberOfNodes": 3,
+	"edges": [ 
+		{
+			"id": 0,
+			"source": 3,
+			"target": 2,
+			"cost": 30.123
+		},
+		{
+			"id": 2,
+			"cost": 78,
+			"source": 1,
+			"target": 2
+		},
+		{
+			"source": 1,
+			"id": 1,
+			"cost": 0.42,
+			"target": 0
+		}
+	]
+}

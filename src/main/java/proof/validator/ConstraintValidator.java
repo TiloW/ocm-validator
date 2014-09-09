@@ -15,7 +15,7 @@ import proof.exception.InvalidProofException;
  * Validates a single Kuratwoski Constraint.
  *
  * The only type of constraints included in the log are Kuratwoski constraints. These constrains
- * will be validated by proving the repective paths do form a Kuratowski-Subdivision. Valid
+ * will be validated by proving the respective paths do form a Kuratowski-subdivision. Valid
  * Kuratowski subdivisions are the K3,3 and the K5.
  *
  * @author Tilo Wiedera
@@ -45,16 +45,49 @@ public class ConstraintValidator implements Validator {
 
     JSONArray paths = object.getJSONArray("paths");
 
-    boolean isK33 = paths.length() == 9;
-    boolean isK5 = paths.length() == 10;
+    validatePaths(vars, paths);
 
-    if (!isK33 && !isK5) {
+    if (paths.length() == 9) {
+      validateK33(vars, paths);
+    } else if (paths.length() == 10) {
+      validateK5(vars, paths);
+    } else {
       throw new InvalidConstraintException(
           "Invalid number of Kuratowski-Paths for single Constraint: " + paths.length());
     }
+  }
 
+  /**
+   * For each path, we have to validate the required crossings are realized.
+   *
+   * @param vars
+   * @param paths
+   */
+  private void validatePaths(Map<CrossingIndex, Boolean> vars, JSONArray paths) {
     for (int i = 0; i < paths.length(); i++) {
+      JSONArray path = paths.getJSONArray(i);
+
 
     }
+  }
+
+  /**
+   * Asserts that all five nodes are connected to one another.
+   *
+   * @param vars
+   * @param paths
+   */
+  private void validateK5(Map<CrossingIndex, Boolean> vars, JSONArray paths) {
+    // TODO
+  }
+
+  /**
+   * Asserts a valid K33, i.e. a bipartit Graph with 3 nodes in each of the two subsets.
+   *
+   * @param vars
+   * @param paths
+   */
+  private void validateK33(Map<CrossingIndex, Boolean> vars, JSONArray paths) {
+    // TODO
   }
 }
