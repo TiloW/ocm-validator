@@ -25,6 +25,8 @@ public class GraphReader implements ObjectReader {
             edge.getDouble("cost"));
       }
 
+      result.makeImmutable();
+
       return result;
 
     } catch (IllegalArgumentException | JSONException e) {

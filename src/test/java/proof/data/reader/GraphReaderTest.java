@@ -28,7 +28,6 @@ public class GraphReaderTest extends ResourceBasedTest {
 
   private final GraphReader graphReader = new GraphReader();
 
-
   @Test(expected = InvalidGraphException.class)
   public void testRead_empty() throws IOException {
     graphReader.read(loadJSON("invalid/empty"));
@@ -79,6 +78,13 @@ public class GraphReaderTest extends ResourceBasedTest {
       graph.getEdgeCost(0, 3);
       fail("getEdgeCost for invalid edge should throw an exception");
     } catch (IllegalArgumentException expected) {
+    }
+
+    try {
+      graph.addEdge(0, 0, 1, 1);
+      fail("Graph should be immutable");
+    } catch (UnsupportedOperationException expected) {
+
     }
   }
 }
