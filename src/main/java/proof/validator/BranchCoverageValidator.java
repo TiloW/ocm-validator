@@ -14,6 +14,7 @@ import org.json.JSONObject;
 import proof.data.CrossingIndex;
 import proof.data.reader.CrossingReader;
 import proof.exception.InvalidCoverageException;
+import proof.validator.base.ObjectValidator;
 
 /**
  * Validates the fixed variables of all leaves.
@@ -26,7 +27,7 @@ import proof.exception.InvalidCoverageException;
  * @author Tilo Wiedera
  *
  */
-public class BranchCoverageValidator implements Validator {
+public class BranchCoverageValidator implements ObjectValidator {
 
   private final static CrossingReader CROSSING_READER = new CrossingReader();
 
