@@ -9,19 +9,19 @@ import org.json.JSONObject;
 import proof.data.CrossingIndex;
 import proof.data.reader.CrossingReader;
 import proof.exception.InvalidConstraintException;
-import proof.exception.InvalidProofException;
+import proof.validator.base.ObjectValidator;
 
 /**
  * Validates a single Kuratwoski Constraint.
  *
- * The only type of constraints included in the log are Kuratwoski constraints. These constrains
+ * The only type of constraints included in the log are Kuratwoski constraints. These constraints
  * will be validated by proving the respective paths do form a Kuratowski-subdivision. Valid
- * Kuratowski subdivisions are the K3,3 and the K5.
+ * Kuratowski subdivisions in this context are the K3,3 and the K5.
  *
  * @author Tilo Wiedera
  *
  */
-public class ConstraintValidator implements Validator {
+public class ConstraintValidator implements ObjectValidator {
 
   private final static CrossingReader CROSSING_READER = new CrossingReader();
 
@@ -32,7 +32,7 @@ public class ConstraintValidator implements Validator {
   }
 
   @Override
-  public void validate(JSONObject object) throws InvalidProofException {
+  public void validate(JSONObject object) throws InvalidConstraintException {
     JSONArray crossings = object.getJSONArray("requiredCrossings");
 
     final Map<CrossingIndex, Boolean> vars = new HashMap<CrossingIndex, Boolean>(fixedVariables);
