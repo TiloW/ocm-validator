@@ -1,5 +1,7 @@
 package proof.data;
 
+import java.util.Arrays;
+
 /**
  * Represents a single crossing by two edge segments.
  * 
@@ -43,5 +45,10 @@ public class CrossingIndex {
   @Override
   public int hashCode() {
     return segments[0].hashCode() + segments[1].hashCode();
+  }
+
+  @Override
+  public String toString() {
+    return Arrays.toString(segments);
   }
 }
