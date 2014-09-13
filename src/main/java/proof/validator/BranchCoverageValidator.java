@@ -12,32 +12,35 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import proof.data.CrossingIndex;
-import proof.data.SegmentIndex;
+import proof.data.reader.CrossingReader;
 import proof.exception.InvalidCoverageException;
+import proof.validator.base.ObjectValidator;
 
 /**
  * Validates the fixed variables of all leaves.
- * 
+ *
  * The set of all leaves must completely cover the problem at hand. This means, every possible
  * configuration of variables must be met. The {@code BranchCoverage}-Validator will ensure that no
  * variable configuration is missing and that there are no ambiguities caused by multiple leaves
  * reporting the same or overlapping configurations.
- * 
+ *
  * @author Tilo Wiedera
  *
  */
-public class BranchCoverage implements Validator {
+public class BranchCoverageValidator implements ObjectValidator {
+
+  private final static CrossingReader CROSSING_READER = new CrossingReader();
 
   /**
    * Used to sort the leaves in descending number of branching variables.
    */
   final static Comparator<Map<CrossingIndex, Boolean>> LEAF_COMPARATOR =
       new Comparator<Map<CrossingIndex, Boolean>>() {
-        @Override
-        public int compare(Map<CrossingIndex, Boolean> vars1, Map<CrossingIndex, Boolean> vars2) {
-          return vars2.size() - vars1.size();
-        }
-      };
+    @Override
+    public int compare(Map<CrossingIndex, Boolean> vars1, Map<CrossingIndex, Boolean> vars2) {
+      return vars2.size() - vars1.size();
+    }
+  };
 
   @Override
   public void validate(JSONObject object) throws InvalidCoverageException {
@@ -55,15 +58,9 @@ public class BranchCoverage implements Validator {
       for (int j = 0; j < fixedVariables.length(); j++) {
         JSONObject variable = fixedVariables.getJSONObject(j);
 
-        JSONArray segments = variable.getJSONArray("segments");
-        JSONObject s1 = segments.getJSONObject(0);
-        JSONObject s2 = segments.getJSONObject(1);
-
         try {
-          variablesOfLeaf.put(
-              new CrossingIndex(new SegmentIndex(s1.getInt("edge"), s1.getInt("segment")),
-                  new SegmentIndex(s2.getInt("edge"), s2.getInt("segment"))), variable
-                  .getInt("value") == 1);
+          variablesOfLeaf.put(CROSSING_READER.read(variable.getJSONArray("segments")),
+              variable.getInt("value") == 1);
         } catch (IllegalArgumentException e) {
           throw new InvalidCoverageException("Encountered invalid variable indices.");
         }
@@ -102,7 +99,7 @@ public class BranchCoverage implements Validator {
   /**
    * Tries to merge the leaves contained at {@code i} and {@code j}. The leaves will be merged if
    * they differ by the assignment of a single variable.
-   * 
+   *
    * @param leaves The list of all leaves
    * @param i The first leaf index
    * @param j The second leaf index

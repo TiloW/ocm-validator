@@ -1,28 +1,25 @@
-package proof.validator;
+package proof.validator.base;
 
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 import proof.exception.InvalidProofException;
 
 /**
- * Generic JSON Validator.
+ * Generic JSON Array Validator.
  * 
  * Used to define validators for certain sections of the JSON log file.
  * 
  * @author Tilo Wiedera
  *
  */
-public interface Validator {
+public interface ArrayValidator extends Validator {
 
   /**
    * Validates the given portion of the log file.
    * 
-   * Each {@link JSONArray} must be wrapped by a {@link JSONObject}.
-   * 
-   * @param object The parsed JSON to be validated
+   * @param array The parsed JSON to be validated
    * @throws InvalidProofException Unless all required conditions are met
    */
-  public void validate(JSONObject object) throws InvalidProofException;
+  public void validate(JSONArray array) throws InvalidProofException;
 
 }

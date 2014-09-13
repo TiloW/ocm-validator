@@ -1,0 +1,65 @@
+{
+	"paths": [
+		[{
+			"from": 0,
+			"to": 1,
+			"start": -1,
+			"end": 42
+		}],
+		[{
+			"from": 0,
+			"to": 2,
+			"start": -1,
+			"end": 42
+		}],
+		[{
+			"from": 0,
+			"to": 3,
+			"start": -1,
+			"end": 42
+		}],
+		[{
+			"from": 0,
+			"to": 3,
+			"start": -1,
+			"end": 42
+		}],
+		[{
+			"from": 1,
+			"to": 2,
+			"start": -1,
+			"end": 42
+		}],
+		[{
+			"from": 1,
+			"to": 3,
+			"start": -1,
+			"end": 42
+		}],
+		[{
+			"from": 1,
+			"to": 4,
+			"start": -1,
+			"end": 42
+		}],
+		[{
+			"from": 2,
+			"to": 3,
+			"start": -1,
+			"end": 42
+		}],
+		[{
+			"from": 2,
+			"to": 4,
+			"start": -1,
+			"end": 42
+		}],
+		[{
+			"from": 3,
+			"to": 4,
+			"start": -1,
+			"end": 42
+		}]
+	],
+	"requiredCrossings": []
+}

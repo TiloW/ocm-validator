@@ -4,16 +4,17 @@ import java.io.IOException;
 
 import org.junit.Test;
 
+import proof.ResourceBasedTest;
 import proof.exception.InvalidCoverageException;
 
-public class BranchCoverageTest extends ResourceBasedTest {
+public class BranchCoverageValidatorTest extends ResourceBasedTest {
 
   @Override
   protected String getResourceSubdir() {
     return "branch-coverage";
   }
 
-  private final BranchCoverage coverageValidator = new BranchCoverage();
+  private final BranchCoverageValidator coverageValidator = new BranchCoverageValidator();
 
   @Test(expected = InvalidCoverageException.class)
   public void testValidate_empty() throws InvalidCoverageException, IOException {

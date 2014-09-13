@@ -42,4 +42,9 @@ public class SegmentIndex {
   public int hashCode() {
     return edge + segment;
   }
+
+  @Override
+  public String toString() {
+    return "(" + edge + "," + segment + ")";
+  }
 }

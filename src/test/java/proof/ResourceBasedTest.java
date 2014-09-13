@@ -1,4 +1,4 @@
-package proof.validator;
+package proof;
 
 import static org.junit.Assert.fail;
 
@@ -14,8 +14,6 @@ public abstract class ResourceBasedTest {
     StringBuilder result = new StringBuilder();
 
     try {
-      System.out.println(getClass().getResource(filename));
-
       BufferedReader reader =
           new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(
               "/" + getResourceSubdir() + "/" + filename + ".json")));
@@ -30,7 +28,5 @@ public abstract class ResourceBasedTest {
     return new JSONObject(result.toString());
   }
 
-  protected String getResourceSubdir() {
-    return "";
-  }
+  protected abstract String getResourceSubdir();
 }
