@@ -14,8 +14,8 @@ import proof.exception.InvalidGraphException;
  */
 public class Graph {
 
-  private int[][] edgeIndices;
-  private double[] costs;
+  private final int[][] edgeIndices;
+  private final double[] costs;
   private boolean immutable;
 
   public final static int NO_EDGE = -1;
@@ -54,14 +54,8 @@ public class Graph {
    * @return {@code true} iff the edge exist
    */
   public boolean edgeExists(int source, int target) {
-    if (source < 0 || source >= edgeIndices.length) {
-      throw new IllegalArgumentException("source node out of range: " + source);
-    }
-    if (target < 0 || target >= edgeIndices.length) {
-      throw new IllegalArgumentException("target node out of range: " + source);
-    }
-
-    return edgeIndices[source][target] != NO_EDGE;
+    return source >= 0 && source < edgeIndices.length && target >= 0 && target < edgeIndices.length
+        && edgeIndices[source][target] != NO_EDGE;
   }
 
   /**
@@ -113,6 +107,14 @@ public class Graph {
 
     if (edgeId < 0 || edgeId >= costs.length) {
       throw new IllegalArgumentException("Edge index out of bounds: " + edgeId);
+    }
+
+    if (source < 0 || source >= edgeIndices.length) {
+      throw new IllegalArgumentException("Source index out of bounds: " + source);
+    }
+
+    if (target < 0 || target >= edgeIndices.length) {
+      throw new IllegalArgumentException("Target index out of bounds: " + target);
     }
 
     if (costs[edgeId] != NO_EDGE_COST) {

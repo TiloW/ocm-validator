@@ -11,7 +11,7 @@ import proof.exception.InvalidGraphException;
 
 /**
  * Tests for {@link Graph}
- * 
+ *
  * @author Tilo Wiedera
  *
  */
@@ -105,28 +105,9 @@ public class GraphTest {
     graph.addEdge(0, 0, 1, 10);
     graph.addEdge(1, 1, 2, 100);
 
-    try {
-      graph.edgeExists(4, 0);
-      fail("Invalid source index should fail");
-    } catch (IllegalArgumentException expected) {
-    }
-
-    try {
-      graph.edgeExists(-1, 0);
-      fail("Invalid source index should fail");
-    } catch (IllegalArgumentException expected) {
-    }
-
-    try {
-      graph.edgeExists(0, 42);
-      fail("Invalid target index should fail");
-    } catch (IllegalArgumentException expected) {
-    }
-
-    try {
-      graph.edgeExists(0, -666);
-      fail("Invalid target index should fail");
-    } catch (IllegalArgumentException expected) {
-    }
+    assertFalse(graph.edgeExists(4, 0));
+    assertFalse(graph.edgeExists(-1, 0));
+    assertFalse(graph.edgeExists(0, 42));
+    assertFalse(graph.edgeExists(0, -666));
   }
 }
