@@ -4,13 +4,17 @@ import java.util.Arrays;
 
 /**
  * Represents a single crossing by two edge segments.
- * 
+ *
  * @author Tilo Wiedera
  *
  */
 public class CrossingIndex {
 
   public final SegmentIndex[] segments = new SegmentIndex[2];
+
+  public CrossingIndex(int edgeA, int segmentA, int edgeB, int segmentB) {
+    this(new SegmentIndex(edgeA, segmentA), new SegmentIndex(edgeB, segmentB));
+  }
 
   public CrossingIndex(SegmentIndex segment, SegmentIndex otherSegment) {
     if (segment.edge == otherSegment.edge) {
