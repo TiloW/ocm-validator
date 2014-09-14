@@ -5,6 +5,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import proof.data.Graph;
+import proof.data.reader.base.ObjectReader;
 import proof.exception.InvalidGraphException;
 
 public class GraphReader implements ObjectReader {
