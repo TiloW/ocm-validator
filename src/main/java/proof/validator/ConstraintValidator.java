@@ -77,13 +77,15 @@ public class ConstraintValidator implements ObjectValidator {
       }
     }
 
-    if (paths.length() == 9) {
+    String constraintType = object.getString("type");
+
+    if (constraintType.equals("K33")) {
       validateK33(paths);
-    } else if (paths.length() == 10) {
+    } else if (constraintType.equals("K5")) {
       validateK5(paths);
     } else {
-      throw new InvalidConstraintException(
-          "Invalid number of Kuratowski paths for single Constraint: " + paths.length());
+      throw new InvalidConstraintException("Invalid type of Kuratowski constraint: "
+          + constraintType);
     }
   }
 
@@ -99,6 +101,11 @@ public class ConstraintValidator implements ObjectValidator {
    * @throws InvalidConstraintException If one of the paths has no defined source or target
    */
   private void validateK5(JSONArray paths) throws InvalidConstraintException {
+    if (paths.length() != 10) {
+      throw new InvalidConstraintException("Supposed K5 has an invalid number of paths: "
+          + paths.length());
+    }
+
     Map<Integer, Integer> nodes = collectNodes(paths);
 
     if (nodes.size() != 5) {
@@ -144,6 +151,11 @@ public class ConstraintValidator implements ObjectValidator {
    * @throws InvalidConstraintException If one of the paths has no defined source or target
    */
   private void validateK33(JSONArray paths) throws InvalidConstraintException {
+    if (paths.length() != 9) {
+      throw new InvalidConstraintException("Supposed K33 has an invalid number of paths: "
+          + paths.length());
+    }
+
     Map<Integer, Integer> nodes = collectNodes(paths);
 
     if (nodes.size() != 6) {

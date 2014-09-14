@@ -77,22 +77,22 @@ public class ConstraintValidatorTest extends ResourceBasedTest {
   }
 
   @Test(expected = InvalidConstraintException.class)
-  public void testValidate_emptyPaths() throws InvalidConstraintException {
-    getValidator(false).validate(loadJSON("invalid/empty-paths"));
+  public void testValidate_emptyPathsK33() throws InvalidConstraintException {
+    getValidator(false).validate(loadJSON("invalid/k33-empty-paths"));
   }
 
   @Test(expected = InvalidConstraintException.class)
-  public void testValidate_tooFewPaths() throws InvalidConstraintException {
-    getValidator(false).validate(loadJSON("invalid/too-few-paths"));
+  public void testValidate_tooFewPathsK33() throws InvalidConstraintException {
+    getValidator(false).validate(loadJSON("invalid/k33-too-few-paths"));
   }
 
   @Test(expected = InvalidConstraintException.class)
-  public void testValidate_tooManyPaths() throws InvalidConstraintException {
-    getValidator(false).validate(loadJSON("invalid/too-many-paths"));
+  public void testValidate_tooManyPathsK33() throws InvalidConstraintException {
+    getValidator(false).validate(loadJSON("invalid/k33-too-many-paths"));
   }
 
   @Test(expected = InvalidConstraintException.class)
-  public void testValidate_invalidPath() throws InvalidConstraintException {
+  public void testValidate_invalidPathK33() throws InvalidConstraintException {
     getValidator(true).validate(loadJSON("invalid/k33-invalid-path"));
   }
 
@@ -107,6 +107,21 @@ public class ConstraintValidatorTest extends ResourceBasedTest {
   }
 
   @Test(expected = InvalidConstraintException.class)
+  public void testValidate_invalidNodesK5() throws InvalidConstraintException {
+    getValidator(true).validate(loadJSON("invalid/k5-invalid-nodes"));
+  }
+
+  @Test(expected = InvalidConstraintException.class)
+  public void testValidate_missingCrossingK33() throws InvalidConstraintException {
+    getValidator(true).validate(loadJSON("invalid/k33-missing-crossing"));
+  }
+
+  @Test(expected = InvalidConstraintException.class)
+  public void testValidate_invalidColoringK33() throws InvalidConstraintException {
+    getValidator(true).validate(loadJSON("invalid/k33-invalid-coloring"));
+  }
+
+  @Test(expected = InvalidConstraintException.class)
   public void testValidate_missingPathK5() throws InvalidConstraintException {
     getValidator(true).validate(loadJSON("invalid/k5-missing-path"));
   }
@@ -117,46 +132,41 @@ public class ConstraintValidatorTest extends ResourceBasedTest {
   }
 
   @Test(expected = InvalidConstraintException.class)
-  public void testValidate_invalidNodesK5() throws InvalidConstraintException {
-    getValidator(true).validate(loadJSON("invalid/k5-invalid-nodes"));
+  public void testValidate_tooManyPathsK5() throws InvalidConstraintException {
+    getValidator(false).validate(loadJSON("invalid/k5-too-many-paths"));
   }
 
   @Test(expected = InvalidConstraintException.class)
-  public void testValidate_missingCrossing() throws InvalidConstraintException {
-    getValidator(true).validate(loadJSON("invalid/k33-missing-crossing"));
+  public void testValidate_invalidType() throws InvalidConstraintException {
+    getValidator(false).validate(loadJSON("invalid/invalid-type"));
   }
 
   @Test(expected = InvalidConstraintException.class)
-  public void testValidate_invalidColoring() throws InvalidConstraintException {
-    getValidator(true).validate(loadJSON("invalid/k33-invalid-coloring"));
-  }
-
-  @Test
-  public void testValidate_crossingBranchingVariable() throws InvalidConstraintException {
-    Map<CrossingIndex, Boolean> vars = new HashMap<CrossingIndex, Boolean>();
-    vars.put(new CrossingIndex(new SegmentIndex(99, 8), new SegmentIndex(198, 16)), true);
-    createValidator(vars, 42, true).validate(loadJSON("invalid/k33-missing-crossing"));
-  }
-
-  @Test(expected = InvalidConstraintException.class)
-  public void testValidate_crossingExcludedBranchingVariable() throws InvalidConstraintException {
+  public void testValidate_crossingExcludedBranchingVariableK33() throws InvalidConstraintException {
     Map<CrossingIndex, Boolean> vars = new HashMap<CrossingIndex, Boolean>();
     vars.put(new CrossingIndex(new SegmentIndex(99, 8), new SegmentIndex(198, 16)), false);
     createValidator(vars, 42, true).validate(loadJSON("invalid/k33-missing-crossing"));
   }
 
   @Test
-  public void testValidate_requiredCrossing() throws InvalidConstraintException {
+  public void testValidate_crossingBranchingVariableK33() throws InvalidConstraintException {
+    Map<CrossingIndex, Boolean> vars = new HashMap<CrossingIndex, Boolean>();
+    vars.put(new CrossingIndex(new SegmentIndex(99, 8), new SegmentIndex(198, 16)), true);
+    createValidator(vars, 42, true).validate(loadJSON("invalid/k33-missing-crossing"));
+  }
+
+  @Test
+  public void testValidate_requiredCrossingK33() throws InvalidConstraintException {
     getValidator(true).validate(loadJSON("valid/k33-required-crossing"));
   }
 
   @Test
   public void testValidate_simpleK5() throws InvalidConstraintException {
-    getValidator(true).validate(loadJSON("valid/simple-k5"));
+    getValidator(true).validate(loadJSON("valid/k5-simple"));
   }
 
   @Test
   public void testValidate_simpleK33() throws InvalidConstraintException {
-    getValidator(true).validate(loadJSON("valid/simple-k33"));
+    getValidator(true).validate(loadJSON("valid/k33-simple"));
   }
 }
