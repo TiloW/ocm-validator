@@ -14,10 +14,10 @@
 			"target": 2
 		},
 		{
-			"source": 1,
+			"source": 0,
 			"id": 1,
 			"cost": 0.42,
-			"target": 0
+			"target": 1
 		}
 	]
 }

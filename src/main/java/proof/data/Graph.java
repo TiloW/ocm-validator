@@ -105,6 +105,10 @@ public class Graph {
       throw new IllegalArgumentException("Can not override existing edge!");
     }
 
+    if (edgeExists(target, source)) {
+      throw new IllegalArgumentException("Inverted edge already exists!");
+    }
+
     if (edgeId < 0 || edgeId >= costs.length) {
       throw new IllegalArgumentException("Edge index out of bounds: " + edgeId);
     }
@@ -122,7 +126,7 @@ public class Graph {
     }
 
     costs[edgeId] = cost;
-    edgeIndices[source][target] = edgeIndices[target][source] = edgeId;
+    edgeIndices[source][target] = edgeId;
   }
 
   /**
@@ -145,7 +149,7 @@ public class Graph {
       }
     }
 
-    if (counter != 2 * costs.length) {
+    if (counter != costs.length) {
       throw new InvalidGraphException("Can not make incomplete graph immutable");
     }
   }
@@ -156,7 +160,7 @@ public class Graph {
    * Checks there are no crossings that require more than {@numberOfSegments}
    * crossings per edge.
    *
-   * @param vars The variable assigment
+   * @param vars The variable assignment
    * @param numberOfSegments The maximum number of crossings per edge
    */
   public void validateVariables(Map<CrossingIndex, Boolean> vars, int numberOfSegments) {

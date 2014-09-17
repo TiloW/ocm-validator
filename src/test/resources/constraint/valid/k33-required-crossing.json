@@ -44,20 +44,20 @@
 			"end": 42
 		}],
 		[{
-			"from": 3,
-			"to": 2,
+			"from": 2,
+			"to": 3,
 			"start": -1,
 			"end": 42
 		}],
 		[{
-			"from": 4,
-			"to": 2,
+			"from": 2,
+			"to": 4,
 			"start": -1,
 			"end": 42
 		}],
 		[{
-			"from": 5,
-			"to": 2,
+			"from": 2,
+			"to": 5,
 			"start": -1,
 			"end": 42
 		}]

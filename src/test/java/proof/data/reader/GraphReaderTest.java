@@ -71,7 +71,7 @@ public class GraphReaderTest extends ResourceBasedTest {
     assertTrue(graph.edgeExists(1, 2));
 
     assertEquals(30, (int) graph.getEdgeCost(0, 2));
-    assertEquals(30, (int) graph.getEdgeCost(2, 0));
+    assertEquals(30, (int) graph.getEdgeCost(0, 2));
     assertEquals(78, (int) graph.getEdgeCost(1, 2));
 
     try {
