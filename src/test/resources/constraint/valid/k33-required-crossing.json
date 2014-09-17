@@ -2,62 +2,82 @@
 	"type": "K33",
 	"paths": [
 		[{
-			"from": 0,
-			"to": 3,
+			"edge": {
+				"source": 0,
+				"target": 3
+			},
 			"start": -1,
 			"end": 42
 		}],
 		[{
-			"from": 0,
-			"to": 4,
+			"edge": {
+				"source": 0,
+				"target": 4
+			},
 			"start": -1,
 			"end": 42
 		}],
 		[{
-			"from": 0,
-			"to": 5,
+			"edge": {
+				"source": 0,
+				"target": 5
+			},
 			"start": -1,
 			"end": 42
 		}],
 		[{
-			"from": 1,
-			"to": 3,
+			"edge": {
+				"source": 1,
+				"target": 3
+			},
 			"start": -1,
 			"end": 42
 		}],
 		[{
-			"from": 1,
-			"to": 2,
+			"edge": {
+				"source": 1,
+				"target": 2
+			},
 			"start": -1,
 			"end": 8
 		},
 		{
-			"from": 2,
-			"to": 4,
+			"edge": {
+				"source": 2,
+				"target": 4
+			},
 			"start": 16,
 			"end": 42
 		}],
 		[{
-			"from": 1,
-			"to": 5,
+			"edge": {
+				"source": 1,
+				"target": 5
+			},
 			"start": -1,
 			"end": 42
 		}],
 		[{
-			"from": 2,
-			"to": 3,
+			"edge": {
+				"source": 2,
+				"target": 3
+			},
 			"start": -1,
 			"end": 42
 		}],
 		[{
-			"from": 2,
-			"to": 4,
+			"edge": {
+				"source": 2,
+				"target": 4
+			},
 			"start": -1,
 			"end": 42
 		}],
 		[{
-			"from": 2,
-			"to": 5,
+			"edge": {
+				"source": 2,
+				"target": 5
+			},
 			"start": -1,
 			"end": 42
 		}]
@@ -65,11 +85,17 @@
 	"requiredCrossings": [
 		[
 			{
-				"edge": 99,
+				"edge": {
+					"source": 1,
+					"target": 2
+				},
 				"segment": 8
 			},
 			{
-				"edge": 198,
+				"edge": {
+					"source": 2,
+					"target": 4
+				},
 				"segment": 16
 			}
 		]

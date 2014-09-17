@@ -12,6 +12,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import proof.data.CrossingIndex;
+import proof.data.Graph;
 import proof.data.reader.CrossingReader;
 import proof.exception.InvalidCoverageException;
 import proof.validator.base.ObjectValidator;
@@ -29,18 +30,22 @@ import proof.validator.base.ObjectValidator;
  */
 public class BranchCoverageValidator implements ObjectValidator {
 
-  private final static CrossingReader CROSSING_READER = new CrossingReader();
+  private final CrossingReader crossingReader;
+
+  public BranchCoverageValidator(Graph graph) {
+    crossingReader = new CrossingReader(graph);
+  }
 
   /**
    * Used to sort the leaves in descending number of branching variables.
    */
   final static Comparator<Map<CrossingIndex, Boolean>> LEAF_COMPARATOR =
       new Comparator<Map<CrossingIndex, Boolean>>() {
-    @Override
-    public int compare(Map<CrossingIndex, Boolean> vars1, Map<CrossingIndex, Boolean> vars2) {
-      return vars2.size() - vars1.size();
-    }
-  };
+        @Override
+        public int compare(Map<CrossingIndex, Boolean> vars1, Map<CrossingIndex, Boolean> vars2) {
+          return vars2.size() - vars1.size();
+        }
+      };
 
   @Override
   public void validate(JSONObject object) throws InvalidCoverageException {
@@ -59,7 +64,7 @@ public class BranchCoverageValidator implements ObjectValidator {
         JSONObject variable = fixedVariables.getJSONObject(j);
 
         try {
-          variablesOfLeaf.put(CROSSING_READER.read(variable.getJSONArray("segments")),
+          variablesOfLeaf.put(crossingReader.read(variable.getJSONArray("segments")),
               variable.getInt("value") == 1);
         } catch (IllegalArgumentException e) {
           throw new InvalidCoverageException("Encountered invalid variable indices.");

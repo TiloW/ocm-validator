@@ -27,7 +27,7 @@ import proof.validator.base.ObjectValidator;
  */
 public class ConstraintValidator implements ObjectValidator {
 
-  private final static CrossingReader CROSSING_READER = new CrossingReader();
+  private final CrossingReader crossingReader;
 
   private final Map<CrossingIndex, Boolean> fixedVariables;
   private final int numberOfSegments;
@@ -45,6 +45,7 @@ public class ConstraintValidator implements ObjectValidator {
     this.fixedVariables = fixedVariables;
     this.numberOfSegments = numberOfSegments;
     this.graph = graph;
+    crossingReader = new CrossingReader(graph);
   }
 
   @Override
@@ -62,7 +63,7 @@ public class ConstraintValidator implements ObjectValidator {
     JSONArray crossings = object.getJSONArray("requiredCrossings");
 
     for (int i = 0; i < crossings.length(); i++) {
-      vars.add(CROSSING_READER.read(crossings.getJSONArray(i)));
+      vars.add(crossingReader.read(crossings.getJSONArray(i)));
     }
 
     JSONArray paths = object.getJSONArray("paths");
@@ -248,13 +249,13 @@ public class ConstraintValidator implements ObjectValidator {
    * Returns the first node of a valid path.
    */
   private int getSource(JSONArray path) {
-    return path.getJSONObject(0).getInt("from");
+    return path.getJSONObject(0).getJSONObject("edge").getInt("source");
   }
 
   /**
    * Returns the last node of a valid path.
    */
   private int getTarget(JSONArray path) {
-    return path.getJSONObject(path.length() - 1).getInt("to");
+    return path.getJSONObject(path.length() - 1).getJSONObject("edge").getInt("target");
   }
 }

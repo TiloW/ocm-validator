@@ -47,13 +47,7 @@ public class ConstraintValidatorTest extends ResourceBasedTest {
     ConstraintValidator result = null;
 
     if (validatePaths) {
-      // create K100
-      int counter = 0;
-      Graph graph = new Graph(100, (100 * 99) / 2);
-      for (int i = 0; i < 100; i++)
-        for (int ii = i + 1; ii < 100; ii++) {
-          graph.addEdge(counter++, i, ii, 1);
-        }
+      Graph graph = createCompleteGraph(100);
       result = new ConstraintValidator(vars, numberOfSegments, graph);
     } else {
       result = new ConstraintValidator(vars, numberOfSegments, new Graph(100, 100)) {

@@ -14,7 +14,8 @@ public class BranchCoverageValidatorTest extends ResourceBasedTest {
     return "branch-coverage";
   }
 
-  private final BranchCoverageValidator coverageValidator = new BranchCoverageValidator();
+  private final BranchCoverageValidator coverageValidator = new BranchCoverageValidator(
+      createCompleteGraph(100));
 
   @Test(expected = InvalidCoverageException.class)
   public void testValidate_empty() throws InvalidCoverageException, IOException {

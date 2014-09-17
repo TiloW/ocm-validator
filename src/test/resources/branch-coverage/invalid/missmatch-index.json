@@ -6,11 +6,17 @@
 					"value": 0,
 					"segments": [
 						{
-							"edge": 1,
+							"edge": {
+								"source": 1,
+								"target": 2
+							},
 							"segment": 0
 						},
 						{
-							"edge": 0,
+							"edge": {
+								"source": 5,
+								"target": 7
+							},
 							"segment": 1
 						}
 					]
@@ -23,11 +29,17 @@
 					"value": 1,
 					"segments": [
 						{
-							"edge": 1,
+							"edge": {
+								"source": 1,
+								"target": 2
+							},
 							"segment": 0
 						},
 						{
-							"edge": 0,
+							"edge": {
+								"source": 5,
+								"target": 7
+							},
 							"segment": 1
 						}
 					]
@@ -36,11 +48,17 @@
 					"value": 1,
 					"segments": [
 						{
-							"edge": 2,
+							"edge": {
+								"source": 4,
+								"target": 5
+							},
 							"segment": 0
 						},
 						{
-							"edge": 0,
+							"edge": {
+								"source": 6,
+								"target": 7
+							},
 							"segment": 1
 						}
 					]
@@ -53,11 +71,17 @@
 					"value": 1,
 					"segments": [
 						{
-							"edge": 1,
+							"edge": {
+								"source": 1,
+								"target": 2
+							},
 							"segment": 0
 						},
 						{
-							"edge": 0,
+							"edge": {
+								"source": 5,
+								"target": 7
+							},
 							"segment": 1
 						}
 					]
@@ -66,11 +90,17 @@
 					"value": 0,
 					"segments": [
 						{
-							"edge": 3,
+							"edge": {
+								"source": 4,
+								"target": 5
+							},
 							"segment": 0
 						},
 						{
-							"edge": 0,
+							"edge": {
+								"source": 9,
+								"target": 7
+							},
 							"segment": 1
 						}
 					]
