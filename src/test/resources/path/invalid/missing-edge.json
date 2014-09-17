@@ -1,8 +1,10 @@
 {
 	"path": [
 		{
-			"from": 4,
-			"to": 5,
+			"edge": {
+				"source": 4,
+				"target": 5,
+			},
 			"start": -1,
 			"end": 42
 		}

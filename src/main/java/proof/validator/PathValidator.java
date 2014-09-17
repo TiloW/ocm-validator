@@ -52,21 +52,23 @@ public class PathValidator implements ArrayValidator {
 
     for (int i = 0; i < path.length(); i++) {
       JSONObject section = path.getJSONObject(i);
+      JSONObject edge = section.getJSONObject("edge");
 
-      int source = section.getInt("from");
-      int target = section.getInt("to");
+      int source = edge.getInt("source");
+      int target = edge.getInt("target");
       int endId = section.getInt("end");
 
       if (!graph.edgeExists(source, target)) {
         throw new InvalidPathException("Required edge does not exist");
       }
 
-      int edge = graph.getEdgeId(source, target);
+      int edgeId = graph.getEdgeId(source, target);
 
       // if there is at least one more section, is it truly reachable?
       if (i < path.length() - 1) {
         JSONObject nextSection = path.getJSONObject(i + 1);
-        int nextSource = nextSection.getInt("from");
+        JSONObject nextEdge = nextSection.getJSONObject("edge");
+        int nextSource = nextEdge.getInt("source");
 
         // either by node
         if (endId == numberOfSegments) {
@@ -76,8 +78,8 @@ public class PathValidator implements ArrayValidator {
         }
         // or by crossing
         else {
-          SegmentIndex s1 = new SegmentIndex(edge, endId);
-          int nextTarget = nextSection.getInt("to");
+          SegmentIndex s1 = new SegmentIndex(edgeId, endId);
+          int nextTarget = nextEdge.getInt("target");
 
           if (!graph.edgeExists(nextSource, nextTarget)) {
             throw new InvalidPathException("Required edge does not exist");
@@ -108,7 +110,7 @@ public class PathValidator implements ArrayValidator {
       throw new InvalidPathException("Path has no source node");
     }
 
-    return section.getInt("from");
+    return section.getJSONObject("edge").getInt("source");
   }
 
   /**
@@ -125,6 +127,6 @@ public class PathValidator implements ArrayValidator {
       throw new InvalidPathException("Path has no target node");
     }
 
-    return section.getInt("to");
+    return section.getJSONObject("edge").getInt("target");
   }
 }
