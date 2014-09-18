@@ -3,29 +3,6 @@
 		{
 			"fixedVariables": [
 				{
-					"value": 0,
-					"segments": [
-						{
-							"edge": {
-								"source": 0,
-								"target": 1
-							},
-							"segment": 0
-						},
-						{
-							"edge": {
-								"source": 2,
-								"target": 3
-							},
-							"segment": 1
-						}
-					]
-				}
-			]
-		},
-		{
-			"fixedVariables": [
-				{
 					"value": 1,
 					"segments": [
 						{
@@ -49,15 +26,15 @@
 					"segments": [
 						{
 							"edge": {
-								"source": 4,
-								"target": 5
+								"source": 2,
+								"target": 3
 							},
 							"segment": 0
 						},
 						{
 							"edge": {
-								"source": 6,
-								"target": 7
+								"source": 4,
+								"target": 5
 							},
 							"segment": 1
 						}
@@ -87,19 +64,19 @@
 					]
 				},
 				{
-					"value": 1,
+					"value": 0,
 					"segments": [
 						{
 							"edge": {
-								"source": 4,
-								"target": 5
+								"source": 2,
+								"target": 3
 							},
 							"segment": 0
 						},
 						{
 							"edge": {
-								"source": 6,
-								"target": 7
+								"source": 4,
+								"target": 5
 							},
 							"segment": 1
 						}
