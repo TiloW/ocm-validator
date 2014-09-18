@@ -17,6 +17,10 @@ import proof.exception.InvalidPathException;
 
 public class PathValidatorTest extends ResourceBasedTest {
 
+  public PathValidatorTest() {
+    super("path");
+  }
+
   /**
    * Returns a simple graph to be used for testing.
    */
@@ -39,11 +43,6 @@ public class PathValidatorTest extends ResourceBasedTest {
     result.makeImmutable();
 
     return result;
-  }
-
-  @Override
-  protected String getResourceSubdir() {
-    return "path";
   }
 
   @Test(expected = InvalidPathException.class)

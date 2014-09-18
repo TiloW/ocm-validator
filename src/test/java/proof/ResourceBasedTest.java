@@ -12,6 +12,12 @@ import proof.data.Graph;
 
 public abstract class ResourceBasedTest {
 
+  private String directory;
+
+  public ResourceBasedTest(String directory) {
+    this.directory = directory;
+  }
+
   protected Graph createCompleteGraph(int n) {
     Graph result = new Graph(n, (n * (n - 1)) / 2);
     int counter = 0;
@@ -31,7 +37,7 @@ public abstract class ResourceBasedTest {
     try {
       BufferedReader reader =
           new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(
-              "/" + getResourceSubdir() + "/" + filename + ".json")));
+              "/" + directory + "/" + filename + ".json")));
       String line;
       while ((line = reader.readLine()) != null) {
         result.append(line);
@@ -42,6 +48,4 @@ public abstract class ResourceBasedTest {
 
     return new JSONObject(result.toString());
   }
-
-  protected abstract String getResourceSubdir();
 }

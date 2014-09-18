@@ -26,9 +26,8 @@ public class GraphReaderTest extends ResourceBasedTest {
 
   private JSONObject resource;
 
-  @Override
-  protected String getResourceSubdir() {
-    return "graph-reader";
+  public GraphReaderTest() {
+    super("graph-reader");
   }
 
   private final GraphReader graphReader = new GraphReader();

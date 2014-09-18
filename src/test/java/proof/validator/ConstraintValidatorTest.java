@@ -24,6 +24,10 @@ import proof.exception.InvalidConstraintException;
  */
 public class ConstraintValidatorTest extends ResourceBasedTest {
 
+  public ConstraintValidatorTest() {
+    super("constraint");
+  }
+
   /**
    * Returns a new {@link ConstraintValidator}.
    *
@@ -63,11 +67,6 @@ public class ConstraintValidatorTest extends ResourceBasedTest {
     }
 
     return result;
-  }
-
-  @Override
-  protected String getResourceSubdir() {
-    return "constraint";
   }
 
   @Test(expected = InvalidConstraintException.class)

@@ -9,9 +9,8 @@ import proof.exception.InvalidCoverageException;
 
 public class BranchCoverageValidatorTest extends ResourceBasedTest {
 
-  @Override
-  protected String getResourceSubdir() {
-    return "branch-coverage";
+  public BranchCoverageValidatorTest() {
+    super("branch-coverage");
   }
 
   private final BranchCoverageValidator coverageValidator = new BranchCoverageValidator(
