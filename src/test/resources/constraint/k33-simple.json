@@ -6,6 +6,7 @@
 				"source": 0,
 				"target": 3
 			},
+			"keepDirection": true,
 			"start": -1,
 			"end": 42
 		}],
@@ -14,6 +15,7 @@
 				"source": 0,
 				"target": 4
 			},
+			"keepDirection": true,
 			"start": -1,
 			"end": 42
 		}],
@@ -22,6 +24,7 @@
 				"source": 0,
 				"target": 5
 			},
+			"keepDirection": true,
 			"start": -1,
 			"end": 42
 		}],
@@ -30,6 +33,7 @@
 				"source": 1,
 				"target": 3
 			},
+			"keepDirection": true,
 			"start": -1,
 			"end": 42
 		}],
@@ -38,14 +42,16 @@
 				"source": 1,
 				"target": 4
 			},
+			"keepDirection": true,
 			"start": -1,
 			"end": 42
 		}],
 		[{
 			"edge": {
 				"source": 1,
-				"target": 4
+				"target": 5
 			},
+			"keepDirection": true,
 			"start": -1,
 			"end": 42
 		}],
@@ -54,6 +60,7 @@
 				"source": 2,
 				"target": 3
 			},
+			"keepDirection": true,
 			"start": -1,
 			"end": 42
 		}],
@@ -62,6 +69,7 @@
 				"source": 2,
 				"target": 4
 			},
+			"keepDirection": true,
 			"start": -1,
 			"end": 42
 		}],
@@ -70,6 +78,7 @@
 				"source": 2,
 				"target": 5
 			},
+			"keepDirection": true,
 			"start": -1,
 			"end": 42
 		}]

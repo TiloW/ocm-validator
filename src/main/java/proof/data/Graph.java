@@ -1,7 +1,5 @@
 package proof.data;
 
-import java.util.Map;
-
 import proof.exception.InvalidGraphException;
 
 /**
@@ -152,18 +150,5 @@ public class Graph {
     if (counter != costs.length) {
       throw new InvalidGraphException("Can not make incomplete graph immutable");
     }
-  }
-
-  /**
-   * Validates a variable assignment.
-   *
-   * Checks there are no crossings that require more than {@numberOfSegments}
-   * crossings per edge.
-   *
-   * @param vars The variable assignment
-   * @param numberOfSegments The maximum number of crossings per edge
-   */
-  public void validateVariables(Map<CrossingIndex, Boolean> vars, int numberOfSegments) {
-    // TODO
   }
 }
