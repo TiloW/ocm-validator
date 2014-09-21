@@ -4,7 +4,7 @@
 			"fixedVariables": [
 				{
 					"value": 1,
-					"segments": [
+					"crossing": [
 						{
 							"edge": {
 								"source": 0,
@@ -23,7 +23,7 @@
 				},
 				{
 					"value": 1,
-					"segments": [
+					"crossing": [
 						{
 							"edge": {
 								"source": 2,
@@ -46,7 +46,7 @@
 			"fixedVariables": [
 				{
 					"value": 0,
-					"segments": [
+					"crossing": [
 						{
 							"edge": {
 								"source": 0,
@@ -65,7 +65,7 @@
 				},
 				{
 					"value": 0,
-					"segments": [
+					"crossing": [
 						{
 							"edge": {
 								"source": 2,

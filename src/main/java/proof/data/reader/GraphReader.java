@@ -22,8 +22,9 @@ public class GraphReader implements ObjectReader {
       for (int i = 0; i < edges.length(); i++) {
         JSONObject edge = edges.getJSONObject(i);
 
-        result.addEdge(edge.getInt("id"), edge.getInt("source"), edge.getInt("target"),
-            edge.getDouble("cost"));
+        double cost = edge.has("cost") ? edge.getDouble("cost") : 1;
+
+        result.addEdge(edge.getInt("id"), edge.getInt("source"), edge.getInt("target"), cost);
       }
 
       result.makeImmutable();

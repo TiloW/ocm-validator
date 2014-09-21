@@ -66,7 +66,7 @@ public class Graph {
    */
   public int getEdgeId(int source, int target) {
     if (!edgeExists(source, target)) {
-      throw new IllegalArgumentException("Edge does not exist!");
+      throw new IllegalArgumentException("Edge does not exist: (" + source + "," + target + ")");
     }
 
     return edgeIndices[source][target];

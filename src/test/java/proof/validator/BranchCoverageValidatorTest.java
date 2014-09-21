@@ -12,8 +12,7 @@ import proof.exception.InvalidCoverageException;
 
 public class BranchCoverageValidatorTest extends ResourceBasedTest {
 
-  private JSONObject simpleResource;
-  private JSONObject singleLeafResource;
+  private JSONArray simpleResource;
 
   public BranchCoverageValidatorTest() {
     super("branch-coverage");
@@ -21,7 +20,7 @@ public class BranchCoverageValidatorTest extends ResourceBasedTest {
 
   @Before
   public void init() {
-    simpleResource = loadJSON("simple");
+    simpleResource = loadJSON("simple").getJSONArray("leaves");
   }
 
   private final BranchCoverageValidator coverageValidator = new BranchCoverageValidator(
@@ -29,22 +28,19 @@ public class BranchCoverageValidatorTest extends ResourceBasedTest {
 
   @Test(expected = InvalidCoverageException.class)
   public void testValidate_empty() throws InvalidCoverageException, IOException {
-    JSONObject empty = new JSONObject();
-    empty.put("leaves", new JSONArray());
-    coverageValidator.validate(empty);
+    coverageValidator.validate(new JSONArray());
   }
 
   @Test(expected = InvalidCoverageException.class)
   public void testValidate_insufficientCoverage() throws InvalidCoverageException, IOException {
-    simpleResource.getJSONArray("leaves").remove(2);
+    simpleResource.remove(2);
     coverageValidator.validate(simpleResource);
   }
 
   @Test(expected = InvalidCoverageException.class)
   public void testValidate_invalidMismatchedValue() throws InvalidCoverageException, IOException {
     JSONObject var =
-        simpleResource.getJSONArray("leaves").getJSONObject(0).getJSONArray("fixedVariables")
-            .getJSONObject(0);
+        simpleResource.getJSONObject(0).getJSONArray("fixedVariables").getJSONObject(0);
 
     var.put("value", var.getInt("value") == 1 ? 0 : 1);
 
@@ -53,34 +49,31 @@ public class BranchCoverageValidatorTest extends ResourceBasedTest {
 
   @Test(expected = InvalidCoverageException.class)
   public void testValidate_invalidMultipleVariables() throws InvalidCoverageException, IOException {
-    simpleResource.getJSONArray("leaves").getJSONObject(0).getJSONArray("fixedVariables")
-        .getJSONObject(0).getJSONArray("segments").getJSONObject(0).getJSONObject("edge")
-        .put("source", 123);
+    simpleResource.getJSONObject(0).getJSONArray("fixedVariables").getJSONObject(0)
+    .getJSONArray("crossing").getJSONObject(0).getJSONObject("edge").put("source", 123);
 
     coverageValidator.validate(simpleResource);
   }
 
   @Test(expected = InvalidCoverageException.class)
   public void testValidate_invalidSingleLeaf() throws InvalidCoverageException, IOException {
-    JSONObject resource = loadJSON("single-leaf");
+    JSONArray resource = loadJSON("single-leaf").getJSONArray("leaves");
     JSONObject var =
-        simpleResource.getJSONArray("leaves").getJSONObject(0).getJSONArray("fixedVariables")
-            .getJSONObject(0);
-    resource.getJSONArray("leaves").getJSONObject(0).getJSONArray("fixedVariables").put(var);
+        simpleResource.getJSONObject(0).getJSONArray("fixedVariables").getJSONObject(0);
+    resource.getJSONObject(0).getJSONArray("fixedVariables").put(var);
 
     coverageValidator.validate(resource);
   }
 
   @Test(expected = InvalidCoverageException.class)
   public void testValidate_overlappingCoverage() throws InvalidCoverageException, IOException {
-    JSONArray leaves = simpleResource.getJSONArray("leaves");
-    leaves.put(leaves.get(0));
+    simpleResource.put(simpleResource.get(0));
     coverageValidator.validate(simpleResource);
   }
 
   @Test(expected = InvalidCoverageException.class)
   public void testValidate_unmergeable() throws InvalidCoverageException, IOException {
-    coverageValidator.validate(loadJSON("unmergeable"));
+    coverageValidator.validate(loadJSON("unmergeable").getJSONArray("leaves"));
   }
 
   @Test
@@ -90,7 +83,7 @@ public class BranchCoverageValidatorTest extends ResourceBasedTest {
 
   @Test
   public void testValidate_validSingleLeaf() throws InvalidCoverageException, IOException {
-    coverageValidator.validate(loadJSON("single-leaf"));
+    coverageValidator.validate(loadJSON("single-leaf").getJSONArray("leaves"));
   }
 
 }
