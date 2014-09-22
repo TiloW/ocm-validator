@@ -47,6 +47,11 @@ public class ConstraintValidator implements ObjectValidator {
     crossingReader = new CrossingReader(graph);
   }
 
+  /**
+   * Validates a single Kuratwoski constraint.
+   *
+   * Investigates all paths and asserts the constraint represents a valid K3,3 or K5.
+   */
   @Override
   public void validate(JSONObject object) throws InvalidConstraintException {
 

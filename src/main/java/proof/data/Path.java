@@ -7,8 +7,17 @@ import java.util.Set;
 
 import proof.exception.InvalidPathException;
 
+/**
+ * Represents a Kuratowski path.
+ *
+ * @author Tilo Wiedera
+ *
+ */
 public class Path {
 
+  /**
+   * A section (or segment range) constitutes some directed portion of an edge.
+   */
   class Section {
     int edge;
     int source;
@@ -22,12 +31,27 @@ public class Path {
   private final Graph graph;
   private final List<Section> sections;
 
+  /**
+   * Initializes a new Kuratowski path.
+   *
+   * @param graph The underlying {@link Graph}
+   * @param crossings The currently realized crossings
+   */
   public Path(Graph graph, Set<CrossingIndex> crossings) {
     this.crossings = crossings;
     this.graph = graph;
     sections = new LinkedList<Section>();
   }
 
+  /**
+   * Adds a new section to this path and ensures the path is valid.
+   *
+   * @param source The source of the edge
+   * @param target The target of the edge
+   * @param start The start index on this edge
+   * @param end The end index on this edge
+   * @param keepDirection Whether to traverse the edge in order
+   */
   public void addSection(int source, int target, int start, int end, boolean keepDirection) {
     Section section = new Section();
     section.source = source;
@@ -57,10 +81,24 @@ public class Path {
     sections.add(section);
   }
 
+  /**
+   * Returns the source of this path.
+   *
+   * This can either be an Integer (node index) or a {@link CrossingIndex}.
+   *
+   * @return The source
+   */
   public Object getSource() {
     return getEndpoint(0, true);
   }
 
+  /**
+   * Returns the target of this path.
+   *
+   * This can either be an Integer (node index) or a {@link CrossingIndex}.
+   *
+   * @return The target
+   */
   public Object getTarget() {
     return getEndpoint(sections.size() - 1, false);
   }

@@ -1,10 +1,9 @@
 package proof.exception;
 
+
 /**
  * Base class for all exceptions that disprove the validity of a log.
- * 
- * Appropriate base classes should be thrown by {@link Validator} upon encountering an error.
- * 
+ *
  * @author Tilo Wiedera
  *
  */

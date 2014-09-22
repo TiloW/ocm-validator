@@ -6,6 +6,11 @@ import proof.data.Graph;
 import proof.data.SegmentIndex;
 import proof.data.reader.base.ObjectReader;
 
+/**
+ *
+ * @author tilo
+ *
+ */
 public class SegmentReader implements ObjectReader {
 
   private final Graph graph;

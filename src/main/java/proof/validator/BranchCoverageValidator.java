@@ -32,6 +32,11 @@ public class BranchCoverageValidator implements ArrayValidator {
 
   private final CrossingReader crossingReader;
 
+  /**
+   * Creates a new coverage validator.
+   *
+   * @param graph The underlying {@link Graph}
+   */
   public BranchCoverageValidator(Graph graph) {
     crossingReader = new CrossingReader(graph);
   }
@@ -47,6 +52,13 @@ public class BranchCoverageValidator implements ArrayValidator {
         }
       };
 
+  /**
+   * Validates the array of leaves.
+   *
+   * Inspects the fixed variables within each leaf. Tries to merge matching leaves until there is
+   * only one leaf with no fixed variables left. If this can not be achieved, the leaves are either
+   * overlapping or not all of the variables are covered.
+   */
   @Override
   public void validate(JSONArray leaves) throws InvalidCoverageException {
 

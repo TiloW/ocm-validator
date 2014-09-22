@@ -13,10 +13,26 @@ import proof.data.reader.GraphReader;
 import proof.exception.InvalidProofException;
 import proof.validator.base.ObjectValidator;
 
+/**
+ * The main validator for validating a complete log file.
+ *
+ * @author Tilo Wiedera
+ *
+ */
 public class MainValidator implements ObjectValidator {
 
   private final static GraphReader graphReader = new GraphReader();
 
+  /**
+   * Called after completing the validation of a leaf.
+   *
+   * @param progress The progess (on a range from 0 to 1)
+   */
+  protected void onProgress(double progress) {}
+
+  /**
+   * Validates a whole log file as provided by the OCM logger.
+   */
   @Override
   public void validate(JSONObject object) throws InvalidProofException {
     Graph graph = graphReader.read(object.getJSONObject("graph"));
@@ -49,7 +65,7 @@ public class MainValidator implements ObjectValidator {
         constraintValidator.validate(constraints.getJSONObject(j));
       }
 
-      System.out.println(i * 100 / (double) leaves.length());
+      onProgress((i + 1) / (double) leaves.length());
     }
   }
 }
