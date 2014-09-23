@@ -7,6 +7,9 @@ import static org.junit.Assert.fail;
 
 import java.io.IOException;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.junit.Before;
 import org.junit.Test;
 
 import proof.ResourceBasedTest;
@@ -21,46 +24,91 @@ import proof.exception.InvalidGraphException;
  */
 public class GraphReaderTest extends ResourceBasedTest {
 
-  @Override
-  protected String getResourceSubdir() {
-    return "graph-reader";
+  private JSONObject resource;
+
+  public GraphReaderTest() {
+    super("graph-reader");
   }
 
   private final GraphReader graphReader = new GraphReader();
 
+  @Before
+  public void init() {
+    resource = loadJSON("simple");
+  }
+
   @Test(expected = InvalidGraphException.class)
   public void testRead_empty() throws IOException {
-    graphReader.read(loadJSON("invalid/empty"));
+    graphReader.read(new JSONObject());
   }
 
   @Test(expected = InvalidGraphException.class)
   public void testRead_ambiguous() throws IOException {
-    graphReader.read(loadJSON("invalid/ambiguous-edge-ids"));
+    JSONObject additionalEdge = new JSONObject();
+    additionalEdge.put("id", 1);
+    additionalEdge.put("source", 5);
+    additionalEdge.put("target", 6);
+    additionalEdge.put("cost", 1);
+
+    resource.getJSONArray("edges").put(additionalEdge);
+
+    graphReader.read(resource);
   }
 
   @Test(expected = InvalidGraphException.class)
   public void testRead_nodeOutOfRange() throws IOException {
-    graphReader.read(loadJSON("invalid/node-out-of-range"));
+    JSONObject additionalEdge = new JSONObject();
+    additionalEdge.put("id", 1);
+    additionalEdge.put("source", 42);
+    additionalEdge.put("target", 43);
+    additionalEdge.put("cost", 1);
+
+    resource.getJSONArray("edges").put(additionalEdge);
+
+    graphReader.read(resource);
   }
 
   @Test(expected = InvalidGraphException.class)
   public void testRead_multiEdge() throws IOException {
-    graphReader.read(loadJSON("invalid/multi-edge"));
+    JSONArray edges = resource.getJSONArray("edges");
+
+    JSONObject edgeCopy = new JSONObject(edges.get(0));
+    edgeCopy.put("id", edges.length());
+    edges.put(edgeCopy);
+
+    graphReader.read(resource);
   }
 
   @Test(expected = InvalidGraphException.class)
   public void testRead_multiEdgeDirected() throws IOException {
-    graphReader.read(loadJSON("invalid/multi-edge-directed"));
+    JSONArray edges = resource.getJSONArray("edges");
+
+    JSONObject edgeOrig = edges.getJSONObject(0);
+    JSONObject edgeCopy = new JSONObject();
+    edgeCopy.put("source", edgeOrig.getInt("target"));
+    edgeCopy.put("target", edgeOrig.getInt("source"));
+    edgeCopy.put("id", edges.length());
+    edges.put(edgeCopy);
+
+    graphReader.read(resource);
   }
 
   @Test(expected = InvalidGraphException.class)
   public void testRead_edgeOutOfRange() throws IOException {
-    graphReader.read(loadJSON("invalid/edge-out-of-range"));
+    JSONArray edges = resource.getJSONArray("edges");
+
+    JSONObject edgeCopy = new JSONObject();
+    edgeCopy.put("source", 5);
+    edgeCopy.put("target", 6);
+    edgeCopy.put("id", edges.length() + 1);
+    edges.put(edgeCopy);
+
+    graphReader.read(resource);
   }
 
   @Test
   public void testRead_simple() throws IOException {
-    Graph graph = graphReader.read(loadJSON("valid/simple"));
+    Graph graph = graphReader.read(resource);
 
     assertFalse(graph.edgeExists(0, 3));
     assertFalse(graph.edgeExists(1, 3));
@@ -71,7 +119,7 @@ public class GraphReaderTest extends ResourceBasedTest {
     assertTrue(graph.edgeExists(1, 2));
 
     assertEquals(30, (int) graph.getEdgeCost(0, 2));
-    assertEquals(30, (int) graph.getEdgeCost(2, 0));
+    assertEquals(30, (int) graph.getEdgeCost(0, 2));
     assertEquals(78, (int) graph.getEdgeCost(1, 2));
 
     try {

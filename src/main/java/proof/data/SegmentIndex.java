@@ -2,12 +2,18 @@ package proof.data;
 
 /**
  * Represents a single segment on a single edge.
- * 
+ *
  * @author Tilo Wiedera
  *
  */
 public class SegmentIndex {
 
+  /**
+   * Creates a new segment index.
+   *
+   * @param edge The edge index
+   * @param segment The segment index
+   */
   public SegmentIndex(int edge, int segment) {
     if (edge < 0) {
       throw new IllegalArgumentException("Invalid edge index");

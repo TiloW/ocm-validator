@@ -1,10 +1,10 @@
 package proof.exception;
 
 /**
- * Should only be thrown by {@link BranchConverage}.
- * 
+ * Should only be thrown by {@link BranchConverageValidator}.
+ *
  * Represents an error in the variable configuration of the branching tree.
- * 
+ *
  * @author Tilo Wiedera
  *
  */

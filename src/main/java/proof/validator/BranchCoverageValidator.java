@@ -12,9 +12,10 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import proof.data.CrossingIndex;
+import proof.data.Graph;
 import proof.data.reader.CrossingReader;
 import proof.exception.InvalidCoverageException;
-import proof.validator.base.ObjectValidator;
+import proof.validator.base.ArrayValidator;
 
 /**
  * Validates the fixed variables of all leaves.
@@ -27,24 +28,39 @@ import proof.validator.base.ObjectValidator;
  * @author Tilo Wiedera
  *
  */
-public class BranchCoverageValidator implements ObjectValidator {
+public class BranchCoverageValidator implements ArrayValidator {
 
-  private final static CrossingReader CROSSING_READER = new CrossingReader();
+  private final CrossingReader crossingReader;
+
+  /**
+   * Creates a new coverage validator.
+   *
+   * @param graph The underlying {@link Graph}
+   */
+  public BranchCoverageValidator(Graph graph) {
+    crossingReader = new CrossingReader(graph);
+  }
 
   /**
    * Used to sort the leaves in descending number of branching variables.
    */
   final static Comparator<Map<CrossingIndex, Boolean>> LEAF_COMPARATOR =
       new Comparator<Map<CrossingIndex, Boolean>>() {
-    @Override
-    public int compare(Map<CrossingIndex, Boolean> vars1, Map<CrossingIndex, Boolean> vars2) {
-      return vars2.size() - vars1.size();
-    }
-  };
+        @Override
+        public int compare(Map<CrossingIndex, Boolean> vars1, Map<CrossingIndex, Boolean> vars2) {
+          return vars2.size() - vars1.size();
+        }
+      };
 
+  /**
+   * Validates the array of leaves.
+   *
+   * Inspects the fixed variables within each leaf. Tries to merge matching leaves until there is
+   * only one leaf with no fixed variables left. If this can not be achieved, the leaves are either
+   * overlapping or not all of the variables are covered.
+   */
   @Override
-  public void validate(JSONObject object) throws InvalidCoverageException {
-    JSONArray leaves = object.getJSONArray("leaves");
+  public void validate(JSONArray leaves) throws InvalidCoverageException {
 
     List<Map<CrossingIndex, Boolean>> parsedVariables =
         new LinkedList<Map<CrossingIndex, Boolean>>();
@@ -59,7 +75,7 @@ public class BranchCoverageValidator implements ObjectValidator {
         JSONObject variable = fixedVariables.getJSONObject(j);
 
         try {
-          variablesOfLeaf.put(CROSSING_READER.read(variable.getJSONArray("segments")),
+          variablesOfLeaf.put(crossingReader.read(variable.getJSONArray("crossing")),
               variable.getInt("value") == 1);
         } catch (IllegalArgumentException e) {
           throw new InvalidCoverageException("Encountered invalid variable indices.");

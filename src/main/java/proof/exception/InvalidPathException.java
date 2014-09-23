@@ -1,6 +1,9 @@
 package proof.exception;
 
-public class InvalidPathException extends InvalidProofException {
+/**
+ * Thrown whenever a parsed Kuratowski {@link Path} turns out to be invalid.
+ */
+public class InvalidPathException extends RuntimeException {
 
   public InvalidPathException(String description) {
     super(description);

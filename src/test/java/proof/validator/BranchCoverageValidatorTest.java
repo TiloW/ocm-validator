@@ -2,6 +2,9 @@ package proof.validator;
 
 import java.io.IOException;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.junit.Before;
 import org.junit.Test;
 
 import proof.ResourceBasedTest;
@@ -9,61 +12,78 @@ import proof.exception.InvalidCoverageException;
 
 public class BranchCoverageValidatorTest extends ResourceBasedTest {
 
-  @Override
-  protected String getResourceSubdir() {
-    return "branch-coverage";
+  private JSONArray simpleResource;
+
+  public BranchCoverageValidatorTest() {
+    super("branch-coverage");
   }
 
-  private final BranchCoverageValidator coverageValidator = new BranchCoverageValidator();
+  @Before
+  public void init() {
+    simpleResource = loadJSON("simple").getJSONArray("leaves");
+  }
+
+  private final BranchCoverageValidator coverageValidator = new BranchCoverageValidator(
+      createCompleteGraph(100));
 
   @Test(expected = InvalidCoverageException.class)
   public void testValidate_empty() throws InvalidCoverageException, IOException {
-    coverageValidator.validate(loadJSON("invalid/empty"));
+    coverageValidator.validate(new JSONArray());
   }
 
   @Test(expected = InvalidCoverageException.class)
   public void testValidate_insufficientCoverage() throws InvalidCoverageException, IOException {
-    coverageValidator.validate(loadJSON("invalid/insufficient"));
+    simpleResource.remove(2);
+    coverageValidator.validate(simpleResource);
   }
 
   @Test(expected = InvalidCoverageException.class)
-  public void testValidate_invalidMissmatchedIndices() throws InvalidCoverageException, IOException {
-    coverageValidator.validate(loadJSON("invalid/missmatch-index"));
-  }
+  public void testValidate_invalidMismatchedValue() throws InvalidCoverageException, IOException {
+    JSONObject var =
+        simpleResource.getJSONObject(0).getJSONArray("fixedVariables").getJSONObject(0);
 
-  @Test(expected = InvalidCoverageException.class)
-  public void testValidate_invalidMissmatchedValues() throws InvalidCoverageException, IOException {
-    coverageValidator.validate(loadJSON("invalid/missmatch-value"));
+    var.put("value", var.getInt("value") == 1 ? 0 : 1);
+
+    coverageValidator.validate(simpleResource);
   }
 
   @Test(expected = InvalidCoverageException.class)
   public void testValidate_invalidMultipleVariables() throws InvalidCoverageException, IOException {
-    coverageValidator.validate(loadJSON("invalid/multi-vars"));
-  }
+    simpleResource.getJSONObject(0).getJSONArray("fixedVariables").getJSONObject(0)
+    .getJSONArray("crossing").getJSONObject(0).getJSONObject("edge").put("source", 123);
 
-  @Test(expected = InvalidCoverageException.class)
-  public void testValidate_overlappingCoverage() throws InvalidCoverageException, IOException {
-    coverageValidator.validate(loadJSON("invalid/overlapping"));
-  }
-
-  @Test(expected = InvalidCoverageException.class)
-  public void testValidate_selfCrossing() throws InvalidCoverageException, IOException {
-    coverageValidator.validate(loadJSON("invalid/self-crossing"));
+    coverageValidator.validate(simpleResource);
   }
 
   @Test(expected = InvalidCoverageException.class)
   public void testValidate_invalidSingleLeaf() throws InvalidCoverageException, IOException {
-    coverageValidator.validate(loadJSON("invalid/single-leaf"));
+    JSONArray resource = loadJSON("single-leaf").getJSONArray("leaves");
+    JSONObject var =
+        simpleResource.getJSONObject(0).getJSONArray("fixedVariables").getJSONObject(0);
+    resource.getJSONObject(0).getJSONArray("fixedVariables").put(var);
+
+    coverageValidator.validate(resource);
+  }
+
+  @Test(expected = InvalidCoverageException.class)
+  public void testValidate_overlappingCoverage() throws InvalidCoverageException, IOException {
+    simpleResource.put(simpleResource.get(0));
+    coverageValidator.validate(simpleResource);
+  }
+
+  @Test(expected = InvalidCoverageException.class)
+  public void testValidate_unmergeable() throws InvalidCoverageException, IOException {
+    coverageValidator.validate(loadJSON("unmergeable").getJSONArray("leaves"));
   }
 
   @Test
   public void testValidate_validCoverage() throws InvalidCoverageException, IOException {
-    coverageValidator.validate(loadJSON("valid/simple"));
+    coverageValidator.validate(simpleResource);
   }
 
   @Test
   public void testValidate_validSingleLeaf() throws InvalidCoverageException, IOException {
-    coverageValidator.validate(loadJSON("valid/single-leaf"));
+    coverageValidator.validate(loadJSON("single-leaf").getJSONArray("leaves"));
   }
 
 }

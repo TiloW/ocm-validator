@@ -24,13 +24,12 @@ public class GraphTest {
     graph.addEdge(0, 0, 1, 20.1);
 
     assertTrue(graph.edgeExists(0, 1));
-    assertTrue(graph.edgeExists(1, 0));
+    assertFalse(graph.edgeExists(1, 0));
 
     assertFalse(graph.edgeExists(0, 2));
     assertFalse(graph.edgeExists(1, 3));
 
     assertEquals(20, (int) graph.getEdgeCost(0, 1));
-    assertEquals(20, (int) graph.getEdgeCost(1, 0));
   }
 
   @Test
@@ -87,9 +86,9 @@ public class GraphTest {
     graph.addEdge(1, 1, 2, 100);
 
     assertTrue(graph.edgeExists(0, 1));
-    assertTrue(graph.edgeExists(1, 0));
+    assertFalse(graph.edgeExists(1, 0));
     assertTrue(graph.edgeExists(1, 2));
-    assertTrue(graph.edgeExists(2, 1));
+    assertFalse(graph.edgeExists(2, 1));
     assertFalse(graph.edgeExists(0, 3));
     assertFalse(graph.edgeExists(1, 3));
     assertFalse(graph.edgeExists(2, 3));
