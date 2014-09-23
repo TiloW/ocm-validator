@@ -2,9 +2,9 @@ package proof;
 
 import static org.junit.Assert.fail;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import org.json.JSONObject;
 
@@ -12,7 +12,7 @@ import proof.data.Graph;
 
 public abstract class ResourceBasedTest {
 
-  private String directory;
+  private final String directory;
 
   public ResourceBasedTest(String directory) {
     this.directory = directory;
@@ -32,20 +32,15 @@ public abstract class ResourceBasedTest {
   }
 
   protected JSONObject loadJSON(String filename) {
-    StringBuilder result = new StringBuilder();
+    String result = null;
 
     try {
-      BufferedReader reader =
-          new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(
-              "/" + directory + "/" + filename + ".json")));
-      String line;
-      while ((line = reader.readLine()) != null) {
-        result.append(line);
-      }
+      String path = getClass().getResource("/" + directory + "/" + filename + ".json").getPath();
+      result = new String(Files.readAllBytes(Paths.get(path)));
     } catch (IOException | NullPointerException e) {
       fail("Could not read ressource: " + filename);
     }
 
-    return new JSONObject(result.toString());
+    return new JSONObject(result);
   }
 }
