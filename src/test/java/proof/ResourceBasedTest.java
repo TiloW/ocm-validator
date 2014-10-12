@@ -35,8 +35,9 @@ public abstract class ResourceBasedTest {
     String result = null;
 
     try {
-      String path = getClass().getResource("/" + directory + "/" + filename + ".json").getPath();
-      result = new String(Files.readAllBytes(Paths.get(path)));
+      result =
+          new String(Files.readAllBytes(Paths.get("build/resources/test/" + directory + "/"
+              + filename + ".json")));
     } catch (IOException | NullPointerException e) {
       fail("Could not read ressource: " + filename);
     }
