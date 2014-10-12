@@ -3,7 +3,6 @@ package proof.validator;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.file.Files;
 
 import org.json.JSONObject;
@@ -24,9 +23,7 @@ public class MainValidatorTest {
 
   @Parameterized.Parameters
   public static File[] getFiles() throws URISyntaxException {
-    URL url = MainValidatorTest.class.getResource("../../../../resources/test/log");
-
-    File dir = new File(url.toURI());
+    File dir = new File("build/resources/test/log");
 
     return dir.listFiles();
   }
