@@ -2,6 +2,7 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'jacoco'
 apply plugin: 'com.github.kt3k.coveralls'
+apply plugin:'application'
 
 ext.libraries = []
 libraries.push('org.json:json:20140107')
@@ -13,6 +14,16 @@ repositories {
 dependencies {
   compile libraries
   testCompile group: 'junit', name: 'junit', version: '4.+'
+}
+
+mainClassName = "proof.Main"
+
+run {
+  standardOutput = System.out
+
+  if(project.hasProperty("file")){
+    args project.file
+  }
 }
 
 buildscript {
