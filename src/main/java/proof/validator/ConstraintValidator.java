@@ -37,9 +37,8 @@ public class ConstraintValidator implements ObjectValidator {
   /**
    * Creates a new constraint validator.
    *
-   * @param fixedVariables The branching variables
-   * @param numberOfSegments The maximum number of segments per edge (i.e. the optimal solution)
    * @param graph The original graph we are working on (without any crossings)
+   * @param fixedVariables The branching variables
    */
   public ConstraintValidator(Graph graph, Map<CrossingIndex, Boolean> fixedVariables) {
     this.fixedVariables = fixedVariables;
