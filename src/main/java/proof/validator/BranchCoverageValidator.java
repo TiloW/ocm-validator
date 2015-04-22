@@ -29,7 +29,6 @@ import proof.validator.base.ArrayValidator;
  *
  */
 public class BranchCoverageValidator implements ArrayValidator {
-
   private final CrossingReader crossingReader;
 
   /**
@@ -61,7 +60,6 @@ public class BranchCoverageValidator implements ArrayValidator {
    */
   @Override
   public void validate(JSONArray leaves) throws InvalidCoverageException {
-
     List<Map<CrossingIndex, Boolean>> parsedVariables =
         new LinkedList<Map<CrossingIndex, Boolean>>();
 
@@ -87,26 +85,27 @@ public class BranchCoverageValidator implements ArrayValidator {
     // sort the leaves by number of variables
     Collections.sort(parsedVariables, LEAF_COMPARATOR);
 
-    if (parsedVariables.size() == 0) {
+    if (parsedVariables.isEmpty()) {
       throw new InvalidCoverageException("Could not find any leaves.");
     }
 
     // merge all leaves that differ by the value of a single variable
     while (parsedVariables.size() > 1) {
       int size = parsedVariables.get(0).size();
-
       boolean merged = false;
+
       for (int i = 1; !merged && i < parsedVariables.size()
           && parsedVariables.get(i).size() == size; i++) {
         merged = mergeIfPossible(parsedVariables, 0, i);
       }
+
       if (!merged) {
         throw new InvalidCoverageException("Could not merge all leaves.");
       }
     }
 
     // check there is exactly one leaf remaining, covering all variables
-    if (parsedVariables.get(0).size() > 0) {
+    if (!parsedVariables.get(0).isEmpty()) {
       throw new InvalidCoverageException(
           "Some variables remain uncovered after merging all leaves.");
     }
@@ -114,7 +113,8 @@ public class BranchCoverageValidator implements ArrayValidator {
 
   /**
    * Tries to merge the leaves contained at {@code i} and {@code j}. The leaves will be merged if
-   * they differ by the assignment of a single variable.
+   * they differ by the assignment of a single variable. Will remove one of the merged leaves and
+   * alter the other one upon success.
    *
    * @param leaves The list of all leaves
    * @param i The first leaf index
@@ -123,22 +123,18 @@ public class BranchCoverageValidator implements ArrayValidator {
    */
   private boolean mergeIfPossible(List<Map<CrossingIndex, Boolean>> leaves, int i, int j) {
     boolean result = true;
-
     Map<CrossingIndex, Boolean> varsA = leaves.get(i);
     Map<CrossingIndex, Boolean> varsB = leaves.get(j);
-
     CrossingIndex branchVariable = null;
-
     Iterator<CrossingIndex> it = varsA.keySet().iterator();
+
     while (result && it.hasNext()) {
       CrossingIndex ci = it.next();
       result &= varsB.containsKey(ci);
+
       if (varsA.get(ci) != varsB.get(ci)) {
-        if (branchVariable == null) {
-          branchVariable = ci;
-        } else {
-          result = false;
-        }
+        result = branchVariable == null;
+        branchVariable = ci;
       }
     }
 
