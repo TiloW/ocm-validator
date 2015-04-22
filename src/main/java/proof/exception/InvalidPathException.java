@@ -1,5 +1,7 @@
 package proof.exception;
 
+import proof.data.Path;
+
 /**
  * Thrown whenever a parsed Kuratowski {@link Path} turns out to be invalid.
  */

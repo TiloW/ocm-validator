@@ -1,7 +1,12 @@
 language: java
+sudo: false
 
 jdk:
 - oraclejdk8
 
+script:
+  - gradle check
+  - ./script/javadoc.sh
+
 after_success:
-- gradle jacoco coveralls
+  - gradle jacoco coveralls
