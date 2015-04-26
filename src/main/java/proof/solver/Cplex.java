@@ -1,10 +1,16 @@
 package proof.solver;
 
-public class Cplex implements Solver {
+import proof.exception.InfeasibleLinearProgramException;
+
+public class Cplex extends Solver {
   @Override
-  public double solve(String filename) {
+  protected String getCommand(String filename) {
     // TODO Auto-generated method stub
-    return 0;
+    return null;
   }
 
+  @Override
+  protected void handleLine(String filename, String line) throws InfeasibleLinearProgramException {
+    // TODO Auto-generated method stub
+  }
 }
