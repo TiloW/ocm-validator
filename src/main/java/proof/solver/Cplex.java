@@ -1,16 +1,26 @@
 package proof.solver;
 
-import proof.exception.InfeasibleLinearProgramException;
+import proof.exception.LinearProgramException;
 
+/**
+ * Wrapper class for calling the CPLEX optimization suite linear program solver.
+ *
+ * @author Tilo Wiedera
+ */
 public class Cplex extends Solver {
   @Override
   protected String getCommand(String filename) {
-    // TODO Auto-generated method stub
-    return null;
+    return "clpex -c read " + filename + " optimize";
   }
 
   @Override
-  protected void handleLine(String filename, String line) throws InfeasibleLinearProgramException {
-    // TODO Auto-generated method stub
+  protected void handleLine(String line) throws LinearProgramException {
+    if (line.contains("Dual simplex - Optimal:")) {
+      setResult(parseDouble(line));
+    } else if (line.contains("No problem exists.")) {
+      setResult(0);
+    } else if (line.contains("Infeasible.")) {
+      returnInfeasiblity();
+    }
   }
 }

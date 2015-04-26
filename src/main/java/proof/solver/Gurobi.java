@@ -1,6 +1,6 @@
 package proof.solver;
 
-import proof.exception.InfeasibleLinearProgramException;
+import proof.exception.LinearProgramException;
 
 /**
  * Wrapper class for performing calls to the Gurobi linear program solver.
@@ -14,9 +14,9 @@ public class Gurobi extends Solver {
   }
 
   @Override
-  protected void handleLine(String filename, String line) throws InfeasibleLinearProgramException {
+  protected void handleLine(String line) throws LinearProgramException {
     if (line.contains("Infeasible model")) {
-      throw new InfeasibleLinearProgramException(filename);
+      returnInfeasiblity();
     } else if (line.contains("Optimal objective")) {
       setResult(parseDouble(line));
     }

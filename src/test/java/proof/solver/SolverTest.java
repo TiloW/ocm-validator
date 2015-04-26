@@ -4,8 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import proof.exception.InfeasibleLinearProgramException;
-import proof.exception.InvalidLinearProgramException;
+import proof.exception.LinearProgramException;
 
 public abstract class SolverTest {
   private Solver solver;
@@ -15,23 +14,22 @@ public abstract class SolverTest {
   }
 
   @Test
-  public void testSimple() throws InfeasibleLinearProgramException, InvalidLinearProgramException {
+  public void testSimple() throws LinearProgramException {
     assertEquals(116, (int) solver.solve("src/test/resources/linear-program/simple.lp"));
   }
 
-  @Test(expected = InfeasibleLinearProgramException.class)
-  public void testInfeasible() throws InfeasibleLinearProgramException,
-      InvalidLinearProgramException {
+  @Test(expected = LinearProgramException.class)
+  public void testInfeasible() throws LinearProgramException {
     solver.solve("src/test/resources/linear-program/infeasible.lp");
   }
 
   @Test
-  public void testEmpty() throws InfeasibleLinearProgramException, InvalidLinearProgramException {
+  public void testEmpty() throws LinearProgramException {
     assertEquals(0, (int) solver.solve("src/test/resources/linear-program/empty.lp"));
   }
 
-  @Test(expected = InvalidLinearProgramException.class)
-  public void testInvalid() throws InvalidLinearProgramException, InfeasibleLinearProgramException {
+  @Test(expected = LinearProgramException.class)
+  public void testInvalid() throws LinearProgramException {
     assertEquals(0, (int) solver.solve("src/test/resources/linear-program/invalid.lp"));
   }
 }

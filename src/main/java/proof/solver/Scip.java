@@ -1,6 +1,6 @@
 package proof.solver;
 
-import proof.exception.InfeasibleLinearProgramException;
+import proof.exception.LinearProgramException;
 
 
 /**
@@ -23,11 +23,11 @@ public class Scip extends Solver {
   }
 
   @Override
-  protected void handleLine(String filename, String line) throws InfeasibleLinearProgramException {
+  protected void handleLine(String line) throws LinearProgramException {
     if (line.contains("problem is solved [optimal solution found]")) {
       isFeasible = true;
     } else if (line.contains("problem is solved [infeasible]")) {
-      throw new InfeasibleLinearProgramException(filename);
+      returnInfeasiblity();
     } else if (isFeasible && line.contains("objective value:")) {
       setResult(parseDouble(line));
     }

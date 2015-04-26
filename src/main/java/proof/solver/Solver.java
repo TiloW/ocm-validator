@@ -5,8 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
-import proof.exception.InfeasibleLinearProgramException;
-import proof.exception.InvalidLinearProgramException;
+import proof.exception.LinearProgramException;
 
 /**
  * Common interface for all linear program solvers.
@@ -15,18 +14,19 @@ import proof.exception.InvalidLinearProgramException;
  */
 public abstract class Solver {
   private Double result;
+  private String filename;
 
   /**
    * Solves the linear program contained in the given file. The file must contain a problem
-   * described in CPLEX lp format.
+   * described in CPLEX lp format. Will return 0 if the given file is empty.
    *
    * @param filename The file containing the problem
    * @return The optimal objective value
    */
-  public double solve(String filename) throws InfeasibleLinearProgramException,
-      InvalidLinearProgramException {
+  public double solve(String filename) throws LinearProgramException {
     Process process = null;
     result = null;
+    this.filename = filename;
 
     prepareSolver();
 
@@ -39,13 +39,13 @@ public abstract class Solver {
       for (String line = reader.readLine(); result == null && line != null; line =
           reader.readLine()) {
         if (errorReader.ready()) {
-          throw new InvalidLinearProgramException(filename, errorReader.readLine());
+          throw new LinearProgramException(this, filename, errorReader.readLine());
         } else {
-          handleLine(filename, line);
+          handleLine(line);
         }
       }
     } catch (IOException e) {
-      Exception exception = new InvalidLinearProgramException(filename);
+      Exception exception = new LinearProgramException(this, filename);
       exception.initCause(e);
     } finally {
       if (process != null) {
@@ -54,8 +54,7 @@ public abstract class Solver {
     }
 
     if (result == null) {
-      throw new InvalidLinearProgramException(filename, getClass().getSimpleName()
-          + " output is missing some information.");
+      throw new LinearProgramException(this, filename, "output is missing some information.");
     }
 
     return result;
@@ -68,6 +67,15 @@ public abstract class Solver {
    */
   protected void setResult(double value) {
     result = value;
+  }
+
+  /**
+   * Throws an exception to mark this linear program as infeasible.
+   *
+   * @throws LinearProgramException since the linear program is declared infeasible
+   */
+  protected void returnInfeasiblity() throws LinearProgramException {
+    throw new LinearProgramException(this, filename, "linear program is infeasible.");
   }
 
   /**
@@ -104,9 +112,7 @@ public abstract class Solver {
    * Called for each line in the solvers output. This method must be overridden to parse the actual
    * results.
    *
-   * @param filename The name of the file to be solved
    * @param line The currently investigated line from the solvers output
    */
-  protected abstract void handleLine(String filename, String line)
-      throws InfeasibleLinearProgramException;
+  protected abstract void handleLine(String line) throws LinearProgramException;
 }
