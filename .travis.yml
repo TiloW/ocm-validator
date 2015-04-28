@@ -2,7 +2,23 @@ language: java
 sudo: false
 
 jdk:
-- oraclejdk8
+  - oraclejdk7
+
+cache:
+  directories:
+    - ~/.bin
+    - ~/gradle/caches
+    - /tmp/scip
+
+env:
+  global:
+    - BIN_PATH=~/.bin
+
+before_install:
+- export PATH="$PATH:$BIN_PATH"
+
+install:
+  - if [ ! -f $BIN_PATH/scip ]; then ./script/scip-setup.sh; fi
 
 script:
   - gradle check
