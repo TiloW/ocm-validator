@@ -2,15 +2,35 @@ package proof.solver;
 
 import static org.junit.Assert.assertEquals;
 
+import org.junit.Assume;
+import org.junit.Before;
 import org.junit.Test;
 
 import proof.exception.LinearProgramException;
+import proof.exception.UnsupportedSolverException;
 
 public abstract class SolverTest {
-  private Solver solver;
 
-  public SolverTest(Solver solver) {
-    this.solver = solver;
+  public static abstract class Initializer {
+    public abstract Solver initialize();
+  }
+
+  private Solver solver = null;
+  private Initializer initializer;
+
+  public SolverTest(Initializer initializer) {
+    this.initializer = initializer;
+  }
+
+  @Before
+  public void setUp() {
+    try {
+      solver = initializer.initialize();
+    } catch (UnsupportedSolverException expected) {
+      solver = null;
+    }
+
+    Assume.assumeNotNull(solver);
   }
 
   @Test
