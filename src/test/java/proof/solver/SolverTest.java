@@ -9,8 +9,19 @@ import org.junit.Test;
 import proof.exception.LinearProgramException;
 import proof.exception.UnsupportedSolverException;
 
+/**
+ * Abstract base class for all linear program solver tests.
+ *
+ * @author Tilo Wiedera
+ */
 public abstract class SolverTest {
 
+  /**
+   * Wrapper class for initializing the requested solver. This is necessary since the constructor of
+   * the solver might throw an {@link UnsupportedSolverException}.
+   *
+   * @author Tilo Wiedera
+   */
   public static abstract class Initializer {
     public abstract Solver initialize();
   }
