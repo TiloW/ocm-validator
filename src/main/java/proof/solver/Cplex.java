@@ -7,7 +7,7 @@ import proof.exception.LinearProgramException;
  *
  * @author Tilo Wiedera
  */
-public class Cplex extends Solver {
+class Cplex extends Solver {
   @Override
   protected String getCommand(String filename) {
     return "clpex -c read " + filename + " optimize";

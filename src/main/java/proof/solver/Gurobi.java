@@ -7,7 +7,7 @@ import proof.exception.LinearProgramException;
  *
  * @author Tilo Wiedera
  */
-public class Gurobi extends Solver {
+class Gurobi extends Solver {
   @Override
   protected String getCommand(String filename) {
     return "gurobi_cl " + filename;

@@ -9,7 +9,7 @@ import proof.exception.LinearProgramException;
  *
  * @author Tilo Wiedera
  */
-public class Scip extends Solver {
+class Scip extends Solver {
   private boolean isFeasible;
 
   @Override

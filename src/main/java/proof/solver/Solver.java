@@ -1,20 +1,31 @@
 package proof.solver;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.util.StringTokenizer;
 
 import proof.exception.LinearProgramException;
+import proof.exception.UnsupportedSolverException;
 
 /**
  * Common interface for all linear program solvers.
- * 
+ *
  * @author Tilo Wiedera
  */
 public abstract class Solver {
   private Double result;
   private String filename;
+
+  public Solver() {
+    if (!isAvailable()) {
+      throw new UnsupportedSolverException(getClass().getName()
+          + " is not available. Calling this solver would fail: "
+          + getCommand("my-linear-program.lp"));
+    }
+  }
 
   /**
    * Solves the linear program contained in the given file. The file must contain a problem
@@ -88,6 +99,8 @@ public abstract class Solver {
    *
    * @param line The line containing the double, typically the optimal objective value.
    * @return The parsed value
+   *
+   * @return true if this solver can be used
    */
   protected double parseDouble(String line) {
     StringTokenizer st = new StringTokenizer(line);
@@ -115,4 +128,32 @@ public abstract class Solver {
    * @param line The currently investigated line from the solvers output
    */
   protected abstract void handleLine(String line) throws LinearProgramException;
+
+  /**
+   * Returns true if this solver is available on the command line.
+   *
+   * @return true if this solver can be used
+   */
+  private boolean isAvailable() {
+    Integer opt = null;
+
+    try {
+      File file = File.createTempFile("simple-linear-program", ".lp");
+      PrintWriter writer = new PrintWriter(file.getAbsoluteFile(), "UTF-8");
+
+      writer.println("Minimize");
+      writer.println("obj: x + y");
+      writer.println("Subject To");
+      writer.println("c1: x >= 2");
+      writer.println("c2: y >= 1");
+      writer.println("End");
+      writer.close();
+
+      opt = (int) solve(file.getAbsoluteFile().toString());
+    } catch (LinearProgramException | IOException e) {
+      // solver is not available
+    }
+
+    return opt != null && opt == 3;
+  }
 }
