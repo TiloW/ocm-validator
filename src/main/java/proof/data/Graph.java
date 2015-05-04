@@ -13,11 +13,14 @@ import proof.exception.InvalidGraphException;
 public class Graph {
 
   private final int[][] edgeIndices;
-  private final double[] costs;
+  private final int[] sources;
+  private final int[] targets;
+  private final int[] costs;
   private boolean immutable;
+  private final int claimedLowerBound;
 
   public final static int NO_EDGE = -1;
-  public final static double NO_EDGE_COST = Double.MAX_VALUE;
+  public final static int NO_EDGE_COST = Integer.MAX_VALUE;
 
   /**
    * Creates a new graph with the exact number of nodes and edges.
@@ -26,10 +29,13 @@ public class Graph {
    *
    * @param numberOfEdges The number of edges
    */
-  public Graph(int numberOfNodes, int numberOfEdges) {
+  public Graph(int numberOfNodes, int numberOfEdges, int claimedLowerBound) {
     immutable = false;
+    this.claimedLowerBound = claimedLowerBound;
 
-    costs = new double[numberOfEdges];
+    sources = new int[numberOfEdges];
+    targets = new int[numberOfEdges];
+    costs = new int[numberOfEdges];
     edgeIndices = new int[numberOfNodes][numberOfNodes];
 
     for (int i = 0; i < numberOfEdges; i++) {
@@ -41,6 +47,18 @@ public class Graph {
         edgeIndices[i][ii] = NO_EDGE;
       }
     }
+  }
+
+  public int getClaimedLowerBound() {
+    return claimedLowerBound;
+  }
+
+  public int getNumberOfNodes() {
+    return edgeIndices.length;
+  }
+
+  public int getNumberOfEdges() {
+    return costs.length;
   }
 
   /**
@@ -80,8 +98,20 @@ public class Graph {
    *
    * @return The cost
    */
-  public double getEdgeCost(int source, int target) {
-    return costs[getEdgeId(source, target)];
+  public int getEdgeCost(int source, int target) {
+    return getEdgeCost(getEdgeId(source, target));
+  }
+
+  public int getEdgeCost(int id) {
+    return costs[id];
+  }
+
+  public int getEdgeSource(int id) {
+    return sources[id];
+  }
+
+  public int getEdgeTarget(int id) {
+    return targets[id];
   }
 
   /**
@@ -94,10 +124,8 @@ public class Graph {
    * @param target The index of the second node
    * @param cost The cost of the edge
    */
-  public void addEdge(int edgeId, int source, int target, double cost) {
-    if (immutable) {
-      throw new UnsupportedOperationException("Can not modify immutable graph");
-    }
+  public void addEdge(int edgeId, int source, int target, int cost) {
+    assertIsMutable();
 
     if (edgeExists(source, target)) {
       throw new IllegalArgumentException("Can not override existing edge!");
@@ -124,6 +152,8 @@ public class Graph {
     }
 
     costs[edgeId] = cost;
+    sources[edgeId] = source;
+    targets[edgeId] = target;
     edgeIndices[source][target] = edgeId;
   }
 
@@ -139,9 +169,9 @@ public class Graph {
 
     // validate all edges have been inserted
     int counter = 0;
-    for (int i = 0; i < edgeIndices.length; i++) {
+    for (int[] edgeIndice : edgeIndices) {
       for (int ii = 0; ii < edgeIndices.length; ii++) {
-        if (edgeIndices[i][ii] != NO_EDGE) {
+        if (edgeIndice[ii] != NO_EDGE) {
           counter++;
         }
       }
@@ -149,6 +179,28 @@ public class Graph {
 
     if (counter != costs.length) {
       throw new InvalidGraphException("Can not make incomplete graph immutable");
+    }
+  }
+
+  /**
+   * Returns true iff both edges have a common incident node.
+   *
+   * @param e1 The index of the first edge
+   * @param e2 The index of the second edge
+   * @return true iff the edges are adjacent
+   */
+  public boolean edgesAreAdjacent(int e1, int e2) {
+    int s1 = getEdgeSource(e1);
+    int t1 = getEdgeTarget(e1);
+    int s2 = getEdgeSource(e2);
+    int t2 = getEdgeTarget(e2);
+
+    return s1 == s2 || s1 == t2 || t1 == s2 || t1 == t2;
+  }
+
+  private void assertIsMutable() {
+    if (immutable) {
+      throw new UnsupportedOperationException("Can not modify immutable graph");
     }
   }
 }

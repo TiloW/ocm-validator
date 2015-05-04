@@ -30,12 +30,12 @@ public class GraphReader implements ObjectReader {
 
       JSONArray edges = input.getJSONArray("edges");
 
-      Graph result = new Graph(numberOfNodes, edges.length());
+      Graph result = new Graph(numberOfNodes, edges.length(), input.getInt("claimedLowerBound"));
 
       for (int i = 0; i < edges.length(); i++) {
         JSONObject edge = edges.getJSONObject(i);
 
-        double cost = edge.has("cost") ? edge.getDouble("cost") : 1;
+        int cost = edge.has("cost") ? edge.getInt("cost") : 1;
 
         result.addEdge(edge.getInt("id"), edge.getInt("source"), edge.getInt("target"), cost);
       }

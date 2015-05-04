@@ -54,6 +54,11 @@ public class ConstraintValidator implements ObjectValidator {
   @Override
   public void validate(JSONObject object) throws InvalidConstraintException {
 
+    // A constraint is considered to be relevant as long as it does not require any crossings
+    // that are currently not realizable (because of the branching)
+    // only relevant constraints are validated
+    boolean relevant = true;
+
     final Set<CrossingIndex> vars = new HashSet<CrossingIndex>();
     for (CrossingIndex cross : fixedVariables.keySet()) {
       if (fixedVariables.get(cross)) {
@@ -65,33 +70,51 @@ public class ConstraintValidator implements ObjectValidator {
     // override branching variables if required (should never happen but still)
     JSONArray crossings = object.getJSONArray("requiredCrossings");
 
-    for (int i = 0; i < crossings.length(); i++) {
-      vars.add(crossingReader.read(crossings.getJSONArray(i)));
-    }
+    for (int i = 0; relevant && i < crossings.length(); i++) {
+      CrossingIndex newCrossing = crossingReader.read(crossings.getJSONArray(i));
 
-    PathReader reader = new PathReader(graph, vars);
-
-    JSONArray jsonPaths = object.getJSONArray("paths");
-    Path paths[] = new Path[jsonPaths.length()];
-
-    for (int i = 0; i < paths.length; i++) {
-      try {
-        paths[i] = reader.read(jsonPaths.getJSONArray(i));
-      } catch (InvalidPathException e) {
-        throw (InvalidConstraintException) new InvalidConstraintException(
-            "Invalid path encountered").initCause(e);
+      for (CrossingIndex cross : vars) {
+        relevant &= !newCrossing.conflicting(cross);
       }
+
+      vars.add(newCrossing);
     }
 
-    String constraintType = object.getString("type");
+    if (relevant) {
+      PathReader reader = new PathReader(graph, vars);
 
-    if (constraintType.equals("K33")) {
-      validateK33(paths);
-    } else if (constraintType.equals("K5")) {
-      validateK5(paths);
-    } else {
-      throw new InvalidConstraintException("Invalid type of Kuratowski constraint: "
-          + constraintType);
+      JSONArray jsonPaths = object.getJSONArray("paths");
+      Path paths[] = new Path[jsonPaths.length()];
+
+      for (int i = 0; i < paths.length; i++) {
+        try {
+          // System.out.println("    Path " + i);
+          paths[i] = reader.read(jsonPaths.getJSONArray(i));
+        } catch (InvalidPathException e) {
+          throw (InvalidConstraintException) new InvalidConstraintException(
+              "Invalid path encountered").initCause(e);
+        }
+      }
+
+      // paths must be disjoint
+      for (int i = 0; i < paths.length; i++) {
+        for (int j = i + 1; j < paths.length; j++) {
+          if (!paths[i].isDisjoint(paths[j])) {
+            throw new InvalidConstraintException("Paths are not disjoint (" + i + "," + j + ").");
+          }
+        }
+      }
+
+      String constraintType = object.getString("type");
+
+      if (constraintType.equals("K33")) {
+        validateK33(paths);
+      } else if (constraintType.equals("K5")) {
+        validateK5(paths);
+      } else {
+        throw new InvalidConstraintException("Invalid type of Kuratowski constraint: "
+            + constraintType);
+      }
     }
   }
 

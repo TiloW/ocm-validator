@@ -48,12 +48,12 @@
 		},
 		{
 			"edge": {
-				"source": 2,
-				"target": 4
+				"source": 4,
+				"target": 10
 			},
-			"keepDirection": true,
-			"start": 16,
-			"end": 42
+			"keepDirection": false,
+			"start": -1,
+			"end": 16
 		}],
 		[{
 			"edge": {
@@ -103,8 +103,8 @@
 			},
 			{
 				"edge": {
-					"source": 2,
-					"target": 4
+					"source": 4,
+					"target": 10
 				},
 				"segment": 16
 			}

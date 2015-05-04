@@ -2,7 +2,6 @@ package proof.validator;
 
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -13,7 +12,7 @@ import org.json.JSONObject;
 
 import proof.data.CrossingIndex;
 import proof.data.Graph;
-import proof.data.reader.CrossingReader;
+import proof.data.reader.VariablesReader;
 import proof.exception.InvalidCoverageException;
 import proof.validator.base.ArrayValidator;
 
@@ -29,7 +28,7 @@ import proof.validator.base.ArrayValidator;
  *
  */
 public class BranchCoverageValidator implements ArrayValidator {
-  private final CrossingReader crossingReader;
+  private final VariablesReader variablesReader;
 
   /**
    * Creates a new coverage validator.
@@ -37,7 +36,7 @@ public class BranchCoverageValidator implements ArrayValidator {
    * @param graph The underlying {@link Graph}
    */
   public BranchCoverageValidator(Graph graph) {
-    crossingReader = new CrossingReader(graph);
+    variablesReader = new VariablesReader(graph);
   }
 
   /**
@@ -45,11 +44,11 @@ public class BranchCoverageValidator implements ArrayValidator {
    */
   final static Comparator<Map<CrossingIndex, Boolean>> LEAF_COMPARATOR =
       new Comparator<Map<CrossingIndex, Boolean>>() {
-        @Override
-        public int compare(Map<CrossingIndex, Boolean> vars1, Map<CrossingIndex, Boolean> vars2) {
-          return vars2.size() - vars1.size();
-        }
-      };
+    @Override
+    public int compare(Map<CrossingIndex, Boolean> vars1, Map<CrossingIndex, Boolean> vars2) {
+      return vars2.size() - vars1.size();
+    }
+  };
 
   /**
    * Validates the array of leaves.
@@ -66,20 +65,14 @@ public class BranchCoverageValidator implements ArrayValidator {
     // collect the fixed variables of each leaf
     for (int i = 0; i < leaves.length(); i++) {
       JSONObject leaf = leaves.getJSONObject(i);
-      JSONArray fixedVariables = leaf.getJSONArray("fixedVariables");
 
-      Map<CrossingIndex, Boolean> variablesOfLeaf = new HashMap<CrossingIndex, Boolean>();
-      for (int j = 0; j < fixedVariables.length(); j++) {
-        JSONObject variable = fixedVariables.getJSONObject(j);
-
-        try {
-          variablesOfLeaf.put(crossingReader.read(variable.getJSONArray("crossing")),
-              variable.getInt("value") == 1);
-        } catch (IllegalArgumentException e) {
-          throw new InvalidCoverageException("Encountered invalid variable indices.");
-        }
+      JSONArray jsonVars = leaf.getJSONArray("fixedVariables");
+      try {
+        Map<CrossingIndex, Boolean> variablesOfLeaf = variablesReader.read(jsonVars);
+        parsedVariables.add(variablesOfLeaf);
+      } catch (IllegalArgumentException e) {
+        throw new InvalidCoverageException("Encountered invalid variable indices.");
       }
-      parsedVariables.add(variablesOfLeaf);
     }
 
     // sort the leaves by number of variables
@@ -94,9 +87,10 @@ public class BranchCoverageValidator implements ArrayValidator {
       int size = parsedVariables.get(0).size();
       boolean merged = false;
 
-      for (int i = 1; !merged && i < parsedVariables.size()
-          && parsedVariables.get(i).size() == size; i++) {
-        merged = mergeIfPossible(parsedVariables, 0, i);
+      for (int i = 1; !merged && i < parsedVariables.size(); i++) {
+        if (parsedVariables.get(i).size() == size) {
+          merged = mergeIfPossible(parsedVariables, 0, i);
+        }
       }
 
       if (!merged) {
