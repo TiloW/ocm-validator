@@ -26,7 +26,8 @@ class Scip extends Solver {
   protected void handleLine(String line) throws LinearProgramException {
     if (line.contains("problem is solved [optimal solution found]")) {
       isFeasible = true;
-    } else if (line.contains("problem is solved [infeasible]")) {
+    } else if (line.contains("problem is solved [infeasible]")
+        || line.contains("original problem has 0 variables")) {
       returnInfeasiblity();
     } else if (isFeasible && line.contains("objective value:")) {
       setResult(parseDouble(line));

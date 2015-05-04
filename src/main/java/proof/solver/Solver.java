@@ -56,8 +56,9 @@ public abstract class Solver {
         }
       }
     } catch (IOException e) {
-      Exception exception = new LinearProgramException(this, filename);
-      exception.initCause(e);
+      LinearProgramException lpException = new LinearProgramException(this, filename);
+      lpException.initCause(e);
+      throw lpException;
     } finally {
       if (process != null) {
         process.destroy();
