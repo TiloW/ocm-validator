@@ -10,7 +10,7 @@ import proof.exception.LinearProgramException;
 class Cplex extends Solver {
   @Override
   protected String getCommand(String filename) {
-    return "clpex -c read " + filename + " optimize";
+    return "cplex -c read " + filename + " optimize quit";
   }
 
   @Override
@@ -19,7 +19,7 @@ class Cplex extends Solver {
       setResult(parseDouble(line));
     } else if (line.contains("No problem exists.")) {
       setResult(0);
-    } else if (line.contains("Infeasible.")) {
+    } else if (line.contains("Infeasible.") || line.contains("CPLEX Error")) {
       returnInfeasiblity();
     }
   }

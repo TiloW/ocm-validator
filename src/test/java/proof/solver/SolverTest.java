@@ -54,13 +54,13 @@ public abstract class SolverTest {
     solver.solve("src/test/resources/linear-program/infeasible.lp");
   }
 
-  @Test
+  @Test(expected = LinearProgramException.class)
   public void testEmpty() throws LinearProgramException {
-    assertEquals(0, (int) solver.solve("src/test/resources/linear-program/empty.lp"));
+    solver.solve("src/test/resources/linear-program/empty.lp");
   }
 
   @Test(expected = LinearProgramException.class)
   public void testInvalid() throws LinearProgramException {
-    assertEquals(0, (int) solver.solve("src/test/resources/linear-program/invalid.lp"));
+    solver.solve("src/test/resources/linear-program/invalid.lp");
   }
 }

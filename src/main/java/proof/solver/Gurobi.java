@@ -15,7 +15,7 @@ class Gurobi extends Solver {
 
   @Override
   protected void handleLine(String line) throws LinearProgramException {
-    if (line.contains("Infeasible model")) {
+    if (line.contains("Infeasible model") || line.contains("(null): 0 rows, 0 columns, 0 nonzeros")) {
       returnInfeasiblity();
     } else if (line.contains("Optimal objective")) {
       setResult(parseDouble(line));
