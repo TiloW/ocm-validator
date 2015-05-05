@@ -11,7 +11,6 @@ import proof.data.Graph;
 import proof.data.reader.CrossingReader;
 import proof.data.reader.GraphReader;
 import proof.exception.InvalidProofException;
-import proof.validator.base.ObjectValidator;
 
 /**
  * The main validator for validating a complete log file.
@@ -19,7 +18,7 @@ import proof.validator.base.ObjectValidator;
  * @author Tilo Wiedera
  *
  */
-public class MainValidator implements ObjectValidator {
+public class MainValidator implements Validator<JSONObject> {
 
   private final static GraphReader graphReader = new GraphReader();
 

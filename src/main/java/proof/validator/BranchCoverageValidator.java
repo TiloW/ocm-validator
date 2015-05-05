@@ -14,7 +14,6 @@ import proof.data.CrossingIndex;
 import proof.data.Graph;
 import proof.data.reader.VariablesReader;
 import proof.exception.InvalidCoverageException;
-import proof.validator.base.ArrayValidator;
 
 /**
  * Validates the fixed variables of all leaves.
@@ -27,7 +26,7 @@ import proof.validator.base.ArrayValidator;
  * @author Tilo Wiedera
  *
  */
-public class BranchCoverageValidator implements ArrayValidator {
+public class BranchCoverageValidator implements Validator<JSONArray> {
   private final VariablesReader variablesReader;
 
   /**
@@ -44,11 +43,11 @@ public class BranchCoverageValidator implements ArrayValidator {
    */
   final static Comparator<Map<CrossingIndex, Boolean>> LEAF_COMPARATOR =
       new Comparator<Map<CrossingIndex, Boolean>>() {
-    @Override
-    public int compare(Map<CrossingIndex, Boolean> vars1, Map<CrossingIndex, Boolean> vars2) {
-      return vars2.size() - vars1.size();
-    }
-  };
+        @Override
+        public int compare(Map<CrossingIndex, Boolean> vars1, Map<CrossingIndex, Boolean> vars2) {
+          return vars2.size() - vars1.size();
+        }
+      };
 
   /**
    * Validates the array of leaves.
