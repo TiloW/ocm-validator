@@ -15,7 +15,6 @@ import proof.data.reader.CrossingReader;
 import proof.data.reader.PathReader;
 import proof.exception.InvalidConstraintException;
 import proof.exception.InvalidPathException;
-import proof.validator.base.ObjectValidator;
 
 /**
  * Validates a single Kuratwoski Constraint.
@@ -27,7 +26,7 @@ import proof.validator.base.ObjectValidator;
  * @author Tilo Wiedera
  *
  */
-public class ConstraintValidator implements ObjectValidator {
+public class ConstraintValidator implements Validator<JSONObject> {
 
   private final CrossingReader crossingReader;
 
@@ -140,12 +139,12 @@ public class ConstraintValidator implements ObjectValidator {
     // find all paths
     boolean[][] foundPaths = new boolean[5][5];
     for (int i = 0; i < 5; i++) {
-      for (int ii = 0; ii < 5; ii++)
+      for (int ii = 0; ii < 5; ii++) {
         foundPaths[i][ii] = false;
+      }
     }
 
-    for (int i = 0; i < paths.length; i++) {
-      Path path = paths[i];
+    for (Path path : paths) {
       int u = endpoints.get(path.getSource());
       int v = endpoints.get(path.getTarget());
 
@@ -193,8 +192,7 @@ public class ConstraintValidator implements ObjectValidator {
       color[i] = false;
     }
 
-    for (int i = 0; i < paths.length; i++) {
-      Path path = paths[i];
+    for (Path path : paths) {
       int u = endpoints.get(path.getSource());
       int v = endpoints.get(path.getTarget());
 
@@ -221,8 +219,7 @@ public class ConstraintValidator implements ObjectValidator {
     for (int node = 0; node < 6; node++) {
       int edgeCounter = 0;
 
-      for (int i = 0; i < paths.length; i++) {
-        Path path = paths[i];
+      for (Path path : paths) {
         int v = endpoints.get(path.getSource());
         int w = endpoints.get(path.getTarget());
 
@@ -247,9 +244,9 @@ public class ConstraintValidator implements ObjectValidator {
     Map<Object, Integer> result = new HashMap<Object, Integer>();
     int counter = 0;
 
-    for (int i = 0; i < paths.length; i++) {
-      Object source = paths[i].getSource();
-      Object target = paths[i].getTarget();
+    for (Path path : paths) {
+      Object source = path.getSource();
+      Object target = path.getTarget();
 
       if (!result.containsKey(source)) {
         result.put(source, counter++);
