@@ -45,6 +45,19 @@ public class CrossingIndex {
     segments[1] = otherSegment;
   }
 
+  /**
+   * Returns true iff the other crossing can not exist with this crossing. (i.e. both crossings
+   * share a single segment).
+   *
+   * @param other The possibly conflicting segment
+   * @return True iff the segments do conflict
+   */
+  public boolean conflicting(CrossingIndex other) {
+    return (other.segments[0].equals(segments[0]) || other.segments[0].equals(segments[1])
+        || other.segments[1].equals(segments[0]) || other.segments[1].equals(segments[1]))
+        && !equals(other);
+  }
+
   @Override
   public boolean equals(Object other) {
     boolean result = other != null;

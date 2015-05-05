@@ -19,7 +19,7 @@ public abstract class ResourceBasedTest {
   }
 
   protected Graph createCompleteGraph(int n) {
-    Graph result = new Graph(n, (n * (n - 1)) / 2);
+    Graph result = new Graph(n, (n * (n - 1)) / 2, 0);
     int counter = 0;
     for (int i = 0; i < n; i++) {
       for (int ii = i + 1; ii < n; ii++) {

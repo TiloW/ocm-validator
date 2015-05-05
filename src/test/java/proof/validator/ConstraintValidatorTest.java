@@ -10,7 +10,6 @@ import org.junit.Test;
 
 import proof.ResourceBasedTest;
 import proof.data.CrossingIndex;
-import proof.data.Graph;
 import proof.exception.InvalidConstraintException;
 
 /**
@@ -24,7 +23,6 @@ import proof.exception.InvalidConstraintException;
  */
 public class ConstraintValidatorTest extends ResourceBasedTest {
 
-  private Graph graph;
   private Map<CrossingIndex, Boolean> variables;
   private ConstraintValidator validator;
 
@@ -34,7 +32,6 @@ public class ConstraintValidatorTest extends ResourceBasedTest {
 
   @Before
   public void init() {
-    graph = createCompleteGraph(100);
     variables = new HashMap<CrossingIndex, Boolean>();
     validator = new ConstraintValidator(createCompleteGraph(100), variables);
   }
@@ -127,6 +124,42 @@ public class ConstraintValidatorTest extends ResourceBasedTest {
     JSONObject resource = loadJSON("k33-simple");
     resource.getJSONArray("paths").getJSONArray(0).getJSONObject(0).getJSONObject("edge")
         .put("target", 1);
+
+    validator.validate(resource);
+  }
+
+  @Test(expected = InvalidConstraintException.class)
+  public void testValidate_overlappingPathsK33() throws InvalidConstraintException {
+    JSONObject resource = loadJSON("k33-simple");
+
+    JSONArray path = new JSONArray();
+
+    JSONObject edge = new JSONObject();
+    JSONObject segment = new JSONObject();
+
+    edge.put("source", 0);
+    edge.put("target", 4);
+    segment.put("edge", edge);
+    segment.put("keepDirection", true);
+    segment.put("start", -1);
+    segment.put("end", 42);
+
+    path.put(segment);
+
+    edge = new JSONObject();
+    segment = new JSONObject();
+
+    edge.put("source", 3);
+    edge.put("target", 4);
+    segment.put("edge", edge);
+    segment.put("keepDirection", false);
+    segment.put("start", -1);
+    segment.put("end", 42);
+
+    path.put(segment);
+
+    resource.getJSONArray("paths").put(0, path);
+
 
     validator.validate(resource);
   }

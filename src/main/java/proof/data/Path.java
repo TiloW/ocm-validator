@@ -16,7 +16,7 @@ import proof.exception.InvalidPathException;
 public class Path {
 
   /**
-   * A section (or segment range) constitutes some directed portion of an edge.
+   * A section (or segment range) constitutes some portion of a directed edge.
    */
   class Section {
     int edge;
@@ -101,6 +101,40 @@ public class Path {
    */
   public Object getTarget() {
     return getEndpoint(sections.size() - 1, false);
+  }
+
+  /**
+   * Will test whether the two paths are disjoint (except for their source and target).
+   *
+   * @param path The path to be tested against this path
+   * @return True iff the paths are disjoint
+   */
+  public boolean isDisjoint(Path path) {
+    boolean result = true;
+
+    for (int i = 0; result && i <= sections.size(); i++) {
+      for (int j = 0; result && j <= path.sections.size(); j++) {
+        if ((i > 0 && i < sections.size()) || (j > 0 && j < path.sections.size())) {
+          Object p1;
+          if (i < sections.size()) {
+            p1 = getEndpoint(i, true);
+          } else {
+            p1 = getEndpoint(i - 1, false);
+          }
+
+          Object p2;
+          if (j < path.sections.size()) {
+            p2 = path.getEndpoint(j, true);
+          } else {
+            p2 = path.getEndpoint(j - 1, false);
+          }
+
+          result = !p1.equals(p2);
+        }
+      }
+    }
+
+    return result;
   }
 
   private Object getEndpoint(int pos, boolean getSource) {

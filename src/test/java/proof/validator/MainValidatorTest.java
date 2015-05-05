@@ -1,6 +1,7 @@
 package proof.validator;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
@@ -21,11 +22,16 @@ public class MainValidatorTest {
     this.logFile = logFile;
   }
 
-  @Parameterized.Parameters
+  @Parameterized.Parameters(name = "{0}")
   public static File[] getFiles() throws URISyntaxException {
     File dir = new File("build/resources/test/log");
 
-    return dir.listFiles();
+    return dir.listFiles(new FileFilter() {
+      @Override
+      public boolean accept(File file) {
+        return file.isFile();
+      }
+    });
   }
 
   @Test

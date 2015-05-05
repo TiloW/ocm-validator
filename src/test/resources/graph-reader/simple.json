@@ -1,5 +1,6 @@
 {
 	"numberOfNodes": 10,
+	"claimedLowerBound": 0,
 	"edges": [ 
 		{
 			"id": 0,

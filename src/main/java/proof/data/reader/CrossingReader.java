@@ -16,6 +16,7 @@ import proof.data.reader.base.ArrayReader;
 public class CrossingReader implements ArrayReader {
 
   private final SegmentReader segmentReader;
+  private Graph graph;
 
   /**
    * Creates a new crossing reader.
@@ -23,6 +24,7 @@ public class CrossingReader implements ArrayReader {
    * @param graph The underlying {@link Graph}.
    */
   public CrossingReader(Graph graph) {
+    this.graph = graph;
     segmentReader = new SegmentReader(graph);
   }
 
@@ -32,7 +34,21 @@ public class CrossingReader implements ArrayReader {
    */
   @Override
   public CrossingIndex read(JSONArray input) {
-    return new CrossingIndex(segmentReader.read(input.getJSONObject(0)), segmentReader.read(input
-        .getJSONObject(1)));
+    SegmentIndex seg1 = segmentReader.read(input.getJSONObject(0));
+    SegmentIndex seg2 = segmentReader.read(input.getJSONObject(1));
+
+    CrossingIndex result = new CrossingIndex(seg1, seg2);
+
+    int source1 = graph.getEdgeSource(seg1.edge);
+    int target1 = graph.getEdgeTarget(seg1.edge);
+
+    int source2 = graph.getEdgeSource(seg2.edge);
+    int target2 = graph.getEdgeTarget(seg2.edge);
+
+    if (source1 == source2 || source1 == target2 || target1 == source2 || target1 == target2) {
+      throw new IllegalArgumentException("Adjacent edges never cross: " + result);
+    }
+
+    return result;
   }
 }
