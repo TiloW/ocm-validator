@@ -1,14 +1,9 @@
 package proof.validator;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import proof.data.CrossingIndex;
 import proof.data.Graph;
-import proof.data.reader.CrossingReader;
 import proof.data.reader.GraphReader;
 import proof.exception.InvalidProofException;
 import proof.util.Config;
@@ -22,13 +17,6 @@ import proof.util.Config;
 public class MainValidator implements Validator<JSONObject> {
 
   private final static GraphReader graphReader = new GraphReader();
-
-  /**
-   * Called after completing the validation of a leaf.
-   *
-   * @param progress The progess (on a range from 0 to 1)
-   */
-  protected void onProgress(double progress) {}
 
   /**
    * Validates a whole log file as provided by the OCM logger.
@@ -45,10 +33,8 @@ public class MainValidator implements Validator<JSONObject> {
       }
       Config.get().logger.println("  ..OK");
     } else {
-
-      BranchCoverageValidator coverageValidator = new BranchCoverageValidator(graph);
-
       JSONArray leaves = object.getJSONObject("solution").getJSONArray("leaves");
+      BranchCoverageValidator coverageValidator = new BranchCoverageValidator(graph);
 
       Config.get().logger.print("branch coverage");
       coverageValidator.validate(leaves);
@@ -56,30 +42,11 @@ public class MainValidator implements Validator<JSONObject> {
 
       for (int i = 0; i < leaves.length(); i++) {
         Config.get().logger.println("branch " + (i + 1) + " of " + leaves.length());
-        JSONObject leaf = leaves.getJSONObject(i);
-        JSONArray variables = leaf.getJSONArray("fixedVariables");
 
-        CrossingReader crossingReader = new CrossingReader(graph);
-        Map<CrossingIndex, Boolean> vars = new HashMap<CrossingIndex, Boolean>();
+        LeafValidator leafValidator = new LeafValidator(graph);
+        leafValidator.validate(leaves.getJSONObject(i));
 
-        for (int j = 0; j < variables.length(); j++) {
-          JSONObject variable = variables.getJSONObject(j);
-
-          CrossingIndex cross = crossingReader.read(variable.getJSONArray("crossing"));
-
-          vars.put(cross, variable.getInt("value") == 1);
-        }
-
-        ConstraintValidator constraintValidator = new ConstraintValidator(graph, vars);
-        JSONArray constraints = leaf.getJSONArray("constraints");
-
-        for (int j = 0; j < constraints.length(); j++) {
-          Config.get().logger.println("  Kuratowski constraint " + (j + 1) + " of "
-              + constraints.length());
-          constraintValidator.validate(constraints.getJSONObject(j));
-        }
-
-        onProgress((i + 1) / (double) leaves.length());
+        Config.get().logger.println("branch " + (i + 1) + " validated");
       }
     }
   }
