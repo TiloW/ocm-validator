@@ -7,7 +7,7 @@ package proof.exception;
  * @author Tilo Wiedera
  *
  */
-public abstract class InvalidProofException extends Exception {
+public class InvalidProofException extends Exception {
 
   public InvalidProofException(String description) {
     super(description);

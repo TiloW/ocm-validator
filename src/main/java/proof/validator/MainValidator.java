@@ -37,35 +37,43 @@ public class MainValidator implements ObjectValidator {
   public void validate(JSONObject object) throws InvalidProofException {
     Graph graph = graphReader.read(object.getJSONObject("graph"));
 
-    BranchCoverageValidator coverageValidator = new BranchCoverageValidator(graph);
-
-    JSONArray leaves = object.getJSONObject("solution").getJSONArray("leaves");
-
-    coverageValidator.validate(leaves);
-
-    for (int i = 0; i < leaves.length(); i++) {
-      JSONObject leaf = leaves.getJSONObject(i);
-      JSONArray variables = leaf.getJSONArray("fixedVariables");
-
-      CrossingReader crossingReader = new CrossingReader(graph);
-      Map<CrossingIndex, Boolean> vars = new HashMap<CrossingIndex, Boolean>();
-
-      for (int j = 0; j < variables.length(); j++) {
-        JSONObject variable = variables.getJSONObject(j);
-
-        CrossingIndex cross = crossingReader.read(variable.getJSONArray("crossing"));
-
-        vars.put(cross, variable.getInt("value") == 1);
+    if (object.getJSONObject("solution").getBoolean("trivial")) {
+      if (graph.getClaimedLowerBound() > 1) {
+        throw new InvalidProofException("The claimed lower bound of "
+            + graph.getClaimedLowerBound() + " is non-trivial.");
       }
+    } else {
 
-      ConstraintValidator constraintValidator = new ConstraintValidator(graph, vars);
-      JSONArray constraints = leaf.getJSONArray("constraints");
+      BranchCoverageValidator coverageValidator = new BranchCoverageValidator(graph);
 
-      for (int j = 0; j < constraints.length(); j++) {
-        constraintValidator.validate(constraints.getJSONObject(j));
+      JSONArray leaves = object.getJSONObject("solution").getJSONArray("leaves");
+
+      coverageValidator.validate(leaves);
+
+      for (int i = 0; i < leaves.length(); i++) {
+        JSONObject leaf = leaves.getJSONObject(i);
+        JSONArray variables = leaf.getJSONArray("fixedVariables");
+
+        CrossingReader crossingReader = new CrossingReader(graph);
+        Map<CrossingIndex, Boolean> vars = new HashMap<CrossingIndex, Boolean>();
+
+        for (int j = 0; j < variables.length(); j++) {
+          JSONObject variable = variables.getJSONObject(j);
+
+          CrossingIndex cross = crossingReader.read(variable.getJSONArray("crossing"));
+
+          vars.put(cross, variable.getInt("value") == 1);
+        }
+
+        ConstraintValidator constraintValidator = new ConstraintValidator(graph, vars);
+        JSONArray constraints = leaf.getJSONArray("constraints");
+
+        for (int j = 0; j < constraints.length(); j++) {
+          constraintValidator.validate(constraints.getJSONObject(j));
+        }
+
+        onProgress((i + 1) / (double) leaves.length());
       }
-
-      onProgress((i + 1) / (double) leaves.length());
     }
   }
 }
