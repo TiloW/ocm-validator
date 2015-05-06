@@ -27,7 +27,23 @@ public class MainValidator implements Validator<JSONObject> {
 
     if (object.getJSONObject("solution").getBoolean("trivial")) {
       Config.get().logger.print("validating supposedly trivial lower bound");
-      if (graph.getClaimedLowerBound() > 1) {
+
+      boolean valid = false;
+
+      if (graph.getClaimedLowerBound() <= 1) {
+        valid = true;
+        Config.get().logger.println(" ..OK (bound is less than 2)");
+      } else if (graph.getClaimedLowerBound() == 6 + graph.getNumberOfEdges() - 3
+          * graph.getNumberOfNodes()) {
+        valid = true;
+        Config.get().logger.println(" ..OK (bound follows from Euler's polyhedron formula)");
+      } else if (graph.getClaimedLowerBound() == Math.ceil(Math.pow(graph.getNumberOfEdges(), 3)
+          / (33.75 * Math.pow(graph.getNumberOfNodes(), 2)) - 3 * graph.getNumberOfNodes())) {
+        valid = true;
+        Config.get().logger.println(" ..OK (bound follows from the formula by Pach & Todt)");
+      }
+
+      if (!valid) {
         throw new InvalidProofException("The claimed lower bound of "
             + graph.getClaimedLowerBound() + " is non-trivial.");
       }
