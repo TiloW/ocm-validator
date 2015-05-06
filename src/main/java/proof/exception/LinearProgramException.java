@@ -16,9 +16,8 @@ public class LinearProgramException extends InvalidProofException {
    * @param errorMessage An optional error message, set to {@code null} to ignore
    */
   public LinearProgramException(Solver solver, String filename, String errorMessage) {
-    super(
-        solver.getClass().getSimpleName() + " error while solving " + filename + errorMessage == null ? ""
-            : ("\n" + errorMessage));
+    super(solver.getClass().getSimpleName() + " error while solving " + filename
+        + (errorMessage == null ? "" : ("\n" + errorMessage)));
   }
 
   /**
