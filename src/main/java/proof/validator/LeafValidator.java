@@ -88,12 +88,10 @@ public class LeafValidator implements Validator<JSONObject> {
     for (int e1 = 0; e1 < graph.getNumberOfEdges(); e1++) {
       for (int e2 = e1 + 1; e2 < graph.getNumberOfEdges(); e2++) {
         if (!graph.edgesAreAdjacent(e1, e2)) {
-          double c1 = graph.getEdgeCost(e1);
-          double c2 = graph.getEdgeCost(e2);
+          int cost = graph.getEdgeCost(e1) * graph.getEdgeCost(e2);
           for (int i = 0; i <= expansions.getInt(String.valueOf(e1)); i++) {
             for (int j = 0; j <= expansions.getInt(String.valueOf(e2)); j++) {
-              String weight = c1 == 1 ? "" : (c1 + "*");
-              weight += c2 == 1 ? "" : (c2 + "*");
+              String weight = cost == 1 ? "" : Integer.toString(cost);
               String varName = createVarName(new CrossingIndex(e1, i, e2, j));
               output.append((first ? " " : " + ") + weight + varName);
               boundsOuput.append("\n 0 <= " + varName + " <= 1");
