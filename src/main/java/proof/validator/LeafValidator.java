@@ -85,7 +85,7 @@ public class LeafValidator implements Validator<JSONObject> {
     StringBuilder output = new StringBuilder();
     StringBuilder boundsOuput = new StringBuilder();
 
-    output.append("Minimize\n obj:");
+    output.append("Minimize\nobj:");
     boolean first = true;
     for (int e1 = 0; e1 < graph.getNumberOfEdges(); e1++) {
       for (int e2 = e1 + 1; e2 < graph.getNumberOfEdges(); e2++) {
@@ -93,10 +93,10 @@ public class LeafValidator implements Validator<JSONObject> {
           int cost = graph.getEdgeCost(e1) * graph.getEdgeCost(e2);
           for (int i = 0; i <= expansions.getInt(String.valueOf(e1)); i++) {
             for (int j = 0; j <= expansions.getInt(String.valueOf(e2)); j++) {
-              String weight = cost == 1 ? "" : Integer.toString(cost);
+              String weight = cost == 1 ? "" : Integer.toString(cost) + " ";
               String varName = createVarName(new CrossingIndex(e1, i, e2, j));
               output.append((first ? " " : " + ") + weight + varName);
-              boundsOuput.append("\n 0 <= " + varName + " <= 1");
+              boundsOuput.append("\n0 <= " + varName + " <= 1");
               first = false;
             }
           }
@@ -125,8 +125,8 @@ public class LeafValidator implements Validator<JSONObject> {
         for (int e2 = 0; e2 < graph.getNumberOfEdges(); e2++) {
           if (!graph.edgesAreAdjacent(e1, e2)) {
             for (int j = 0; j <= expansions.getInt(String.valueOf(e2)); j++) {
-              output.append((first ? "\n " : " + ")
-                  + createVarName(new CrossingIndex(e1, i, e2, j)));
+              output
+                  .append((first ? "\n" : " + ") + createVarName(new CrossingIndex(e1, i, e2, j)));
               first = false;
             }
           }
@@ -146,9 +146,8 @@ public class LeafValidator implements Validator<JSONObject> {
         for (int e2 = 0; e2 < graph.getNumberOfEdges(); e2++) {
           if (!graph.edgesAreAdjacent(e1, e2)) {
             for (int j = 0; j <= expansions.getInt(String.valueOf(e2)); j++) {
-              output.append((first ? "\n " : " + ")
-                  + createVarName(new CrossingIndex(e1, i, e2, j)) + " - "
-                  + createVarName(new CrossingIndex(e1, (i + 1) % (exp1 + 1), e2, j)));
+              output.append((first ? "\n" : " + ") + createVarName(new CrossingIndex(e1, i, e2, j))
+                  + " - " + createVarName(new CrossingIndex(e1, (i + 1) % (exp1 + 1), e2, j)));
               first = false;
             }
           }
@@ -160,22 +159,19 @@ public class LeafValidator implements Validator<JSONObject> {
       }
     }
 
-    output.append("\n\\ Kuratowski Constraints");
-    first = true;
-
     // vars
     for (int i = 0; i < constraints.length(); i++) {
       Set<CrossingIndex> constraintCrossings = new HashSet<CrossingIndex>(realizedCrossings);
       JSONObject constraint = constraints.getJSONObject(i);
-      JSONArray crossings = constraint.getJSONArray("requiredCrossings");
+      JSONArray requiredCrossings = constraint.getJSONArray("requiredCrossings");
 
-      output.append("\n \\ Constraint #" + i + "\n ");
+      output.append("\n\\ Kuratowski Constraint #" + i + "\n");
 
       first = true;
       CrossingReader crossReader = new CrossingReader(graph);
-      for (int j = 0; j < crossings.length(); j++) {
-        CrossingIndex crossing = crossReader.read(crossings.getJSONArray(j));
-        output.append((first ? "" : " + ") + "1 - " + createVarName(crossing));
+      for (int j = 0; j < requiredCrossings.length(); j++) {
+        CrossingIndex crossing = crossReader.read(requiredCrossings.getJSONArray(j));
+        output.append(" - " + createVarName(crossing));
         first = false;
         constraintCrossings.add(crossing);
       }
@@ -229,7 +225,7 @@ public class LeafValidator implements Validator<JSONObject> {
         }
       }
 
-      output.append(" >= 1");
+      output.append(" >= " + (1 - requiredCrossings.length()));
     }
 
     output.append("\nBounds");
