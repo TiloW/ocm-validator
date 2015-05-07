@@ -5,6 +5,7 @@ import org.json.JSONObject;
 
 import proof.data.Graph;
 import proof.data.reader.GraphReader;
+import proof.exception.ExceptionHelper;
 import proof.exception.InvalidProofException;
 import proof.util.Config;
 
@@ -58,9 +59,13 @@ public class MainValidator implements Validator<JSONObject> {
 
       for (int i = 0; i < leaves.length(); i++) {
         Config.get().logger.println("branch " + (i + 1) + " of " + leaves.length());
-
         LeafValidator leafValidator = new LeafValidator(graph);
-        leafValidator.validate(leaves.getJSONObject(i));
+
+        try {
+          leafValidator.validate(leaves.getJSONObject(i));
+        } catch (InvalidProofException e) {
+          throw ExceptionHelper.wrap(e, new InvalidProofException("Could not validate leaf #" + i));
+        }
 
         Config.get().logger.println("branch " + (i + 1) + " validated");
       }

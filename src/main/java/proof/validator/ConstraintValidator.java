@@ -13,6 +13,7 @@ import proof.data.Graph;
 import proof.data.Path;
 import proof.data.reader.CrossingReader;
 import proof.data.reader.PathReader;
+import proof.exception.ExceptionHelper;
 import proof.exception.InvalidConstraintException;
 import proof.exception.InvalidPathException;
 import proof.util.Config;
@@ -72,8 +73,8 @@ public class ConstraintValidator implements Validator<JSONObject> {
         Config.get().logger.println("    path #" + i);
         paths[i] = reader.read(jsonPaths.getJSONArray(i));
       } catch (InvalidPathException e) {
-        throw (InvalidConstraintException) new InvalidConstraintException(
-            "Invalid path encountered").initCause(e);
+        throw ExceptionHelper
+            .wrap(e, new InvalidConstraintException("Path #" + i + " is invalid!"));
       }
     }
 

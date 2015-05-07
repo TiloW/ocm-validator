@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.StringTokenizer;
 
+import proof.exception.ExceptionHelper;
 import proof.exception.LinearProgramException;
 import proof.exception.UnsupportedSolverException;
 
@@ -56,9 +57,7 @@ public abstract class Solver {
         }
       }
     } catch (IOException e) {
-      LinearProgramException lpException = new LinearProgramException(this, filename);
-      lpException.initCause(e);
-      throw lpException;
+      throw ExceptionHelper.wrap(e, new LinearProgramException(this, filename));
     } finally {
       if (process != null) {
         process.destroy();

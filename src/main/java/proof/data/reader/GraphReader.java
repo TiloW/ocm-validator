@@ -6,6 +6,7 @@ import org.json.JSONObject;
 
 import proof.data.Graph;
 import proof.data.reader.base.ObjectReader;
+import proof.exception.ExceptionHelper;
 import proof.exception.InvalidGraphException;
 
 /**
@@ -45,9 +46,7 @@ public class GraphReader implements ObjectReader {
       return result;
 
     } catch (IllegalArgumentException | JSONException e) {
-      InvalidGraphException exception = new InvalidGraphException("Could not parse JSON");
-      exception.initCause(e);
-      throw exception;
+      throw ExceptionHelper.wrap(e, new InvalidGraphException("Could not parse JSON"));
     }
   }
 }

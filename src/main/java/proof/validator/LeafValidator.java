@@ -17,6 +17,7 @@ import proof.data.Path;
 import proof.data.SegmentIndex;
 import proof.data.reader.CrossingReader;
 import proof.data.reader.PathReader;
+import proof.exception.ExceptionHelper;
 import proof.exception.InvalidProofException;
 import proof.exception.LinearProgramException;
 import proof.solver.Solver;
@@ -52,7 +53,12 @@ public class LeafValidator implements Validator<JSONObject> {
     JSONArray constraints = leaf.getJSONArray("constraints");
 
     for (int j = 0; j < constraints.length(); j++) {
-      constraintValidator.validate(constraints.getJSONObject(j));
+      try {
+        constraintValidator.validate(constraints.getJSONObject(j));
+      } catch (InvalidProofException e) {
+        throw ExceptionHelper.wrap(e, new InvalidProofException("Could not validate constraint #"
+            + j));
+      }
     }
 
     // TODO: Temporarily logging LPs
@@ -70,9 +76,7 @@ public class LeafValidator implements Validator<JSONObject> {
             + " instead of " + expected);
       }
     } catch (IOException e) {
-      LinearProgramException lpException = new LinearProgramException(solver, file);
-      lpException.initCause(e);
-      throw lpException;
+      throw ExceptionHelper.wrap(e, new LinearProgramException(solver, file));
     }
   }
 

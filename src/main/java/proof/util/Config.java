@@ -6,6 +6,7 @@ import java.io.PrintStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import proof.exception.ExceptionHelper;
 import proof.exception.InvalidConfigurationException;
 import proof.exception.UnsupportedSolverException;
 import proof.solver.Solver;
@@ -150,12 +151,9 @@ public class Config {
     try {
       solver = new SolverFactory().getSolver(finalSolver);
     } catch (IllegalArgumentException | UnsupportedSolverException e) {
-      InvalidConfigurationException ice =
-          new InvalidConfigurationException(
-              finalSolver == null ? "No linear program solver available."
-                  : (finalSolver + " is not available on this system."));
-      ice.initCause(e);
-      throw ice;
+      throw ExceptionHelper.wrap(e, new InvalidConfigurationException(
+          finalSolver == null ? "No linear program solver available."
+              : (finalSolver + " is not available on this system.")));
     }
 
     verbose = finalVerbose;
