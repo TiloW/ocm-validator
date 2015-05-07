@@ -55,7 +55,9 @@ public class CrossingIndex {
   public boolean conflicting(CrossingIndex other) {
     return (other.segments[0].equals(segments[0]) || other.segments[0].equals(segments[1])
         || other.segments[1].equals(segments[0]) || other.segments[1].equals(segments[1]))
-        && !equals(other);
+        && !equals(other)
+        && (segments[0].segment * segments[1].segment * other.segments[0].segment
+            * other.segments[1].segment != 0);
   }
 
   @Override
