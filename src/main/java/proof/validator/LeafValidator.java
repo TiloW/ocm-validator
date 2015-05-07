@@ -48,7 +48,7 @@ public class LeafValidator implements Validator<JSONObject> {
       vars.put(cross, variable.getInt("value") == 1);
     }
 
-    ConstraintValidator constraintValidator = new ConstraintValidator(graph, vars);
+    ConstraintValidator constraintValidator = new ConstraintValidator(graph);
     JSONArray constraints = leaf.getJSONArray("constraints");
 
     for (int j = 0; j < constraints.length(); j++) {
@@ -126,7 +126,7 @@ public class LeafValidator implements Validator<JSONObject> {
           if (!graph.edgesAreAdjacent(e1, e2)) {
             for (int j = 0; j <= expansions.getInt(String.valueOf(e2)); j++) {
               output
-                  .append((first ? "\n" : " + ") + createVarName(new CrossingIndex(e1, i, e2, j)));
+              .append((first ? "\n" : " + ") + createVarName(new CrossingIndex(e1, i, e2, j)));
               first = false;
             }
           }
@@ -161,24 +161,23 @@ public class LeafValidator implements Validator<JSONObject> {
 
     // vars
     for (int i = 0; i < constraints.length(); i++) {
-      Set<CrossingIndex> constraintCrossings = new HashSet<CrossingIndex>(realizedCrossings);
-      JSONObject constraint = constraints.getJSONObject(i);
-      JSONArray requiredCrossings = constraint.getJSONArray("requiredCrossings");
-
       output.append("\n\\ Kuratowski Constraint #" + i + "\n");
 
+      JSONObject constraint = constraints.getJSONObject(i);
+      Set<CrossingIndex> requiredCrossings = new HashSet<>();
       first = true;
       CrossingReader crossReader = new CrossingReader(graph);
-      for (int j = 0; j < requiredCrossings.length(); j++) {
-        CrossingIndex crossing = crossReader.read(requiredCrossings.getJSONArray(j));
+      for (int j = 0; j < constraint.getJSONArray("requiredCrossings").length(); j++) {
+        CrossingIndex crossing =
+            crossReader.read(constraint.getJSONArray("requiredCrossings").getJSONArray(j));
         output.append(" - " + createVarName(crossing));
         first = false;
-        constraintCrossings.add(crossing);
+        requiredCrossings.add(crossing);
       }
 
       JSONArray paths = constraint.getJSONArray("paths");
 
-      PathReader pathReader = new PathReader(graph, constraintCrossings);
+      PathReader pathReader = new PathReader(graph, requiredCrossings);
 
       for (int j = 0; j < paths.length(); j++) {
         JSONArray path1 = paths.getJSONArray(j);
@@ -225,7 +224,7 @@ public class LeafValidator implements Validator<JSONObject> {
         }
       }
 
-      output.append(" >= " + (1 - requiredCrossings.length()));
+      output.append(" >= " + (1 - requiredCrossings.size()));
     }
 
     output.append("\nBounds");

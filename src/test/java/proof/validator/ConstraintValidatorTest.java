@@ -34,7 +34,7 @@ public class ConstraintValidatorTest extends ValidatorTest {
   @Before
   public void init() {
     variables = new HashMap<CrossingIndex, Boolean>();
-    validator = new ConstraintValidator(createCompleteGraph(100), variables);
+    validator = new ConstraintValidator(createCompleteGraph(100));
   }
 
   @Test(expected = InvalidConstraintException.class)
