@@ -19,15 +19,21 @@ public class SolverFactory {
     if (solver == null) {
       if (param == null || param == "") {
         chooseSolver();
-      } else if (param == "cplex") {
-        solver = new Cplex();
-      } else if (param == "scip") {
-        solver = new Scip();
-      } else if (param == "gurobi") {
-        solver = new Gurobi();
       } else {
-        throw new UnsupportedSolverException(
-            "The requested linear program solver is not supported: " + param);
+        switch (param) {
+          case "cplex":
+            solver = new Cplex();
+            break;
+          case "scip":
+            solver = new Scip();
+            break;
+          case "gurobi":
+            solver = new Gurobi();
+            break;
+          default:
+            throw new UnsupportedSolverException(
+                "The requested linear program solver is not supported: " + param);
+        }
       }
     }
 

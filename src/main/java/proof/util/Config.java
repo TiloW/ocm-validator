@@ -1,5 +1,7 @@
 package proof.util;
 
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -27,10 +29,7 @@ public class Config {
       + "\tUse <solver> as the linear program solver for validating lower bounds.\n"
       + "\tValid choices are {scip,cplex,gurobi}.";
 
-  /**
-   * Whether verbose mode is enabled.
-   */
-  public final boolean verbose;
+  private final boolean verbose;
 
   /**
    * The currently used linear program solver.
@@ -46,6 +45,11 @@ public class Config {
    * The file to be validated.
    */
   public final Path file;
+
+  /**
+   * The global output stream. Equals {@link System.out} if {@link #verbose} is set to {@code true}.
+   */
+  public final PrintStream logger;
 
   /**
    * Creates a new configuration. Must be called exactly once.
@@ -152,13 +156,18 @@ public class Config {
 
     verbose = finalVerbose;
     report = getReport();
+
+    logger = verbose ? System.out : new PrintStream(new OutputStream() {
+      @Override
+      public void write(int b) {}
+    });
   }
 
   /**
    * Returns a summary of all set options.
    */
   private String getReport() {
-    return "Configuration\n==============\n  verbose: " + verbose + "\n  linear program solver: "
+    return "CONFIGURATION\n\n  verbose: " + verbose + "\n  linear program solver: "
         + solver.getClass().getSimpleName() + "\n  file to validate: " + file;
   }
 }

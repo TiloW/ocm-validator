@@ -29,17 +29,14 @@ public class Main {
       System.exit(1);
     }
 
-    if (Config.get().verbose) {
-      System.out.println(Config.get().report + "\n");
-    }
+    Config.get().logger.println(Config.get().report + "\n");
 
     try {
       String input = new String(Files.readAllBytes(Config.get().file));
-
       JSONObject main = new JSONObject(input);
+      Config.get().logger.println("START VALIDATION\n");
       new MainValidator().validate(main);
-
-      System.out.println("Validation succeeded!");
+      Config.get().logger.println("\nVALIDATION SUCCESSFULL");
     } catch (IOException e) {
       System.out.println("Failed to read the requested file.");
       e.printStackTrace();
