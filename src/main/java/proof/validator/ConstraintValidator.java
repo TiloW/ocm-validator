@@ -15,6 +15,7 @@ import proof.data.reader.CrossingReader;
 import proof.data.reader.PathReader;
 import proof.exception.InvalidConstraintException;
 import proof.exception.InvalidPathException;
+import proof.util.Config;
 
 /**
  * Validates a single Kuratwoski Constraint.
@@ -87,7 +88,7 @@ public class ConstraintValidator implements Validator<JSONObject> {
 
       for (int i = 0; i < paths.length; i++) {
         try {
-          // System.out.println("    Path " + i);
+          Config.get().logger.println("    path #" + i);
           paths[i] = reader.read(jsonPaths.getJSONArray(i));
         } catch (InvalidPathException e) {
           throw (InvalidConstraintException) new InvalidConstraintException(

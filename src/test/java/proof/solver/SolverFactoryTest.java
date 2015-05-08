@@ -1,6 +1,5 @@
 package proof.solver;
 
-import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
@@ -23,11 +22,7 @@ public class SolverFactoryTest {
 
   @Test
   public void testDefault() {
-    try {
-      Solver solver = solverFactory.getSolver(null);
-      assertSame(solver, solverFactory.getSolver(null));
-    } catch (UnsupportedSolverException expected) {
-    }
+    Solver solver = solverFactory.getSolver(null);
   }
 
   @Test
@@ -55,11 +50,8 @@ public class SolverFactoryTest {
     }
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test(expected = UnsupportedSolverException.class)
   public void testInvalid() {
-    try {
-      solverFactory.getSolver("foobar");
-    } catch (UnsupportedSolverException expected) {
-    }
+    solverFactory.getSolver("foobar");
   }
 }
