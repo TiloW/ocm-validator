@@ -80,11 +80,16 @@ public class LeafValidator implements Validator<JSONObject> {
     }
   }
 
-  public String generateLinearProgram(Map<CrossingIndex, Boolean> fixedVariables, JSONObject leaf) {
+  public String generateLinearProgram(Map<CrossingIndex, Boolean> fixedVariables, JSONObject leaf)
+      throws InvalidProofException {
     JSONArray constraints = leaf.getJSONArray("constraints");
     JSONObject expansions = leaf.getJSONObject("expansions");
 
-    // TODO: Validate expansions >= 0
+    for (int e = 0; e < graph.getNumberOfEdges(); e++) {
+      if (expansions.getInt(String.valueOf(e)) < 0) {
+        throw new InvalidProofException("The amount of additional segments must not be negative.");
+      }
+    }
 
     StringBuilder output = new StringBuilder();
     StringBuilder boundsOuput = new StringBuilder();
