@@ -13,7 +13,7 @@ public class SolverFactory {
    * is respected only if the solver is requested for the first time.
    *
    * @param param The command line argument to specify the solver
-   * @throws IllegalArgumentException if the requested solver is not supported
+   * @throws UnsupportedSolverException if the requested solver is not supported
    */
   public Solver getSolver(String param) {
     if (solver == null) {
@@ -26,8 +26,8 @@ public class SolverFactory {
       } else if (param == "gurobi") {
         solver = new Gurobi();
       } else {
-        throw new IllegalArgumentException("The requested linear program solver is not supported: "
-            + param);
+        throw new UnsupportedSolverException(
+            "The requested linear program solver is not supported: " + param);
       }
     }
 
@@ -38,6 +38,7 @@ public class SolverFactory {
    * Detects which linear program solvers are available and chooses one.
    *
    * @return The chosen solver
+   * @throws UnsupportedSolverException if no solver is available
    */
   private void chooseSolver() {
     solver = null;

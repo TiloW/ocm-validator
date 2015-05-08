@@ -21,8 +21,8 @@ mainClassName = "proof.Main"
 run {
   standardOutput = System.out
 
-  if(project.hasProperty("file")){
-    args project.file
+  if(project.hasProperty("args")) {
+    args project.args.split()
   }
 }
 

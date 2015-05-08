@@ -2,37 +2,48 @@ package proof;
 
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import org.json.JSONObject;
 
+import proof.exception.InvalidConfigurationException;
 import proof.exception.InvalidProofException;
+import proof.util.Config;
 import proof.validator.MainValidator;
 
 /**
  * Main class for running the application.
  *
  * @author Tilo Wiedera
- *
  */
 public class Main {
 
-  public static void main(String[] args) throws IOException, InvalidProofException {
-    Path filepath = null;
-
+  /**
+   * Validates a proof for the crossing number of a single graph.
+   */
+  public static void main(String[] args) throws InvalidProofException {
     try {
-      filepath = Paths.get(args[0]);
-    } catch (RuntimeException e) {
-      System.err.println("You need to specify a valid file as the first argument");
+      Config.Create(args);
+    } catch (InvalidConfigurationException e) {
+      System.out.println(e.getMessage() + "\n");
+      System.out.println(Config.usage);
       System.exit(1);
     }
 
-    String input = new String(Files.readAllBytes(filepath));
+    if (Config.get().verbose) {
+      System.out.println(Config.get().report + "\n");
+    }
 
-    JSONObject main = new JSONObject(input);
-    new MainValidator().validate(main);
+    try {
+      String input = new String(Files.readAllBytes(Config.get().file));
 
-    System.out.println("Validation succeeded!");
+      JSONObject main = new JSONObject(input);
+      new MainValidator().validate(main);
+
+      System.out.println("Validation succeeded!");
+    } catch (IOException e) {
+      System.out.println("Failed to read the requested file.");
+      e.printStackTrace();
+      System.exit(1);
+    }
   }
 }
