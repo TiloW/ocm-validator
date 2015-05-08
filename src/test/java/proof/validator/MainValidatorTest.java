@@ -15,7 +15,6 @@ import proof.exception.InvalidProofException;
 
 @RunWith(Parameterized.class)
 public class MainValidatorTest {
-
   private final File logFile;
 
   public MainValidatorTest(File logFile) {

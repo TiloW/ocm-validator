@@ -7,14 +7,15 @@ import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 
-import proof.ResourceBasedTest;
+import proof.ValidatorTest;
+import proof.exception.InvalidConfigurationException;
 import proof.exception.InvalidCoverageException;
 
-public class BranchCoverageValidatorTest extends ResourceBasedTest {
+public class BranchCoverageValidatorTest extends ValidatorTest {
 
   private JSONArray simpleResource;
 
-  public BranchCoverageValidatorTest() {
+  public BranchCoverageValidatorTest() throws InvalidConfigurationException {
     super("branch-coverage");
   }
 

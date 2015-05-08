@@ -1,8 +1,8 @@
 package proof.util;
 
+import java.io.File;
 import java.io.OutputStream;
 import java.io.PrintStream;
-import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -29,7 +29,11 @@ public class Config {
       + "\tUse <solver> as the linear program solver for validating lower bounds.\n"
       + "\tValid choices are {scip,cplex,gurobi}.";
 
-  private final boolean verbose;
+  /**
+   * Whether verbose mode is enabled. Instead of accessing this field directly, the {@link #logger}
+   * should be utilized for all output.
+   */
+  public final boolean verbose;
 
   /**
    * The currently used linear program solver.
@@ -47,7 +51,7 @@ public class Config {
   public final Path file;
 
   /**
-   * The global output stream. Equals {@link System.out} if {@link #verbose} is set to {@code true}.
+   * The global output stream. Equals {@code System.out} if {@link #verbose} is set to {@code true}.
    */
   public final PrintStream logger;
 
@@ -66,7 +70,7 @@ public class Config {
   }
 
   /**
-   * Returns the configuration. Assumes that {@link #Create(String[]) has already been called.
+   * Returns the configuration. Assumes that {@link #Create(String[])} has already been called.
    *
    * @return The configuration instance
    */
@@ -84,7 +88,7 @@ public class Config {
    * @param args The command line arguments as given to the main method.
    * @throws InvalidConfigurationException If any arguments do not comply with the {@link #usage}.
    */
-  private Config(String[] args) throws InvalidConfigurationException {
+  Config(String[] args) throws InvalidConfigurationException {
     boolean finalVerbose = false;
     String finalSolver = null;
     String finalFile = null;
@@ -134,13 +138,13 @@ public class Config {
       throw new InvalidConfigurationException("No input file specified");
     }
 
-    try {
+    File f = new File(finalFile);
+    boolean fileExists = f.exists() && !f.isDirectory();
+
+    if (!fileExists) {
+      throw new InvalidConfigurationException("File does not exist: " + finalFile);
+    } else {
       file = Paths.get(finalFile);
-    } catch (InvalidPathException e) {
-      InvalidConfigurationException ice =
-          new InvalidConfigurationException("Invalid file provided: " + finalFile);
-      ice.initCause(e);
-      throw ice;
     }
 
     try {

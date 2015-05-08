@@ -8,8 +8,9 @@ import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 
-import proof.ResourceBasedTest;
+import proof.ValidatorTest;
 import proof.data.CrossingIndex;
+import proof.exception.InvalidConfigurationException;
 import proof.exception.InvalidConstraintException;
 
 /**
@@ -19,14 +20,14 @@ import proof.exception.InvalidConstraintException;
  * path to be valid or on a K100 with a fully functional {@PathValidator}.
  *
  * @author Tilo Wiedera
- * 
+ *
  */
-public class ConstraintValidatorTest extends ResourceBasedTest {
+public class ConstraintValidatorTest extends ValidatorTest {
 
   private Map<CrossingIndex, Boolean> variables;
   private ConstraintValidator validator;
 
-  public ConstraintValidatorTest() {
+  public ConstraintValidatorTest() throws InvalidConfigurationException {
     super("constraint");
   }
 
