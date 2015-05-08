@@ -21,7 +21,7 @@ import proof.exception.ExceptionHelper;
 import proof.exception.InvalidProofException;
 import proof.exception.LinearProgramException;
 import proof.solver.Solver;
-import proof.solver.SolverFactory;
+import proof.util.Config;
 
 public class LeafValidator implements Validator<JSONObject> {
   private final Graph graph;
@@ -29,9 +29,7 @@ public class LeafValidator implements Validator<JSONObject> {
 
   public LeafValidator(Graph graph) {
     this.graph = graph;
-
-    // TODO specifiy solver py parameter
-    this.solver = new SolverFactory().getSolver(null);
+    solver = Config.get().solver;
   }
 
   @Override
@@ -54,6 +52,7 @@ public class LeafValidator implements Validator<JSONObject> {
 
     for (int j = 0; j < constraints.length(); j++) {
       try {
+        Config.get().logger.println("  Kuratowski constraint " + j);
         constraintValidator.validate(constraints.getJSONObject(j));
       } catch (InvalidProofException e) {
         throw ExceptionHelper.wrap(e, new InvalidProofException("Could not validate constraint #"
@@ -69,9 +68,10 @@ public class LeafValidator implements Validator<JSONObject> {
       PrintWriter out = new PrintWriter(file);
       out.print(generateLinearProgram(vars, leaf));
       out.close();
-      double lowerBound = solver.solve(file);
 
-      if (Math.ceil(solver.solve(file)) < expected) {
+      Config.get().logger.println("  linear program lower bound");
+      double lowerBound = solver.solve(file);
+      if (Math.ceil(lowerBound) < expected) {
         throw new LinearProgramException(solver, file, "Lower bound is too small: " + lowerBound
             + " instead of " + expected);
       }
