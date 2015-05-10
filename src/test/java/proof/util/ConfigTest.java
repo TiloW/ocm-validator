@@ -2,8 +2,6 @@ package proof.util;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
@@ -25,7 +23,6 @@ public class ConfigTest {
     String[] args = {"-f", FILE};
     Config config = new Config(args);
 
-    assertNotSame(System.out, config.logger);
     assertFalse(config.verbose);
     assertEquals(FILE, config.file.toString());
   }
@@ -35,7 +32,6 @@ public class ConfigTest {
     String[] args = {"-f", "src/test/resources/log/invalid/empty.json", "-v"};
     Config config = new Config(args);
 
-    assertSame(System.out, config.logger);
     assertTrue(config.verbose);
   }
 

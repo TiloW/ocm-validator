@@ -1,8 +1,6 @@
 package proof.util;
 
 import java.io.File;
-import java.io.OutputStream;
-import java.io.PrintStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -52,9 +50,9 @@ public class Config {
   public final Path file;
 
   /**
-   * The global output stream. Equals {@code System.out} if {@link #verbose} is set to {@code true}.
+   * The global logger.
    */
-  public final PrintStream logger;
+  public final ProgressLogger logger;
 
   /**
    * Creates a new configuration. Must be called exactly once.
@@ -159,10 +157,7 @@ public class Config {
     verbose = finalVerbose;
     report = getReport();
 
-    logger = verbose ? System.out : new PrintStream(new OutputStream() {
-      @Override
-      public void write(int b) {}
-    });
+    logger = new ProgressLogger(verbose);
   }
 
   /**

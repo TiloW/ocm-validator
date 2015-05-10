@@ -70,11 +70,10 @@ public class ConstraintValidator implements Validator<JSONObject> {
 
     for (int i = 0; i < paths.length; i++) {
       try {
-        Config.get().logger.println("    path #" + i);
+        Config.get().logger.print("    path " + i);
         paths[i] = reader.read(jsonPaths.getJSONArray(i));
       } catch (InvalidPathException e) {
-        throw ExceptionHelper
-            .wrap(e, new InvalidConstraintException("Path #" + i + " is invalid!"));
+        throw ExceptionHelper.wrap(e, new InvalidConstraintException("Path " + i + " is invalid!"));
       }
     }
 

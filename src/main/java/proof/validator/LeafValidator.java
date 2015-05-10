@@ -52,10 +52,10 @@ public class LeafValidator implements Validator<JSONObject> {
 
     for (int j = 0; j < constraints.length(); j++) {
       try {
-        Config.get().logger.println("  Kuratowski constraint " + j);
+        Config.get().logger.progress("  Kuratowski constraint " + j);
         constraintValidator.validate(constraints.getJSONObject(j));
       } catch (InvalidProofException e) {
-        throw ExceptionHelper.wrap(e, new InvalidProofException("Could not validate constraint #"
+        throw ExceptionHelper.wrap(e, new InvalidProofException("Could not validate constraint "
             + j));
       }
     }
@@ -66,10 +66,11 @@ public class LeafValidator implements Validator<JSONObject> {
       int expected = graph.getClaimedLowerBound();
       file = File.createTempFile("leaf", "." + expected + ".lp").getAbsolutePath();
       PrintWriter out = new PrintWriter(file);
+      Config.get().logger.print("  generate linear program");
       out.print(generateLinearProgram(vars, leaf));
       out.close();
 
-      Config.get().logger.println("  linear program lower bound");
+      Config.get().logger.print("  solve linear program");
       double lowerBound = solver.solve(file);
       if (Math.ceil(lowerBound) < expected) {
         throw new LinearProgramException(solver, file, "Lower bound is too small: " + lowerBound
@@ -170,7 +171,7 @@ public class LeafValidator implements Validator<JSONObject> {
 
     // vars
     for (int i = 0; i < constraints.length(); i++) {
-      output.append("\n\\ Kuratowski Constraint #" + i + "\n");
+      output.append("\n\\ Kuratowski Constraint " + i + "\n");
 
       JSONObject constraint = constraints.getJSONObject(i);
       Set<CrossingIndex> requiredCrossings = new HashSet<>();
