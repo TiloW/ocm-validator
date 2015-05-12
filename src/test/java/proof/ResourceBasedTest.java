@@ -34,10 +34,14 @@ public abstract class ResourceBasedTest {
   protected JSONObject loadJSON(String filename) {
     String result = null;
 
+    if (!filename.substring(filename.length() - 5).equals(".json")) {
+      filename += ".json";
+    }
+
     try {
       result =
           new String(Files.readAllBytes(Paths.get("build/resources/test/" + directory + "/"
-              + filename + ".json")));
+              + filename)));
     } catch (IOException | NullPointerException e) {
       fail("Could not read ressource: " + filename);
     }

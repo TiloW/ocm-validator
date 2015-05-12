@@ -1,5 +1,8 @@
 package proof;
 
+import java.io.OutputStream;
+import java.io.PrintStream;
+
 import proof.exception.InvalidConfigurationException;
 import proof.util.Config;
 
@@ -19,7 +22,10 @@ public class ValidatorTest extends ResourceBasedTest {
       Config.get();
     } catch (RuntimeException e) {
       // config does not exists yet
-      Config.Create(configArgs);
+      Config.Create(configArgs, new PrintStream(new OutputStream() {
+        @Override
+        public void write(int b) {}
+      }));
     }
   }
 }

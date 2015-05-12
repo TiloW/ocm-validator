@@ -1,5 +1,7 @@
 package proof.util;
 
+import java.io.PrintStream;
+
 /**
  * Global logger. Keeps track of the progress of the validation.
  *
@@ -11,6 +13,7 @@ public class ProgressLogger {
   private String lastMessage = null;
   private final boolean verbose;
   private static final int SIZE = 32;
+  private final PrintStream out;
 
   /**
    * Creates a new logger.
@@ -18,7 +21,8 @@ public class ProgressLogger {
    * @param out The output stream to use
    * @param verbose Whether to print everything
    */
-  public ProgressLogger(boolean verbose) {
+  public ProgressLogger(PrintStream out, boolean verbose) {
+    this.out = out;
     this.verbose = verbose;
   }
 
@@ -43,7 +47,7 @@ public class ProgressLogger {
    */
   public void println(String message) {
     lastMessage = null;
-    System.out.println("\r" + message);
+    out.println("\r" + message);
   }
 
   /**
@@ -54,13 +58,13 @@ public class ProgressLogger {
   public void print(String message) {
     if (verbose) {
       if (lastMessage != null) {
-        System.out.print("\r" + String.format("%" + (lastMessage.length() + 6) + "s", ""));
+        out.print("\r" + String.format("%" + (lastMessage.length() + 6) + "s", ""));
       }
 
-      System.out.println("[" + String.format("%3d%%", (progress * 99) / maxProgress) + "] "
+      out.println("[" + String.format("%3d%%", (progress * 99) / maxProgress) + "] "
           + (message == null ? "" : message));
     } else {
-      System.out.print("\r["
+      out.print("\r["
           + String.format("%-" + SIZE + "s",
               new String(new char[(progress * SIZE) / maxProgress]).replace("\0", "=")) + "]");
     }
