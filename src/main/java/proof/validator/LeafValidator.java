@@ -97,22 +97,27 @@ public class LeafValidator implements Validator<JSONObject> {
 
     output.append("Minimize\nobj:");
     boolean first = true;
+    int nVars = 0;
+
     for (int e1 = 0; e1 < graph.getNumberOfEdges(); e1++) {
       for (int e2 = e1 + 1; e2 < graph.getNumberOfEdges(); e2++) {
         if (!graph.edgesAreAdjacent(e1, e2)) {
           int cost = graph.getEdgeCost(e1) * graph.getEdgeCost(e2);
           for (int i = 0; i <= expansions.getInt(String.valueOf(e1)); i++) {
             for (int j = 0; j <= expansions.getInt(String.valueOf(e2)); j++) {
-              String weight = cost == 1 ? "" : Integer.toString(cost) + " ";
+              String weight = cost == 1 ? "" : (Integer.toString(cost) + " ");
               String varName = createVarName(new CrossingIndex(e1, i, e2, j));
               output.append((first ? " " : " + ") + weight + varName);
               boundsOuput.append("\n0 <= " + varName + " <= 1");
               first = false;
+              nVars++;
             }
           }
         }
       }
     }
+
+    printNumber("variables", nVars);
 
     output.append("\nSubject To");
     output.append("\n\\ Fixed Branching Variables");
@@ -127,8 +132,11 @@ public class LeafValidator implements Validator<JSONObject> {
       }
     }
 
+    printNumber("fixed variables", fixedVariables.size());
+
     // note that simplicity is not required on the first segment
     output.append("\n\\ Simplicity Constraints");
+    int nSimplicity = 0;
     for (int e1 = 0; e1 < graph.getNumberOfEdges(); e1++) {
       for (int i = 1; i <= expansions.getInt(String.valueOf(e1)); i++) {
         first = true;
@@ -144,11 +152,15 @@ public class LeafValidator implements Validator<JSONObject> {
 
         if (!first) {
           output.append(" <= 1");
+          nSimplicity++;
         }
       }
     }
 
+    printNumber("simplicity constraints", nSimplicity);
+
     output.append("\n\\ Ordering Constraints");
+    int nOrder = 0;
     for (int e1 = 0; e1 < graph.getNumberOfEdges(); e1++) {
       int exp1 = expansions.getInt(String.valueOf(e1));
       for (int i = 1; i <= exp1; i++) {
@@ -165,9 +177,13 @@ public class LeafValidator implements Validator<JSONObject> {
 
         if (!first) {
           output.append(" >= 0");
+          nOrder++;
         }
       }
     }
+
+    printNumber("ordering constraints", nOrder);
+    printNumber("Kuratowski constraints", constraints.length());
 
     // vars
     for (int i = 0; i < constraints.length(); i++) {
@@ -248,5 +264,9 @@ public class LeafValidator implements Validator<JSONObject> {
     SegmentIndex s1 = crossing.segments[0];
     SegmentIndex s2 = crossing.segments[1];
     return "x_e" + s1.edge + "_s" + s1.segment + "_e" + s2.edge + "_s" + s2.segment;
+  }
+
+  private void printNumber(String title, int number) {
+    Config.get().logger.print(String.format("    # %-23s%8d", title + ":", number));
   }
 }
