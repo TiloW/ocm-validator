@@ -162,14 +162,13 @@ public class LeafValidator implements Validator<JSONObject> {
     output.append("\n\\ Ordering Constraints");
     int nOrder = 0;
     for (int e1 = 0; e1 < graph.getNumberOfEdges(); e1++) {
-      int exp1 = expansions.getInt(String.valueOf(e1));
-      for (int i = 1; i <= exp1; i++) {
+      for (int i = 1; i < expansions.getInt(String.valueOf(e1)); i++) {
         first = true;
         for (int e2 = 0; e2 < graph.getNumberOfEdges(); e2++) {
           if (!graph.edgesAreAdjacent(e1, e2)) {
             for (int j = 0; j <= expansions.getInt(String.valueOf(e2)); j++) {
               output.append((first ? "\n" : " + ") + createVarName(new CrossingIndex(e1, i, e2, j))
-                  + " - " + createVarName(new CrossingIndex(e1, (i + 1) % (exp1 + 1), e2, j)));
+                  + " - " + createVarName(new CrossingIndex(e1, i + 1, e2, j)));
               first = false;
             }
           }
@@ -183,6 +182,33 @@ public class LeafValidator implements Validator<JSONObject> {
     }
 
     printNumber("ordering constraints", nOrder);
+
+    // TODO edge might never be fully extended (only applies if many incident edges -> high degree)
+    output.append("\n\\ First Segment Ordering Constraints");
+    int nFirstSegmentOrder = 0;
+    for (int e1 = 0; e1 < graph.getNumberOfEdges(); e1++) {
+      int exp = expansions.getInt(String.valueOf(e1));
+      if (exp == graph.getClaimedLowerBound() - 1) {
+        first = true;
+        for (int e2 = 0; e2 < graph.getNumberOfEdges(); e2++) {
+          if (!graph.edgesAreAdjacent(e1, e2)) {
+            for (int j = 0; j <= expansions.getInt(String.valueOf(e2)); j++) {
+              output.append((first ? "\n" : " + ")
+                  + createVarName(new CrossingIndex(e1, exp, e2, j)) + " - "
+                  + createVarName(new CrossingIndex(e1, 0, e2, j)));
+              first = false;
+            }
+          }
+        }
+
+        if (!first) {
+          output.append(" >= 0");
+          nFirstSegmentOrder++;
+        }
+      }
+    }
+
+    printNumber("first segment ordering constraints", nFirstSegmentOrder);
     printNumber("Kuratowski constraints", constraints.length());
 
     // vars
@@ -267,6 +293,6 @@ public class LeafValidator implements Validator<JSONObject> {
   }
 
   private void printNumber(String title, int number) {
-    Config.get().logger.print(String.format("    # %-23s%8d", title + ":", number));
+    Config.get().logger.print(String.format("    # %-35s%8d", title + ":", number));
   }
 }
