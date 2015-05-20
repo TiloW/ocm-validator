@@ -15,12 +15,12 @@ import proof.exception.InvalidProofException;
 
 @RunWith(Parameterized.class)
 public class MainValidatorTest extends ValidatorTest {
-  private final File logFile;
-  private static final String DIR = "log";
+  private final File proofFile;
+  static final String DIR = "log";
 
-  public MainValidatorTest(File logFile) throws InvalidConfigurationException {
+  public MainValidatorTest(File proofFile) throws InvalidConfigurationException {
     super(DIR);
-    this.logFile = logFile;
+    this.proofFile = proofFile;
   }
 
   @Parameterized.Parameters(name = "{0}")
@@ -37,6 +37,6 @@ public class MainValidatorTest extends ValidatorTest {
 
   @Test
   public void testValidate() throws InvalidProofException, IOException {
-    new MainValidator().validate(loadJSON(logFile.getName()));
+    new MainValidator().validate(loadJSON(proofFile.getName()));
   }
 }
