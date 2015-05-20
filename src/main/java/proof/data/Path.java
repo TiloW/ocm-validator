@@ -1,6 +1,5 @@
 package proof.data;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -11,7 +10,6 @@ import proof.exception.InvalidPathException;
  * Represents a Kuratowski path.
  *
  * @author Tilo Wiedera
- *
  */
 public class Path {
 
@@ -137,6 +135,11 @@ public class Path {
     return result;
   }
 
+  public boolean isAdjacentTo(Path other) {
+    return getSource().equals(other.getSource()) || getSource().equals(other.getTarget())
+        || getTarget().equals(other.getSource()) || getTarget().equals(other.getTarget());
+  }
+
   private Object getEndpoint(int pos, boolean getSource) {
     Object result = null;
     Section section = sections.get(pos);
@@ -163,9 +166,7 @@ public class Path {
     SegmentIndex seg = new SegmentIndex(edge, index);
     CrossingIndex result = null;
 
-    for (Iterator<CrossingIndex> it = crossings.iterator(); it.hasNext();) {
-      CrossingIndex cr = it.next();
-
+    for (CrossingIndex cr : crossings) {
       if (cr.segments[0].equals(seg) || cr.segments[1].equals(seg)) {
         result = cr;
       }

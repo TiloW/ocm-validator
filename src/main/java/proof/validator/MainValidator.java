@@ -26,6 +26,7 @@ public class MainValidator implements Validator<JSONObject> {
   public void validate(JSONObject object) throws InvalidProofException {
     Graph graph = graphReader.read(object.getJSONObject("graph"));
 
+    // is the proof trivial in terms of a known lower bound formula?
     if (object.getJSONObject("solution").getBoolean("trivial")) {
       Config.get().logger.reset(1);
       Config.get().logger.print("validating supposedly trivial lower bound of "

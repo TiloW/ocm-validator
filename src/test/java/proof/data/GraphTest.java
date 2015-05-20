@@ -171,16 +171,16 @@ public class GraphTest {
     graph.addEdge(1, 1, 2, 100);
     graph.addEdge(2, 45, 2, 100);
 
-    assertTrue(graph.edgesAreAdjacent(0, 0));
-    assertTrue(graph.edgesAreAdjacent(0, 1));
-    assertFalse(graph.edgesAreAdjacent(0, 2));
+    assertTrue(graph.areEdgesAdjacent(0, 0));
+    assertTrue(graph.areEdgesAdjacent(0, 1));
+    assertFalse(graph.areEdgesAdjacent(0, 2));
 
-    assertTrue(graph.edgesAreAdjacent(1, 0));
-    assertTrue(graph.edgesAreAdjacent(1, 1));
-    assertTrue(graph.edgesAreAdjacent(1, 2));
+    assertTrue(graph.areEdgesAdjacent(1, 0));
+    assertTrue(graph.areEdgesAdjacent(1, 1));
+    assertTrue(graph.areEdgesAdjacent(1, 2));
 
-    assertFalse(graph.edgesAreAdjacent(2, 0));
-    assertTrue(graph.edgesAreAdjacent(2, 1));
-    assertTrue(graph.edgesAreAdjacent(2, 2));
+    assertFalse(graph.areEdgesAdjacent(2, 0));
+    assertTrue(graph.areEdgesAdjacent(2, 1));
+    assertTrue(graph.areEdgesAdjacent(2, 2));
   }
 }
