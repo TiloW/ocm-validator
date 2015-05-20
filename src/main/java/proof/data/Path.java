@@ -77,6 +77,10 @@ public class Path {
     }
 
     sections.add(section);
+
+    // validate the current source and target
+    getSource();
+    getTarget();
   }
 
   /**
@@ -151,12 +155,16 @@ public class Path {
       index = section.end;
     }
 
-    if (index >= 0) {
+    if (index == -1 || index == graph.getClaimedLowerBound()) {
+      result = new Integer(node);
+    } else {
       result = findCrossing(section.edge, index);
     }
 
     if (result == null) {
-      result = new Integer(node);
+      throw new InvalidPathException(
+          "Path is supposed to end at a realized crossing but there is none: "
+              + new SegmentIndex(section.edge, index));
     }
 
     return result;
