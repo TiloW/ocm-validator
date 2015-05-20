@@ -231,6 +231,8 @@ public class LeafValidator implements Validator<JSONObject> {
 
       PathReader pathReader = new PathReader(graph, requiredCrossings);
 
+      Set<CrossingIndex> feasibleCrossings = new HashSet<>();
+
       for (int j = 0; j < paths.length(); j++) {
         JSONArray path1 = paths.getJSONArray(j);
 
@@ -264,9 +266,7 @@ public class LeafValidator implements Validator<JSONObject> {
                       expansions.getInt(String.valueOf(edge1)), end1); segIndex1++) {
                     for (int segIndex2 = Math.max(0, start2); segIndex2 <= Math.min(
                         expansions.getInt(String.valueOf(edge2)), end2); segIndex2++) {
-                      output.append((first ? "" : " + ")
-                          + createVarName(new CrossingIndex(edge1, segIndex1, edge2, segIndex2)));
-                      first = false;
+                      feasibleCrossings.add(new CrossingIndex(edge1, segIndex1, edge2, segIndex2));
                     }
                   }
                 }
@@ -274,6 +274,11 @@ public class LeafValidator implements Validator<JSONObject> {
             }
           }
         }
+      }
+
+      for (CrossingIndex cross : feasibleCrossings) {
+        output.append((first ? "" : " + ") + createVarName(cross));
+        first = false;
       }
 
       output.append(" >= " + (1 - requiredCrossings.size()));
