@@ -80,7 +80,7 @@ public class ConstraintValidator implements Validator<JSONObject> {
     // paths must be disjoint
     for (int i = 0; i < paths.length; i++) {
       for (int j = i + 1; j < paths.length; j++) {
-        if (!paths[i].isDisjoint(paths[j])) {
+        if (!paths[i].isDisjointTo(paths[j])) {
           throw new InvalidConstraintException("Paths are not disjoint (" + i + "," + j + ").");
         }
       }

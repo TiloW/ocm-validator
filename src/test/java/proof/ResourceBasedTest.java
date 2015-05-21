@@ -8,29 +8,29 @@ import java.nio.file.Paths;
 
 import org.json.JSONObject;
 
-import proof.data.Graph;
-
-public abstract class ResourceBasedTest {
+/**
+ * Base class for tests that require JSON resources.
+ *
+ * @author Tilo Wiedera
+ */
+public abstract class ResourceBasedTest extends GraphBasedTest {
 
   private final String directory;
 
+  /**
+   * Initializes a new resource based test.
+   *
+   * @param directory The base directory containing all resource files to be loaded by this test.
+   */
   public ResourceBasedTest(String directory) {
     this.directory = directory;
   }
 
-  protected Graph createCompleteGraph(int n) {
-    Graph result = new Graph(n, (n * (n - 1)) / 2, 42);
-    int counter = 0;
-    for (int i = 0; i < n; i++) {
-      for (int ii = i + 1; ii < n; ii++) {
-        result.addEdge(counter++, i, ii, 1);
-      }
-    }
-    result.makeImmutable();
-
-    return result;
-  }
-
+  /**
+   *
+   * @param filename The name of the file to be loaded (relative to the base {@link #directory}).
+   * @return The parsed JSON object
+   */
   protected JSONObject loadJSON(String filename) {
     String result = null;
 
