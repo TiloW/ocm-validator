@@ -134,7 +134,8 @@ public class BranchCoverageValidator implements Validator<JSONArray> {
     if (result) {
       varsA.remove(branchVariable);
       leaves.remove(varsB);
-      Collections.sort(leaves, LEAF_COMPARATOR); // shift varsA to the right
+      // shift varsA to the right
+      Collections.sort(leaves, LEAF_COMPARATOR);
     }
 
     return result;

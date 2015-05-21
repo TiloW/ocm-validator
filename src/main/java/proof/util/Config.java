@@ -1,11 +1,11 @@
 package proof.util;
 
 import java.io.File;
-import java.io.OutputStream;
 import java.io.PrintStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import proof.exception.ExceptionHelper;
 import proof.exception.InvalidConfigurationException;
 import proof.exception.UnsupportedSolverException;
 import proof.solver.Solver;
@@ -51,9 +51,9 @@ public class Config {
   public final Path file;
 
   /**
-   * The global output stream. Equals {@code System.out} if {@link #verbose} is set to {@code true}.
+   * The global logger.
    */
-  public final PrintStream logger;
+  public final ProgressLogger logger;
 
   /**
    * Creates a new configuration. Must be called exactly once.
@@ -62,11 +62,18 @@ public class Config {
    * @throws InvalidConfigurationException If any arguments do not comply with the {@link #usage}.
    */
   public static void Create(String[] args) throws InvalidConfigurationException {
+    Create(args, System.out);
+  }
+
+  /**
+   * Method for specifying an output stream during testing. See {@link #Create(String[])}.
+   */
+  public static void Create(String[] args, PrintStream out) throws InvalidConfigurationException {
     if (Config.config != null) {
       throw new RuntimeException("Configuration has already been initialized.");
     }
 
-    Config.config = new Config(args);
+    Config.config = new Config(args, out);
   }
 
   /**
@@ -86,9 +93,10 @@ public class Config {
    * Initializes a new configuration based on the given command line arguments.
    *
    * @param args The command line arguments as given to the main method.
+   * @param out The output stream for the global logger.
    * @throws InvalidConfigurationException If any arguments do not comply with the {@link #usage}.
    */
-  Config(String[] args) throws InvalidConfigurationException {
+  Config(String[] args, PrintStream out) throws InvalidConfigurationException {
     boolean finalVerbose = false;
     String finalSolver = null;
     String finalFile = null;
@@ -150,21 +158,15 @@ public class Config {
     try {
       solver = new SolverFactory().getSolver(finalSolver);
     } catch (IllegalArgumentException | UnsupportedSolverException e) {
-      InvalidConfigurationException ice =
-          new InvalidConfigurationException(
-              finalSolver == null ? "No linear program solver available."
-                  : (finalSolver + " is not available on this system."));
-      ice.initCause(e);
-      throw ice;
+      throw ExceptionHelper.wrap(e, new InvalidConfigurationException(
+          finalSolver == null ? "No linear program solver available."
+              : (finalSolver + " is not available on this system.")));
     }
 
     verbose = finalVerbose;
     report = getReport();
 
-    logger = verbose ? System.out : new PrintStream(new OutputStream() {
-      @Override
-      public void write(int b) {}
-    });
+    logger = new ProgressLogger(out, verbose);
   }
 
   /**

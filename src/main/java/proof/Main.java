@@ -3,6 +3,7 @@ package proof;
 import java.io.IOException;
 import java.nio.file.Files;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import proof.exception.InvalidConfigurationException;
@@ -37,7 +38,7 @@ public class Main {
       Config.get().logger.println("START VALIDATION\n");
       new MainValidator().validate(main);
       Config.get().logger.println("\nVALIDATION SUCCESSFULL");
-    } catch (IOException e) {
+    } catch (IOException | JSONException e) {
       System.out.println("Failed to read the requested file.");
       e.printStackTrace();
       System.exit(1);

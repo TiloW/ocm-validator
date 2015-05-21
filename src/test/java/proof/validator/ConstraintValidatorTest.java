@@ -1,15 +1,11 @@
 package proof.validator;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 
 import proof.ValidatorTest;
-import proof.data.CrossingIndex;
 import proof.exception.InvalidConfigurationException;
 import proof.exception.InvalidConstraintException;
 
@@ -20,11 +16,8 @@ import proof.exception.InvalidConstraintException;
  * path to be valid or on a K100 with a fully functional {@PathValidator}.
  *
  * @author Tilo Wiedera
- *
  */
 public class ConstraintValidatorTest extends ValidatorTest {
-
-  private Map<CrossingIndex, Boolean> variables;
   private ConstraintValidator validator;
 
   public ConstraintValidatorTest() throws InvalidConfigurationException {
@@ -33,8 +26,7 @@ public class ConstraintValidatorTest extends ValidatorTest {
 
   @Before
   public void init() {
-    variables = new HashMap<CrossingIndex, Boolean>();
-    validator = new ConstraintValidator(createCompleteGraph(100), variables);
+    validator = new ConstraintValidator(createCompleteGraph(100));
   }
 
   @Test(expected = InvalidConstraintException.class)
@@ -124,7 +116,7 @@ public class ConstraintValidatorTest extends ValidatorTest {
   public void testValidate_invalidColoringK33() throws InvalidConstraintException {
     JSONObject resource = loadJSON("k33-simple");
     resource.getJSONArray("paths").getJSONArray(0).getJSONObject(0).getJSONObject("edge")
-        .put("target", 1);
+    .put("target", 1);
 
     validator.validate(resource);
   }

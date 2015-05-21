@@ -19,7 +19,7 @@ public abstract class ResourceBasedTest {
   }
 
   protected Graph createCompleteGraph(int n) {
-    Graph result = new Graph(n, (n * (n - 1)) / 2, 0);
+    Graph result = new Graph(n, (n * (n - 1)) / 2, 42);
     int counter = 0;
     for (int i = 0; i < n; i++) {
       for (int ii = i + 1; ii < n; ii++) {
@@ -34,10 +34,14 @@ public abstract class ResourceBasedTest {
   protected JSONObject loadJSON(String filename) {
     String result = null;
 
+    if (!filename.substring(filename.length() - 5).equals(".json")) {
+      filename += ".json";
+    }
+
     try {
       result =
           new String(Files.readAllBytes(Paths.get("build/resources/test/" + directory + "/"
-              + filename + ".json")));
+              + filename)));
     } catch (IOException | NullPointerException e) {
       fail("Could not read ressource: " + filename);
     }

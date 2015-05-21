@@ -189,7 +189,7 @@ public class Graph {
    * @param e2 The index of the second edge
    * @return true iff the edges are adjacent
    */
-  public boolean edgesAreAdjacent(int e1, int e2) {
+  public boolean areEdgesAdjacent(int e1, int e2) {
     int s1 = getEdgeSource(e1);
     int t1 = getEdgeTarget(e1);
     int s2 = getEdgeSource(e2);

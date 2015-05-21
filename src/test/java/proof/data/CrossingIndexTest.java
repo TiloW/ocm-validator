@@ -40,6 +40,15 @@ public class CrossingIndexTest {
   }
 
   @Test
+  public void testFirstSegmentIsConflicting() {
+    CrossingIndex c10_21 = new CrossingIndex(1, 0, 2, 1);
+    CrossingIndex c10_32 = new CrossingIndex(1, 0, 3, 2);
+
+    assertFalse(c10_21.conflicting(c10_32));
+    assertFalse(c10_32.conflicting(c10_21));
+  }
+
+  @Test
   public void testIsConflicting() {
     CrossingIndex c12_21 = new CrossingIndex(1, 2, 2, 1);
     CrossingIndex c12_32 = new CrossingIndex(1, 2, 3, 2);

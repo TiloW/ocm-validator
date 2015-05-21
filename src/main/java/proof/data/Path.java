@@ -1,6 +1,5 @@
 package proof.data;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -11,7 +10,6 @@ import proof.exception.InvalidPathException;
  * Represents a Kuratowski path.
  *
  * @author Tilo Wiedera
- *
  */
 public class Path {
 
@@ -79,6 +77,10 @@ public class Path {
     }
 
     sections.add(section);
+
+    // validate the current source and target
+    getSource();
+    getTarget();
   }
 
   /**
@@ -137,6 +139,11 @@ public class Path {
     return result;
   }
 
+  public boolean isAdjacentTo(Path other) {
+    return getSource().equals(other.getSource()) || getSource().equals(other.getTarget())
+        || getTarget().equals(other.getSource()) || getTarget().equals(other.getTarget());
+  }
+
   private Object getEndpoint(int pos, boolean getSource) {
     Object result = null;
     Section section = sections.get(pos);
@@ -148,12 +155,16 @@ public class Path {
       index = section.end;
     }
 
-    if (index >= 0) {
+    if (index == -1 || index == graph.getClaimedLowerBound()) {
+      result = new Integer(node);
+    } else {
       result = findCrossing(section.edge, index);
     }
 
     if (result == null) {
-      result = new Integer(node);
+      throw new InvalidPathException(
+          "Path is supposed to end at a realized crossing but there is none: "
+              + new SegmentIndex(section.edge, index));
     }
 
     return result;
@@ -163,9 +174,7 @@ public class Path {
     SegmentIndex seg = new SegmentIndex(edge, index);
     CrossingIndex result = null;
 
-    for (Iterator<CrossingIndex> it = crossings.iterator(); it.hasNext();) {
-      CrossingIndex cr = it.next();
-
+    for (CrossingIndex cr : crossings) {
       if (cr.segments[0].equals(seg) || cr.segments[1].equals(seg)) {
         result = cr;
       }
