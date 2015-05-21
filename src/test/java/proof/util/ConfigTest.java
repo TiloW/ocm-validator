@@ -3,7 +3,9 @@ package proof.util;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
+import java.io.File;
 import java.io.OutputStream;
 import java.io.PrintStream;
 
@@ -31,7 +33,7 @@ public class ConfigTest {
     Config config = new Config(args, out);
 
     assertFalse(config.verbose);
-    assertEquals(FILE, config.file.toString());
+    assertEquals(new File(FILE).toString(), config.file.toString());
   }
 
   @Test
@@ -76,6 +78,12 @@ public class ConfigTest {
 
   @Test(expected = InvalidConfigurationException.class)
   public void testMissingFile() throws InvalidConfigurationException {
+    String[] args = {"-f"};
+    new Config(args, out);
+  }
+
+  @Test(expected = InvalidConfigurationException.class)
+  public void testMissingFile_badFlag() throws InvalidConfigurationException {
     String[] args = {"-f", "-v"};
     new Config(args, out);
   }
@@ -89,5 +97,29 @@ public class ConfigTest {
   public void testInvalidFlag() throws InvalidConfigurationException {
     String[] args = {"-f", FILE, "some-invalid-flag"};
     new Config(args, out);
+  }
+
+  @Test(expected = InvalidConfigurationException.class)
+  public void testDuplicateArgument() throws InvalidConfigurationException {
+    String[] args = {"-f", FILE, "-v", "-v"};
+    new Config(args, out);
+  }
+
+  @Test(expected = InvalidConfigurationException.class)
+  public void testMissingSolver() throws InvalidConfigurationException {
+    String[] args = {"-f", FILE, "-s"};
+    new Config(args, out);
+  }
+
+  @Test
+  public void testSingleton() throws InvalidConfigurationException {
+    try {
+      assertTrue(Config.get() instanceof Config);
+      String[] args = {"-f", FILE};
+      Config.Create(args, out);
+      fail("Configuration must be unique.");
+    } catch (InvalidConfigurationException | RuntimeException expected) {
+      // this is supposed to happen
+    }
   }
 }
