@@ -111,7 +111,7 @@ public class Path {
    * @param path The path to be tested against this path
    * @return True iff the paths are disjoint
    */
-  public boolean isDisjoint(Path path) {
+  public boolean isDisjointTo(Path path) {
     boolean result = true;
 
     for (int i = 0; result && i <= sections.size(); i++) {

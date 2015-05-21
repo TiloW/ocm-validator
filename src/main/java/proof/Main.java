@@ -21,13 +21,13 @@ public class Main {
   /**
    * Validates a proof for the crossing number of a single graph.
    */
-  public static void main(String[] args) throws InvalidProofException {
+  public static int main(String[] args) throws InvalidProofException {
     try {
       Config.Create(args);
     } catch (InvalidConfigurationException e) {
       System.out.println(e.getMessage() + "\n");
       System.out.println(Config.usage);
-      System.exit(1);
+      return 1;
     }
 
     Config.get().logger.println(Config.get().report + "\n");
@@ -41,7 +41,9 @@ public class Main {
     } catch (IOException | JSONException e) {
       System.out.println("Failed to read the requested file.");
       e.printStackTrace();
-      System.exit(1);
+      return 1;
     }
+
+    return 0;
   }
 }
