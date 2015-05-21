@@ -5,7 +5,7 @@ package proof.exception;
  *
  * @author Tilo Wiedera <tilo@wiedera.de>
  */
-public class ExceptionHelper {
+public abstract class ExceptionHelper {
   /**
    * Initializes the cause of {@code outerException} with {@code innerException}. Can be used
    * directly in a {@code throw} statement since it returns the {@code outerException}.
