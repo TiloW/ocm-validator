@@ -10,7 +10,6 @@ import java.io.PrintStream;
 public class ProgressLogger {
   private int progress = 0;
   private int maxProgress = 1;
-  private String lastMessage = null;
   private final boolean verbose;
   private static final int SIZE = 32;
   private final PrintStream out;
@@ -46,7 +45,6 @@ public class ProgressLogger {
    * @param message The message to be printed
    */
   public void println(String message) {
-    lastMessage = null;
     out.println("\r" + message);
   }
 
@@ -57,12 +55,7 @@ public class ProgressLogger {
    */
   public void print(String message) {
     if (verbose) {
-      if (lastMessage != null) {
-        out.print("\r" + String.format("%" + (lastMessage.length() + 6) + "s", ""));
-      }
-
-      out.println("[" + String.format("%3d%%", (progress * 99) / maxProgress) + "] "
-          + (message == null ? "" : message));
+      out.println("[" + String.format("%3d%%", (progress * 99) / maxProgress) + "] " + message);
     } else {
       out.print("\r["
           + String.format("%-" + SIZE + "s",
@@ -91,7 +84,7 @@ public class ProgressLogger {
     }
 
     if (!verbose) {
-      print(lastMessage);
+      print("");
     }
   }
 }
