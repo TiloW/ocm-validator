@@ -70,7 +70,7 @@ public class Config {
    */
   public static void Create(String[] args, PrintStream out) throws InvalidConfigurationException {
     if (Config.config != null) {
-      throw new RuntimeException("Configuration has already been initialized.");
+      throw new InvalidConfigurationException("Configuration has already been initialized.");
     }
 
     Config.config = new Config(args, out);
@@ -97,7 +97,7 @@ public class Config {
    * @throws InvalidConfigurationException If any arguments do not comply with the {@link #usage}.
    */
   Config(String[] args, PrintStream out) throws InvalidConfigurationException {
-    boolean finalVerbose = false;
+    Boolean finalVerbose = null;
     String finalSolver = null;
     String finalFile = null;
 
@@ -105,9 +105,7 @@ public class Config {
       switch (args[i].trim()) {
         case "-v":
         case "--verbose":
-          if (finalVerbose) {
-            throw new InvalidConfigurationException("Duplicate argument given: " + args[i]);
-          }
+          assertUniqueness(args[i], finalVerbose);
           finalVerbose = true;
           break;
 
@@ -116,10 +114,7 @@ public class Config {
           if (i == args.length - 1) {
             throw new InvalidConfigurationException("No solver specified for " + args[i]);
           } else {
-            if (finalSolver != null) {
-              throw new InvalidConfigurationException("Duplicate argument given: " + args[i]);
-            }
-
+            assertUniqueness(args[i], finalSolver);
             finalSolver = args[++i];
           }
           break;
@@ -129,10 +124,7 @@ public class Config {
           if (i == args.length - 1) {
             throw new InvalidConfigurationException("No file specified for " + args[i]);
           } else {
-            if (finalFile != null) {
-              throw new InvalidConfigurationException("Duplicate argument given: " + args[i]);
-            }
-
+            assertUniqueness(args[i], finalFile);
             finalFile = args[++i];
           }
           break;
@@ -140,6 +132,10 @@ public class Config {
         default:
           throw new InvalidConfigurationException("Unknown command line parameter: " + args[i]);
       }
+    }
+
+    if (finalVerbose == null) {
+      finalVerbose = false;
     }
 
     if (finalFile == null) {
@@ -167,6 +163,13 @@ public class Config {
     report = getReport();
 
     logger = new ProgressLogger(out, verbose);
+  }
+
+  private void assertUniqueness(String name, Object currentValue)
+      throws InvalidConfigurationException {
+    if (currentValue != null) {
+      throw new InvalidConfigurationException("Duplicate argument given: " + name);
+    }
   }
 
   /**
