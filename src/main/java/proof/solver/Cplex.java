@@ -15,7 +15,7 @@ class Cplex extends Solver {
 
   @Override
   protected void handleLine(String line) throws LinearProgramException {
-    if (line.contains("Dual simplex - Optimal:")) {
+    if (line.contains(" - Optimal:")) {
       setResult(parseDouble(line));
     } else if (line.contains("No problem exists.")) {
       setResult(0);
