@@ -75,6 +75,7 @@ public class LeafValidator implements Validator<JSONObject> {
       Config.get().logger.print("  generate linear program");
       out.print(generator.createLinearProgram(vars, leaf));
       out.close();
+      Config.get().logger.print("  linear program written to " + file);
       Config.get().logger.print("  solve linear program");
 
       double lowerBound = solver.solve(file);

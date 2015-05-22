@@ -15,49 +15,252 @@ import proof.data.reader.CrossingReader;
 import proof.data.reader.PathReader;
 import proof.exception.InvalidProofException;
 import proof.util.Config;
+import proof.util.Statistics;
 
 /**
- * Class for generating the linear program used to prove the lower bound.
+ * Class for generating the linear program used to prove the lower bound. The program is returned in
+ * CPLEX LP file format.
  *
  * @author Tilo Wiedera
  */
 public class LinearProgramGenerator {
   private final Graph graph;
+  private final int[] expansions;
+  private final Statistics stats = new Statistics();
+  private final Set<CrossingIndex> variables = new HashSet<CrossingIndex>();
 
+  /**
+   * Initializes a new generator.
+   *
+   * @param graph The graph to work on.
+   */
   public LinearProgramGenerator(Graph graph) {
     this.graph = graph;
+    expansions = new int[graph.getNumberOfEdges()];
   }
 
+  /**
+   * Returns a linear program based on the expanded graph and all given Kuratowski subdivisions. The
+   * program is returned in CPLEX LP file format.
+   *
+   * @param fixedVariables The currently fixed branching variables
+   * @param leaf A JSON object containing all relevant information for this leaf
+   * @return The generated linear program in CPLEX LP file format
+   * @throws InvalidProofException if the number of expansions on any edge is negative
+   */
   public String createLinearProgram(Map<CrossingIndex, Boolean> fixedVariables, JSONObject leaf)
       throws InvalidProofException {
-    JSONArray constraints = leaf.getJSONArray("constraints");
-    JSONObject expansions = leaf.getJSONObject("expansions");
+    StringBuilder result = new StringBuilder();
 
+    JSONArray jsonConstraints = leaf.getJSONArray("constraints");
+    JSONObject jsonExpansions = leaf.getJSONObject("expansions");
+
+    stats.clear();
+    stats.put("fixed variables", fixedVariables.size());
+    stats.put("Kuratowski constraints", jsonConstraints.length());
+
+    // parse expansions (i.e. the variables to be generated)
     for (int e = 0; e < graph.getNumberOfEdges(); e++) {
-      if (expansions.getInt(String.valueOf(e)) < 0) {
+      expansions[e] = jsonExpansions.getInt(String.valueOf(e));
+
+      if (expansions[e] < 0) {
         throw new InvalidProofException("The amount of additional segments must not be negative.");
       }
     }
 
-    StringBuilder output = new StringBuilder();
-    StringBuilder boundsOuput = new StringBuilder();
-    boolean first = true;
-    int numberOfVariables = 0;
+    result.append("Minimize\nobj:\n");
+    result.append(generateObjective());
 
-    output.append("Minimize\nobj:");
+    stats.put("variables", variables.size());
+
+    result.append("\nSubject To");
+
+    // note that simplicity is not required on the first segment
+    result.append("\n\\ Simplicity Constraints");
+
+    for (int e = 0; e < graph.getNumberOfEdges(); e++) {
+      for (int s = 1; s <= expansions[e]; s++) {
+        result.append("\n" + sumVariables(e, s) + " <= 1");
+        stats.increase("simplicity constraints");
+      }
+    }
+
+    result.append("\n\\ Ordering Constraints");
+
+    for (int e = 0; e < graph.getNumberOfEdges(); e++) {
+      for (int s = 1; s < expansions[e]; s++) {
+        result.append("\n" + sumVariables(e, s) + sumVariables(e, s + 1, true) + " >= 0");
+        stats.increase("ordering constraints");
+      }
+    }
+
+    for (int i = 0; i < jsonConstraints.length(); i++) {
+      result.append("\n\\ Kuratowski Constraint " + i + "\n");
+      result.append(generateKuratowski(jsonConstraints.getJSONObject(i)));
+    }
+
+    result.append("\nBounds");
+    result.append(generateBounds(fixedVariables));
+    result.append("\nEnd");
+
+    for (String line : stats.format()) {
+      Config.get().logger.print("    " + line);
+    }
+
+    return result.toString();
+  }
+
+  /**
+   * Generates and returns a single Kuratowski constraint.
+   *
+   * @param constraint A JSON structure containing all paths and required crossings
+   * @return A CPLEX LP file format compliant description of the constraint
+   */
+  private String generateKuratowski(JSONObject constraint) {
+    StringBuilder result = new StringBuilder();
+    Set<CrossingIndex> requiredCrossings = new HashSet<>();
+    CrossingReader crossReader = new CrossingReader(graph);
+
+    // collect required crossings
+    for (int i = 0; i < constraint.getJSONArray("requiredCrossings").length(); i++) {
+      CrossingIndex crossing =
+          crossReader.read(constraint.getJSONArray("requiredCrossings").getJSONArray(i));
+      requiredCrossings.add(crossing);
+    }
+
+    boolean first = true;
+    JSONArray paths = constraint.getJSONArray("paths");
+    PathReader pathReader = new PathReader(graph, requiredCrossings);
+    Set<CrossingIndex> feasibleCrossings = new HashSet<>();
+
+    // collect feasible crossings for resolving the Kuratowski subdivision
+    for (int i = 0; i < paths.length(); i++) {
+      JSONArray path1 = paths.getJSONArray(i);
+
+      for (int k = i + 1; k < paths.length(); k++) {
+        JSONArray path2 = paths.getJSONArray(k);
+        Path p1 = pathReader.read(path1);
+        Path p2 = pathReader.read(path2);
+
+        // crossing adjacent paths do not resolve the subdivision
+        if (!p1.isAdjacentTo(p2)) {
+          feasibleCrossings.addAll(collectFeasibleCrossings(path1, path2));
+        }
+      }
+    }
+
+    for (CrossingIndex crossing : feasibleCrossings) {
+      result.append((first ? "" : " + ") + createVarName(crossing));
+      first = false;
+    }
+
+    for (CrossingIndex crossing : requiredCrossings) {
+      result.append(" - " + createVarName(crossing));
+    }
+
+    result.append(" >= " + (1 - requiredCrossings.size()));
+
+    return result.toString();
+  }
+
+  /**
+   * Collects all feasible {@link #variables} over all segments of two paths.
+   *
+   * @param path1 The first path
+   * @param path2 The second path
+   * @return the set of feasible crossings
+   */
+  private Set<CrossingIndex> collectFeasibleCrossings(JSONArray path1, JSONArray path2) {
+    Set<CrossingIndex> result = new HashSet<>();
+
+    for (int i = 0; i < path1.length(); i++) {
+      for (int k = 0; k < path2.length(); k++) {
+        JSONObject segRange1 = path1.getJSONObject(i);
+        JSONObject segRange2 = path2.getJSONObject(k);
+
+        int edge1 =
+            graph.getEdgeId(segRange1.getJSONObject("edge").getInt("source"), segRange1
+                .getJSONObject("edge").getInt("target"));
+
+        int edge2 =
+            graph.getEdgeId(segRange2.getJSONObject("edge").getInt("source"), segRange2
+                .getJSONObject("edge").getInt("target"));
+
+        int startSeg1 = Math.max(0, segRange1.getInt("start"));
+        int startSeg2 = Math.max(0, segRange2.getInt("start"));
+
+        int endSeg1 = Math.min(expansions[edge1], segRange1.getInt("end"));
+        int endSeg2 = Math.min(expansions[edge2], segRange2.getInt("end"));
+
+        // since the first segment might participate in multiple paths this condition could
+        // be false
+        if (!graph.areEdgesAdjacent(edge1, edge2)) {
+          for (int s1 = startSeg1; s1 <= endSeg1; s1++) {
+            for (int s2 = startSeg2; s2 <= endSeg2; s2++) {
+              result.add(new CrossingIndex(edge1, s1, edge2, s2));
+            }
+          }
+        }
+      }
+    }
+
+    return result;
+  }
+
+  /**
+   * Generates the lower and upper bound for all variables. All variables are continuous on the
+   * interval {@code [0,1]}. However, some variables might be fixed to either {@code 1} or {@code 0}
+   * due to branching.
+   *
+   * @param fixedVariables The currently fixed branching variables
+   * @return A CPLEX LP file format compliant description of all bounds
+   */
+  private String generateBounds(Map<CrossingIndex, Boolean> fixedVariables) {
+    StringBuilder result = new StringBuilder();
+
+    for (CrossingIndex var : variables) {
+      int min = 0;
+      int max = 1;
+
+      if (fixedVariables.containsKey(var)) {
+        if (fixedVariables.get(var)) {
+          min = 1;
+        } else {
+          max = 0;
+        }
+      }
+
+      result.append("\n " + min + " <= " + createVarName(var) + " <= " + max);
+    }
+
+    return result.toString();
+  }
+
+  /**
+   * Generates the objective function to be minimized. Clears and collects all feasible
+   * {@link #variables}. Since adjacent edges will never cross in any optimal drawing of a graph
+   * they are not considered as feasible variables. The cost of any crossing equals the product of
+   * the weight of both involved edges. Weighted edges commonly occur in pre-processed graphs.
+   *
+   * @return the objective function in CPLEX LP file format
+   */
+  private String generateObjective() {
+    StringBuilder result = new StringBuilder();
+    boolean first = true;
+    variables.clear();
 
     for (int e1 = 0; e1 < graph.getNumberOfEdges(); e1++) {
       for (int e2 = e1 + 1; e2 < graph.getNumberOfEdges(); e2++) {
         if (!graph.areEdgesAdjacent(e1, e2)) {
           int cost = graph.getEdgeCost(e1) * graph.getEdgeCost(e2);
-          for (int i = 0; i <= expansions.getInt(String.valueOf(e1)); i++) {
-            for (int j = 0; j <= expansions.getInt(String.valueOf(e2)); j++) {
+          for (int s1 = 0; s1 <= expansions[e1]; s1++) {
+            for (int s2 = 0; s2 <= expansions[e2]; s2++) {
               String weight = cost == 1 ? "" : (Integer.toString(cost) + " ");
-              String varName = createVarName(new CrossingIndex(e1, i, e2, j));
+              CrossingIndex crossing = new CrossingIndex(e1, s1, e2, s2);
               String prefix = first ? " " : " + ";
-              output.append(prefix + weight + varName);
-              boundsOuput.append("\n0 <= " + varName + " <= 1");
-              numberOfVariables++;
+              result.append(prefix + weight + createVarName(crossing));
+              variables.add(crossing);
+              stats.increase("variables");
               first = false;
             }
           }
@@ -65,185 +268,41 @@ public class LinearProgramGenerator {
       }
     }
 
-    printNumber("variables", numberOfVariables);
-    Set<CrossingIndex> realizedCrossings = new HashSet<>();
+    return result.toString();
+  }
 
-    output.append("\nSubject To");
-    output.append("\n\\ Fixed Branching Variables");
+  private String sumVariables(int edge, int segment) {
+    return sumVariables(edge, segment, false);
+  }
 
-    for (Map.Entry<CrossingIndex, Boolean> var : fixedVariables.entrySet()) {
-      int value = var.getValue() ? 1 : 0;
+  /**
+   * Returns the sum over all feasible variables (i.e. crossings) including the given segment.
+   *
+   * @param edge The edge
+   * @param segment The segment
+   * @param substract Whether to return the negative sum
+   * @return string a CPLEX LP file format compliant representation of the sum over all feasible
+   *         variables
+   */
+  private String sumVariables(int edge, int segment, boolean substract) {
+    StringBuilder result = new StringBuilder();
+    boolean first = true;
 
-      output.append("\n" + createVarName(var.getKey()) + " = " + value);
-
-      if (var.getValue()) {
-        realizedCrossings.add(var.getKey());
-      }
-    }
-
-    printNumber("fixed variables", fixedVariables.size());
-    int numberOfSimplicityConstraints = 0;
-
-    // note that simplicity is not required on the first segment
-    output.append("\n\\ Simplicity Constraints");
-
-    for (int e1 = 0; e1 < graph.getNumberOfEdges(); e1++) {
-      for (int i = 1; i <= expansions.getInt(String.valueOf(e1)); i++) {
-        first = true;
-
-        for (int e2 = 0; e2 < graph.getNumberOfEdges(); e2++) {
-          if (!graph.areEdgesAdjacent(e1, e2)) {
-            for (int j = 0; j <= expansions.getInt(String.valueOf(e2)); j++) {
-              String prefix = first ? "\n" : " + ";
-              output.append(prefix + createVarName(new CrossingIndex(e1, i, e2, j)));
-              first = false;
-            }
+    for (int e = 0; e < graph.getNumberOfEdges(); e++) {
+      if (!graph.areEdgesAdjacent(edge, e)) {
+        for (int i = 0; i <= expansions[e]; i++) {
+          if (substract) {
+            result.append(" - ");
+          } else if (!first) {
+            result.append(" + ");
           }
-        }
-
-        if (!first) {
-          output.append(" <= 1");
-          numberOfSimplicityConstraints++;
+          result.append(createVarName(new CrossingIndex(edge, segment, e, i)));
+          first = false;
         }
       }
     }
 
-    printNumber("simplicity constraints", numberOfSimplicityConstraints);
-    int nOrder = 0;
-
-    output.append("\n\\ Ordering Constraints");
-
-    for (int e1 = 0; e1 < graph.getNumberOfEdges(); e1++) {
-      for (int i = 1; i < expansions.getInt(String.valueOf(e1)); i++) {
-        first = true;
-
-        for (int e2 = 0; e2 < graph.getNumberOfEdges(); e2++) {
-          if (!graph.areEdgesAdjacent(e1, e2)) {
-            for (int j = 0; j <= expansions.getInt(String.valueOf(e2)); j++) {
-              String prefix = first ? "\n" : " + ";
-              output.append(prefix + createVarName(new CrossingIndex(e1, i, e2, j)) + " - "
-                  + createVarName(new CrossingIndex(e1, i + 1, e2, j)));
-              first = false;
-            }
-          }
-        }
-
-        if (!first) {
-          output.append(" >= 0");
-          nOrder++;
-        }
-      }
-    }
-
-    printNumber("ordering constraints", nOrder);
-    int numberOfFirstSegmentConstraints = 0;
-
-    output.append("\n\\ First Segment Ordering Constraints");
-
-    for (int e1 = 0; e1 < graph.getNumberOfEdges(); e1++) {
-      int exp = expansions.getInt(String.valueOf(e1));
-
-      if (exp == graph.getClaimedLowerBound() - 1) {
-        first = true;
-
-        for (int e2 = 0; e2 < graph.getNumberOfEdges(); e2++) {
-          if (!graph.areEdgesAdjacent(e1, e2)) {
-            for (int j = 0; j <= expansions.getInt(String.valueOf(e2)); j++) {
-              String prefix = first ? "\n" : " + ";
-              output.append(prefix + createVarName(new CrossingIndex(e1, exp, e2, j)) + " - "
-                  + createVarName(new CrossingIndex(e1, 0, e2, j)));
-              first = false;
-            }
-          }
-        }
-
-        if (!first) {
-          output.append(" >= 0");
-          numberOfFirstSegmentConstraints++;
-        }
-      }
-    }
-
-    printNumber("first segment ordering constraints", numberOfFirstSegmentConstraints);
-    printNumber("Kuratowski constraints", constraints.length());
-
-    for (int i = 0; i < constraints.length(); i++) {
-      output.append("\n\\ Kuratowski Constraint " + i + "\n");
-
-      JSONObject constraint = constraints.getJSONObject(i);
-      Set<CrossingIndex> requiredCrossings = new HashSet<>();
-      CrossingReader crossReader = new CrossingReader(graph);
-      first = true;
-
-      for (int j = 0; j < constraint.getJSONArray("requiredCrossings").length(); j++) {
-        CrossingIndex crossing =
-            crossReader.read(constraint.getJSONArray("requiredCrossings").getJSONArray(j));
-
-        output.append(" - " + createVarName(crossing));
-        requiredCrossings.add(crossing);
-        first = false;
-      }
-
-      JSONArray paths = constraint.getJSONArray("paths");
-      PathReader pathReader = new PathReader(graph, requiredCrossings);
-      Set<CrossingIndex> feasibleCrossings = new HashSet<>();
-
-      for (int j = 0; j < paths.length(); j++) {
-        JSONArray path1 = paths.getJSONArray(j);
-
-        for (int k = j + 1; k < paths.length(); k++) {
-          JSONArray path2 = paths.getJSONArray(k);
-          Path p1 = pathReader.read(path1);
-          Path p2 = pathReader.read(path2);
-
-          if (!p1.isAdjacentTo(p2)) {
-            for (int l = 0; l < path1.length(); l++) {
-              for (int h = 0; h < path2.length(); h++) {
-                JSONObject seg1 = path1.getJSONObject(l);
-                JSONObject seg2 = path2.getJSONObject(h);
-
-                int s1 = seg1.getJSONObject("edge").getInt("source");
-                int t1 = seg1.getJSONObject("edge").getInt("target");
-                int edge1 = graph.getEdgeId(s1, t1);
-                int start1 = seg1.getInt("start");
-                int end1 = seg1.getInt("end");
-
-                int s2 = seg2.getJSONObject("edge").getInt("source");
-                int t2 = seg2.getJSONObject("edge").getInt("target");
-                int edge2 = graph.getEdgeId(s2, t2);
-                int start2 = seg2.getInt("start");
-                int end2 = seg2.getInt("end");
-
-                // since the first segment might participate in multiple paths this condition could
-                // be false
-                if (!graph.areEdgesAdjacent(edge1, edge2)) {
-                  for (int segIndex1 = Math.max(0, start1); segIndex1 <= Math.min(
-                      expansions.getInt(String.valueOf(edge1)), end1); segIndex1++) {
-                    for (int segIndex2 = Math.max(0, start2); segIndex2 <= Math.min(
-                        expansions.getInt(String.valueOf(edge2)), end2); segIndex2++) {
-                      feasibleCrossings.add(new CrossingIndex(edge1, segIndex1, edge2, segIndex2));
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-
-      for (CrossingIndex cross : feasibleCrossings) {
-        output.append((first ? "" : " + ") + createVarName(cross));
-        first = false;
-      }
-
-      output.append(" >= " + (1 - requiredCrossings.size()));
-    }
-
-    output.append("\nBounds");
-    output.append(boundsOuput);
-    output.append("\nEnd");
-
-    return output.toString();
+    return result.toString();
   }
 
   /**
@@ -257,15 +316,5 @@ public class LinearProgramGenerator {
     SegmentIndex s1 = crossing.segments[0];
     SegmentIndex s2 = crossing.segments[1];
     return "x_e" + s1.edge + "_s" + s1.segment + "_e" + s2.edge + "_s" + s2.segment;
-  }
-
-  /**
-   * Prints a number to the logger which is only shown in verbose mode.
-   *
-   * @param title A description of the value
-   * @param number The integer value
-   */
-  private void printNumber(String title, int number) {
-    Config.get().logger.print(String.format("    # %-35s%8d", title + ":", number));
   }
 }
