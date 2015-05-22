@@ -12,11 +12,9 @@ import proof.util.Config;
 /**
  * The main validator for validating a complete log file.
  *
- * @author Tilo Wiedera
- *
+ * @author Tilo Wiedera <tilo@wiedera.de>
  */
 public class MainValidator implements Validator<JSONObject> {
-
   private final static GraphReader graphReader = new GraphReader();
 
   /**
@@ -26,11 +24,13 @@ public class MainValidator implements Validator<JSONObject> {
   public void validate(JSONObject object) throws InvalidProofException {
     Graph graph = graphReader.read(object.getJSONObject("graph"));
 
+    Config.get().logger
+        .print("trying to validate a lower bound of " + graph.getClaimedLowerBound());
+
     // is the proof trivial in terms of a known lower bound formula?
     if (object.getJSONObject("solution").getBoolean("trivial")) {
       Config.get().logger.reset(1);
-      Config.get().logger.print("validating supposedly trivial lower bound of "
-          + graph.getClaimedLowerBound());
+      Config.get().logger.print("lower bound is claimed to be trivial");
 
       boolean valid = false;
 

@@ -4,15 +4,12 @@ import org.json.JSONObject;
 
 import proof.data.Graph;
 import proof.data.SegmentIndex;
-import proof.data.reader.base.ObjectReader;
 
 /**
  *
- * @author tilo
- *
+ * @author Tilo Wiedera <tilo@wiedera.de>
  */
-public class SegmentReader implements ObjectReader {
-
+public class SegmentReader implements Reader<JSONObject> {
   private final Graph graph;
 
   public SegmentReader(Graph graph) {

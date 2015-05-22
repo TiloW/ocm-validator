@@ -5,7 +5,7 @@ import proof.solver.Solver;
 /**
  * Thrown whenever a linear program could not be solved.
  *
- * @author Tilo Wiedera
+ * @author Tilo Wiedera <tilo@wiedera.de>
  */
 public class LinearProgramException extends InvalidProofException {
   /**

@@ -5,17 +5,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import proof.data.Graph;
-import proof.data.reader.base.ObjectReader;
 import proof.exception.ExceptionHelper;
 import proof.exception.InvalidGraphException;
 
 /**
  * Reader for reading graph objects.
  *
- * @author Tilo Wiedera
- *
+ * @author Tilo Wiedera <tilo@wiedera.de>
  */
-public class GraphReader implements ObjectReader {
+public class GraphReader implements Reader<JSONObject> {
 
   /**
    * Constructs a graph with the specified number of nodes and edges. Nodes and edges must be

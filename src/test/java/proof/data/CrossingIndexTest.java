@@ -10,8 +10,7 @@ import org.junit.Test;
 /**
  * Tests for {@link CrossingIndex}.
  *
- * @author Tilo Wiedera
- *
+ * @author Tilo Wiedera <tilo@wiedera.de>
  */
 public class CrossingIndexTest {
 

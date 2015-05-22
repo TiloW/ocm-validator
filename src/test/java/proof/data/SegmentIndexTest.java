@@ -6,12 +6,10 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-
 /**
  * Tests for {@link SegmentIndex}.
- * 
- * @author Tilo Wiedera
  *
+ * @author Tilo Wiedera <tilo@wiedera.de>
  */
 public class SegmentIndexTest {
 

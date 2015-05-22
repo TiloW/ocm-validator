@@ -8,17 +8,14 @@ import org.json.JSONObject;
 import proof.data.CrossingIndex;
 import proof.data.Graph;
 import proof.data.Path;
-import proof.data.reader.base.ArrayReader;
 import proof.exception.InvalidPathException;
 
 /**
  * Used for reading Kuratowski paths.
  *
- * @author Tilo Wiedera
- *
+ * @author Tilo Wiedera <tilo@wiedera.de>
  */
-public class PathReader implements ArrayReader {
-
+public class PathReader implements Reader<JSONArray> {
   private final Graph graph;
   private final Set<CrossingIndex> crossings;
 

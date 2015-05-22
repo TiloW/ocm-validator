@@ -5,18 +5,15 @@ import org.json.JSONArray;
 import proof.data.CrossingIndex;
 import proof.data.Graph;
 import proof.data.SegmentIndex;
-import proof.data.reader.base.ArrayReader;
 
 /**
  * Used for reading a single {@link CrossingIndex}.
  *
- * @author Tilo Wiedera
- *
+ * @author Tilo Wiedera <tilo@wiedera.de>
  */
-public class CrossingReader implements ArrayReader {
-
+public class CrossingReader implements Reader<JSONArray> {
   private final SegmentReader segmentReader;
-  private Graph graph;
+  private final Graph graph;
 
   /**
    * Creates a new crossing reader.

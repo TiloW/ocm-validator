@@ -7,11 +7,9 @@ import proof.exception.InvalidGraphException;
  *
  * Represents a graph by an adjacency matrix. Requires nodes to be indexed continuously.
  *
- * @author Tilo Wiedera
- *
+ * @author Tilo Wiedera <tilo@wiedera.de>
  */
 public class Graph {
-
   private final int[][] edgeIndices;
   private final int[] sources;
   private final int[] targets;
@@ -26,8 +24,8 @@ public class Graph {
    * Creates a new graph with the exact number of nodes and edges.
    *
    * @param numberOfNodes The number of nodes
-   *
    * @param numberOfEdges The number of edges
+   * @param claimedLowerBound The claimed minimum of realized crossings
    */
   public Graph(int numberOfNodes, int numberOfEdges, int claimedLowerBound) {
     immutable = false;
@@ -198,6 +196,9 @@ public class Graph {
     return s1 == s2 || s1 == t2 || t1 == s2 || t1 == t2;
   }
 
+  /**
+   * Called before modifying the graph.
+   */
   private void assertIsMutable() {
     if (immutable) {
       throw new UnsupportedOperationException("Can not modify immutable graph");

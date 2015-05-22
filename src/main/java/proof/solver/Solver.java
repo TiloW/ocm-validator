@@ -14,7 +14,7 @@ import proof.exception.UnsupportedSolverException;
 /**
  * Common interface for all linear program solvers.
  *
- * @author Tilo Wiedera
+ * @author Tilo Wiedera <tilo@wiedera.de>
  */
 public abstract class Solver {
   private Double result;
@@ -30,10 +30,13 @@ public abstract class Solver {
 
   /**
    * Solves the linear program contained in the given file. The file must contain a problem
-   * described in CPLEX lp format. Will return 0 if the given file is empty.
+   * described in CPLEX LP format. Will return 0 if the given file is empty.
    *
    * @param filename The file containing the problem
    * @return The optimal objective value
+   *
+   * @throws LinearProgramException if the generated program could not be solved or the optimal
+   *         solution is too low
    */
   public double solve(String filename) throws LinearProgramException {
     Process process = null;
@@ -99,8 +102,6 @@ public abstract class Solver {
    *
    * @param line The line containing the double, typically the optimal objective value.
    * @return The parsed value
-   *
-   * @return true if this solver can be used
    */
   protected double parseDouble(String line) {
     StringTokenizer st = new StringTokenizer(line);
@@ -126,6 +127,7 @@ public abstract class Solver {
    * results.
    *
    * @param line The currently investigated line from the solvers output
+   * @throws LinearProgramException if the line indicates the solver has failed
    */
   protected abstract void handleLine(String line) throws LinearProgramException;
 

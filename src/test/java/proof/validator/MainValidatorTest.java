@@ -13,6 +13,11 @@ import proof.ValidatorTest;
 import proof.exception.InvalidConfigurationException;
 import proof.exception.InvalidProofException;
 
+/**
+ * Tests of valid proofs for the {@link MainValidator}.
+ *
+ * @author Tilo Wiedera <tilo@wiedera.de>
+ */
 @RunWith(Parameterized.class)
 public class MainValidatorTest extends ValidatorTest {
   private final File proofFile;

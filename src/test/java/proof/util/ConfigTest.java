@@ -18,7 +18,7 @@ import proof.solver.SolverFactory;
 /**
  * Tests for {@link Config}.
  *
- * @author Tilo Wiedera
+ * @author Tilo Wiedera <tilo@wiedera.de>
  */
 public class ConfigTest {
   private final static String FILE = "src/test/resources/log/invalid/empty.json";

@@ -7,8 +7,7 @@ import proof.validator.BranchCoverageValidator;
  *
  * Represents an error in the variable configuration of the branching tree.
  *
- * @author Tilo Wiedera
- *
+ * @author Tilo Wiedera <tilo@wiedera.de>
  */
 public class InvalidCoverageException extends InvalidProofException {
 

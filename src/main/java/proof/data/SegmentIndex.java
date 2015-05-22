@@ -3,10 +3,11 @@ package proof.data;
 /**
  * Represents a single segment on a single edge.
  *
- * @author Tilo Wiedera
- *
+ * @author Tilo Wiedera <tilo@wiedera.de>
  */
 public class SegmentIndex {
+  public final int edge;
+  public final int segment;
 
   /**
    * Creates a new segment index.
@@ -25,9 +26,6 @@ public class SegmentIndex {
     this.edge = edge;
     this.segment = segment;
   }
-
-  public final int edge;
-  public final int segment;
 
   @Override
   public boolean equals(Object other) {

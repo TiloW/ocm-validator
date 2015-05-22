@@ -10,6 +10,11 @@ import proof.ValidatorTest;
 import proof.exception.InvalidConfigurationException;
 import proof.exception.InvalidProofException;
 
+/**
+ * Invalidity-tests for the {@link MainValidator}.
+ *
+ * @author Tilo Wiedera <tilo@wiedera.de>
+ */
 public class MainValidatorInvalidityTest extends ValidatorTest {
 
   public MainValidatorInvalidityTest() throws InvalidConfigurationException {

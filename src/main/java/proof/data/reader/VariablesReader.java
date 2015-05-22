@@ -8,16 +8,14 @@ import org.json.JSONObject;
 
 import proof.data.CrossingIndex;
 import proof.data.Graph;
-import proof.data.reader.base.ArrayReader;
 
 /**
  * Reads all variables fixed on a single branch.
  *
- * @author Tilo Wiedera
+ * @author Tilo Wiedera <tilo@wiedera.de>
  */
-public class VariablesReader implements ArrayReader {
-
-  private Graph graph;
+public class VariablesReader implements Reader<JSONArray> {
+  private final Graph graph;
 
   public VariablesReader(Graph graph) {
     this.graph = graph;

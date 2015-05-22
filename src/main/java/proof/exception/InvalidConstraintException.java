@@ -5,8 +5,7 @@ import proof.validator.ConstraintValidator;
 /**
  * Thrown whenever the Kuratowski {@link ConstraintValidator} encounteres an error.
  *
- * @author Tilo Wiedera
- *
+ * @author Tilo Wiedera <tilo@wiedera.de>
  */
 public class InvalidConstraintException extends InvalidProofException {
 

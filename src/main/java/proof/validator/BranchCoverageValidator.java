@@ -23,8 +23,7 @@ import proof.exception.InvalidCoverageException;
  * variable configuration is missing and that there are no ambiguities caused by multiple leaves
  * reporting the same or overlapping configurations.
  *
- * @author Tilo Wiedera
- *
+ * @author Tilo Wiedera <tilo@wiedera.de>
  */
 public class BranchCoverageValidator implements Validator<JSONArray> {
   private final VariablesReader variablesReader;
