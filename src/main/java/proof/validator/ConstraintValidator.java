@@ -221,6 +221,12 @@ public class ConstraintValidator implements Validator<JSONObject> {
     }
   }
 
+  /**
+   * Collects all nodes and crossings which represent a start or end of any of the given paths.
+   *
+   * @param paths The paths to be investigated
+   * @return a map containing the number of times each endpoint was found in any path
+   */
   private Map<Object, Integer> collectEndpoints(Path paths[]) {
     Map<Object, Integer> result = new HashMap<Object, Integer>();
     int counter = 0;

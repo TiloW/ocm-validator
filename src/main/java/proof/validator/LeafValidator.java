@@ -31,6 +31,11 @@ public class LeafValidator implements Validator<JSONObject> {
   private final Solver solver;
   private final LinearProgramGenerator generator;
 
+  /**
+   * Initializes a new leaf validator.
+   *
+   * @param graph The graph to work with.
+   */
   public LeafValidator(Graph graph) {
     this.graph = graph;
     generator = new LinearProgramGenerator(graph);

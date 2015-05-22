@@ -271,6 +271,15 @@ public class LinearProgramGenerator {
     return result.toString();
   }
 
+  /**
+   * Returns the positive sum over all feasible variables (i.e. crossings) including the given
+   * segment.
+   *
+   * @param edge The edge
+   * @param segment The segment
+   * @return string a CPLEX LP file format compliant representation of the sum over all feasible
+   *         variables
+   */
   private String sumVariables(int edge, int segment) {
     return sumVariables(edge, segment, false);
   }

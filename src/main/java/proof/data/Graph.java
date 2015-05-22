@@ -198,6 +198,9 @@ public class Graph {
     return s1 == s2 || s1 == t2 || t1 == s2 || t1 == t2;
   }
 
+  /**
+   * Called before modifying the graph.
+   */
   private void assertIsMutable() {
     if (immutable) {
       throw new UnsupportedOperationException("Can not modify immutable graph");

@@ -139,11 +139,24 @@ public class Path {
     return result;
   }
 
+  /**
+   * Returns whether this path shares a common start or end with the other one.
+   *
+   * @param other The other path
+   * @return true iff the paths are ajacent to each other
+   */
   public boolean isAdjacentTo(Path other) {
     return getSource().equals(other.getSource()) || getSource().equals(other.getTarget())
         || getTarget().equals(other.getSource()) || getTarget().equals(other.getTarget());
   }
 
+  /**
+   * Returns the node or crossing at the end (or start) of the given segment range.
+   *
+   * @param pos The position of the segment range in this path
+   * @param getSource Whether to return the source instead of the target
+   * @return The node or crossing
+   */
   private Object getEndpoint(int pos, boolean getSource) {
     Object result = null;
     Section section = sections.get(pos);
