@@ -5,7 +5,7 @@ import java.util.Arrays;
 /**
  * Represents a single crossing by two edge segments.
  *
- * @author Tilo Wiedera <tilo@wiedera.de>
+ * @author <a href="mailto:tilo@wiedera.de">Tilo Wiedera</a>
  */
 public class CrossingIndex {
 
@@ -66,8 +66,10 @@ public class CrossingIndex {
     if (result) {
       result &= getClass().equals(other.getClass());
       if (result) {
-        CrossingIndex otherCI = (CrossingIndex) other;
-        result = segments[0].equals(otherCI.segments[0]) && segments[1].equals(otherCI.segments[1]);
+        CrossingIndex otherCrossing = (CrossingIndex) other;
+        result =
+            segments[0].equals(otherCrossing.segments[0])
+            && segments[1].equals(otherCrossing.segments[1]);
       }
     }
 

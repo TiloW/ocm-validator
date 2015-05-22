@@ -1,5 +1,9 @@
 package proof.solver;
 
+import proof.exception.ExceptionHelper;
+import proof.exception.LinearProgramException;
+import proof.exception.UnsupportedSolverException;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -7,19 +11,18 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.StringTokenizer;
 
-import proof.exception.ExceptionHelper;
-import proof.exception.LinearProgramException;
-import proof.exception.UnsupportedSolverException;
-
 /**
  * Common interface for all linear program solvers.
  *
- * @author Tilo Wiedera <tilo@wiedera.de>
+ * @author <a href="mailto:tilo@wiedera.de">Tilo Wiedera</a>
  */
 public abstract class Solver {
   private Double result;
   private String filename;
 
+  /**
+   * Initializes the solver and asserts it is available.
+   */
   public Solver() {
     if (!isAvailable()) {
       throw new UnsupportedSolverException(getClass().getName()
@@ -47,7 +50,8 @@ public abstract class Solver {
 
     try {
       process = Runtime.getRuntime().exec(getCommand(filename));
-      BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+      BufferedReader reader =
+          new BufferedReader(new InputStreamReader(process.getInputStream()));
       BufferedReader errorReader =
           new BufferedReader(new InputStreamReader(process.getErrorStream()));
 
@@ -68,7 +72,8 @@ public abstract class Solver {
     }
 
     if (result == null) {
-      throw new LinearProgramException(this, filename, "output is missing some information.");
+      throw new LinearProgramException(this, filename,
+          "output is missing some information.");
     }
 
     return result;
@@ -132,7 +137,8 @@ public abstract class Solver {
   protected abstract void handleLine(String line) throws LinearProgramException;
 
   /**
-   * Returns true if this solver is available on the command line.
+   * Returns true if this solver is available on the command line. Availability is tested by solving
+   * a tiny linear program.
    *
    * @return true if this solver can be used
    */

@@ -5,7 +5,7 @@ import java.io.PrintStream;
 /**
  * Global logger. Keeps track of the progress of the validation.
  *
- * @author Tilo Wiedera <tilo@wiedera.de>
+ * @author <a href="mailto:tilo@wiedera.de">Tilo Wiedera</a>
  */
 public class ProgressLogger {
   private int progress = 0;

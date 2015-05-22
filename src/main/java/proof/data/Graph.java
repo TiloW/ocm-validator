@@ -3,11 +3,9 @@ package proof.data;
 import proof.exception.InvalidGraphException;
 
 /**
- * Maintains a graph.
- *
  * Represents a graph by an adjacency matrix. Requires nodes to be indexed continuously.
  *
- * @author Tilo Wiedera <tilo@wiedera.de>
+ * @author <a href="mailto:tilo@wiedera.de">Tilo Wiedera</a>
  */
 public class Graph {
   private final int[][] edgeIndices;
@@ -17,8 +15,8 @@ public class Graph {
   private boolean immutable;
   private final int claimedLowerBound;
 
-  public final static int NO_EDGE = -1;
-  public final static int NO_EDGE_COST = Integer.MAX_VALUE;
+  public static final int NO_EDGE = -1;
+  public static final int NO_EDGE_COST = Integer.MAX_VALUE;
 
   /**
    * Creates a new graph with the exact number of nodes and edges.
@@ -89,7 +87,7 @@ public class Graph {
   }
 
   /**
-   * Returns the cost of a single edge
+   * Returns the cost of a single edge.
    *
    * @param source The index of the first node
    * @param target The index of the second node
@@ -113,9 +111,7 @@ public class Graph {
   }
 
   /**
-   * Creates a new edge.
-   *
-   * Will fail if the index is already in use or the edge already exists.
+   * Creates a new edge. Will fail if the index is already in use or the edge already exists.
    *
    * @param edgeId The edge index to be used
    * @param source The index of the first node
@@ -156,9 +152,8 @@ public class Graph {
   }
 
   /**
-   * Makes this graph immutable.
-   *
-   * Future calls of {@code addEdge} will throw an {@link UnsupportedOperationException}.
+   * Makes this graph immutable. Future calls of {@code addEdge} will throw an
+   * {@link UnsupportedOperationException}.
    *
    * @throws InvalidGraphException Iff not all edges have been set
    */

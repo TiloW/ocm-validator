@@ -1,15 +1,15 @@
 package proof.data;
 
+import proof.exception.InvalidPathException;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import proof.exception.InvalidPathException;
-
 /**
  * Represents a Kuratowski path.
  *
- * @author Tilo Wiedera <tilo@wiedera.de>
+ * @author <a href="mailto:tilo@wiedera.de">Tilo Wiedera</a>
  */
 public class Path {
 
@@ -84,9 +84,8 @@ public class Path {
   }
 
   /**
-   * Returns the source of this path.
-   *
-   * This can either be an Integer (node index) or a {@link CrossingIndex}.
+   * Returns the source of this path. This can either be an Integer (node index) or a
+   * {@link CrossingIndex}.
    *
    * @return The source
    */
@@ -95,9 +94,8 @@ public class Path {
   }
 
   /**
-   * Returns the target of this path.
-   *
-   * This can either be an Integer (node index) or a {@link CrossingIndex}.
+   * Returns the target of this path. This can either be an Integer (node index) or a
+   * {@link CrossingIndex}.
    *
    * @return The target
    */

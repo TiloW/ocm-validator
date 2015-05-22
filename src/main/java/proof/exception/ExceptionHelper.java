@@ -3,7 +3,7 @@ package proof.exception;
 /**
  * Helper for throwing exceptions.
  *
- * @author Tilo Wiedera <tilo@wiedera.de>
+ * @author <a href="mailto:tilo@wiedera.de">Tilo Wiedera</a>
  */
 public abstract class ExceptionHelper {
   /**

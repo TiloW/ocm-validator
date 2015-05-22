@@ -1,8 +1,5 @@
 package proof;
 
-import java.io.IOException;
-import java.nio.file.Files;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -11,10 +8,13 @@ import proof.exception.InvalidProofException;
 import proof.util.Config;
 import proof.validator.MainValidator;
 
+import java.io.IOException;
+import java.nio.file.Files;
+
 /**
  * Main class for running the application.
  *
- * @author Tilo Wiedera <tilo@wiedera.de>
+ * @author <a href="mailto:tilo@wiedera.de">Tilo Wiedera</a>
  */
 public class Main {
 
@@ -26,7 +26,7 @@ public class Main {
    */
   public static void main(String[] args) throws InvalidProofException {
     try {
-      Config.Create(args);
+      Config.create(args);
     } catch (InvalidConfigurationException e) {
       System.out.println(e.getMessage() + "\n");
       System.out.println(Config.usage);

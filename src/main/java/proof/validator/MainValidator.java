@@ -12,10 +12,10 @@ import proof.util.Config;
 /**
  * The main validator for validating a complete log file.
  *
- * @author Tilo Wiedera <tilo@wiedera.de>
+ * @author <a href="mailto:tilo@wiedera.de">Tilo Wiedera</a>
  */
 public class MainValidator implements Validator<JSONObject> {
-  private final static GraphReader graphReader = new GraphReader();
+  private static final GraphReader graphReader = new GraphReader();
 
   /**
    * Validates a whole log file as provided by the OCM logger.

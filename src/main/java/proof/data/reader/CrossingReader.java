@@ -9,7 +9,7 @@ import proof.data.SegmentIndex;
 /**
  * Used for reading a single {@link CrossingIndex}.
  *
- * @author Tilo Wiedera <tilo@wiedera.de>
+ * @author <a href="mailto:tilo@wiedera.de">Tilo Wiedera</a>
  */
 public class CrossingReader implements Reader<JSONArray> {
   private final SegmentReader segmentReader;

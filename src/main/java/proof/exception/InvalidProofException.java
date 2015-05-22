@@ -4,7 +4,7 @@ package proof.exception;
 /**
  * Base class for all exceptions that disprove the validity of a log.
  *
- * @author Tilo Wiedera <tilo@wiedera.de>
+ * @author <a href="mailto:tilo@wiedera.de">Tilo Wiedera</a>
  */
 public class InvalidProofException extends Exception {
 

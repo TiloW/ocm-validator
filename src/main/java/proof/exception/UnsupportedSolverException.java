@@ -4,7 +4,7 @@ package proof.exception;
  * Exception to be thrown when a linear program solver is requested that is not available on the
  * command line.
  *
- * @author Tilo Wiedera <tilo@wiedera.de>
+ * @author <a href="mailto:tilo@wiedera.de">Tilo Wiedera</a>
  */
 public class UnsupportedSolverException extends RuntimeException {
 

@@ -5,7 +5,7 @@ import proof.exception.LinearProgramException;
 /**
  * Wrapper class for performing calls to the Gurobi linear program solver.
  *
- * @author Tilo Wiedera <tilo@wiedera.de>
+ * @author <a href="mailto:tilo@wiedera.de">Tilo Wiedera</a>
  */
 class Gurobi extends Solver {
   @Override
@@ -15,7 +15,9 @@ class Gurobi extends Solver {
 
   @Override
   protected void handleLine(String line) throws LinearProgramException {
-    if (line.contains("Infeasible model") || line.contains("(null): 0 rows, 0 columns, 0 nonzeros")) {
+    boolean empty = line.contains("(null): 0 rows, 0 columns, 0 nonzeros");
+
+    if (empty || line.contains("Infeasible model")) {
       returnInfeasiblity();
     } else if (line.contains("Optimal objective")) {
       setResult(parseDouble(line));

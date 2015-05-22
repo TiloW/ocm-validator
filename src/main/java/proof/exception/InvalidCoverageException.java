@@ -3,11 +3,10 @@ package proof.exception;
 import proof.validator.BranchCoverageValidator;
 
 /**
- * Should only be thrown by {@link BranchCoverageValidator}.
+ * Represents an error in the variable configuration of the branching tree. Should be thrown by
+ * {@link BranchCoverageValidator} only.
  *
- * Represents an error in the variable configuration of the branching tree.
- *
- * @author Tilo Wiedera <tilo@wiedera.de>
+ * @author <a href="mailto:tilo@wiedera.de">Tilo Wiedera</a>
  */
 public class InvalidCoverageException extends InvalidProofException {
 
