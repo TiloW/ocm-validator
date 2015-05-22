@@ -9,7 +9,7 @@ import org.junit.Test;
 /**
  * Tests for {@link SegmentIndex}.
  *
- * @author Tilo Wiedera <tilo@wiedera.de>
+ * @author <a href="mailto:tilo@wiedera.de">Tilo Wiedera</a>
  */
 public class SegmentIndexTest {
 

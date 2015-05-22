@@ -1,10 +1,5 @@
 package proof.validator;
 
-import java.io.File;
-import java.io.FileFilter;
-import java.io.IOException;
-import java.net.URISyntaxException;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -13,10 +8,14 @@ import proof.ValidatorTest;
 import proof.exception.InvalidConfigurationException;
 import proof.exception.InvalidProofException;
 
+import java.io.File;
+import java.io.FileFilter;
+import java.io.IOException;
+
 /**
  * Tests of valid proofs for the {@link MainValidator}.
  *
- * @author Tilo Wiedera <tilo@wiedera.de>
+ * @author <a href="mailto:tilo@wiedera.de">Tilo Wiedera</a>
  */
 @RunWith(Parameterized.class)
 public class MainValidatorTest extends ValidatorTest {
@@ -28,8 +27,13 @@ public class MainValidatorTest extends ValidatorTest {
     this.proofFile = proofFile;
   }
 
+  /**
+   * Returns a collection of all JSON resource files to be tested.
+   *
+   * @return An array of JSON files
+   */
   @Parameterized.Parameters(name = "{0}")
-  public static File[] getFiles() throws URISyntaxException {
+  public static File[] getFiles() {
     File dir = new File("build/resources/test/" + DIR);
 
     return dir.listFiles(new FileFilter() {
@@ -42,6 +46,6 @@ public class MainValidatorTest extends ValidatorTest {
 
   @Test
   public void testValidate() throws InvalidProofException, IOException {
-    new MainValidator().validate(loadJSON(proofFile.getName()));
+    new MainValidator().validate(loadJson(proofFile.getName()));
   }
 }

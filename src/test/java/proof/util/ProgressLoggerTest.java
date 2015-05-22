@@ -3,19 +3,19 @@ package proof.util;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
+
 /**
  * Tests for {@link ProgressLogger}.
  *
- * @author Tilo Wiedera <tilo@wiedera.de>
+ * @author <a href="mailto:tilo@wiedera.de">Tilo Wiedera</a>
  */
 @RunWith(Parameterized.class)
 public class ProgressLoggerTest {
@@ -23,7 +23,7 @@ public class ProgressLoggerTest {
   private final boolean verbose;
   private final PrintStream printStream = new PrintStream(byteStream);
   private final ProgressLogger logger;
-  private final int MAX_PROGRESS = 42;
+  private static final int MAX_PROGRESS = 42;
 
 
   @Parameterized.Parameters(name = "verbose={0}")
@@ -37,6 +37,10 @@ public class ProgressLoggerTest {
     logger = new ProgressLogger(printStream, verbose);
   }
 
+
+  /**
+   * Called before each test execution. Resets the output buffer.
+   */
   @Before
   public void setUp() throws IOException {
     logger.reset(MAX_PROGRESS);

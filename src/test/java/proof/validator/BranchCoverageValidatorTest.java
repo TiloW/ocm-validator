@@ -1,7 +1,5 @@
 package proof.validator;
 
-import java.io.IOException;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Before;
@@ -11,10 +9,12 @@ import proof.ValidatorTest;
 import proof.exception.InvalidConfigurationException;
 import proof.exception.InvalidCoverageException;
 
+import java.io.IOException;
+
 /**
  * Tests for the {@link BranchCoverageValidator}.
  *
- * @author Tilo Wiedera <tilo@wiedera.de>
+ * @author <a href="mailto:tilo@wiedera.de">Tilo Wiedera</a>
  */
 public class BranchCoverageValidatorTest extends ValidatorTest {
   private JSONArray simpleResource;
@@ -25,7 +25,7 @@ public class BranchCoverageValidatorTest extends ValidatorTest {
 
   @Before
   public void init() {
-    simpleResource = loadJSON("simple").getJSONArray("leaves");
+    simpleResource = loadJson("simple").getJSONArray("leaves");
   }
 
   private final BranchCoverageValidator coverageValidator = new BranchCoverageValidator(
@@ -55,14 +55,14 @@ public class BranchCoverageValidatorTest extends ValidatorTest {
   @Test(expected = InvalidCoverageException.class)
   public void testValidate_invalidMultipleVariables() throws InvalidCoverageException, IOException {
     simpleResource.getJSONObject(0).getJSONArray("fixedVariables").getJSONObject(0)
-        .getJSONArray("crossing").getJSONObject(0).getJSONObject("edge").put("source", 123);
+    .getJSONArray("crossing").getJSONObject(0).getJSONObject("edge").put("source", 123);
 
     coverageValidator.validate(simpleResource);
   }
 
   @Test(expected = InvalidCoverageException.class)
   public void testValidate_invalidSingleLeaf() throws InvalidCoverageException, IOException {
-    JSONArray resource = loadJSON("single-leaf").getJSONArray("leaves");
+    JSONArray resource = loadJson("single-leaf").getJSONArray("leaves");
     JSONObject var =
         simpleResource.getJSONObject(0).getJSONArray("fixedVariables").getJSONObject(0);
     resource.getJSONObject(0).getJSONArray("fixedVariables").put(var);
@@ -78,7 +78,7 @@ public class BranchCoverageValidatorTest extends ValidatorTest {
 
   @Test(expected = InvalidCoverageException.class)
   public void testValidate_unmergeable() throws InvalidCoverageException, IOException {
-    coverageValidator.validate(loadJSON("unmergeable").getJSONArray("leaves"));
+    coverageValidator.validate(loadJson("unmergeable").getJSONArray("leaves"));
   }
 
   @Test
@@ -88,7 +88,7 @@ public class BranchCoverageValidatorTest extends ValidatorTest {
 
   @Test
   public void testValidate_validSingleLeaf() throws InvalidCoverageException, IOException {
-    coverageValidator.validate(loadJSON("single-leaf").getJSONArray("leaves"));
+    coverageValidator.validate(loadJson("single-leaf").getJSONArray("leaves"));
   }
 
 }
