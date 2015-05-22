@@ -4,6 +4,7 @@ apply plugin: 'jacoco'
 apply plugin: 'com.github.kt3k.coveralls'
 apply plugin:'application'
 apply plugin: 'checkstyle'
+apply plugin: 'sonar-runner'
 
 ext.libraries = []
 libraries.push('org.json:json:20140107')
