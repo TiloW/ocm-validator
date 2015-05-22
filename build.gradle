@@ -3,6 +3,7 @@ apply plugin: 'eclipse'
 apply plugin: 'jacoco'
 apply plugin: 'com.github.kt3k.coveralls'
 apply plugin:'application'
+apply plugin: 'checkstyle'
 
 ext.libraries = []
 libraries.push('org.json:json:20140107')
@@ -26,8 +27,13 @@ run {
   }
 }
 
-javadoc{
+javadoc {
   options.memberLevel = JavadocMemberLevel.PRIVATE
+}
+
+checkstyle {
+  configFile = file("checkstyle.xml")
+  toolVersion = "6.6"
 }
 
 buildscript {
