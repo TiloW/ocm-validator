@@ -67,6 +67,12 @@ public class Config {
 
   /**
    * Method for specifying an output stream during testing. See {@link #Create(String[])}.
+   *
+   * @param args The command line arguments as given to the main method.
+   * @param out The output stream to be used.
+   * @throws InvalidConfigurationException If any arguments do not comply with the {@link #usage}.
+   *
+   * @throws InvalidConfigurationException if the configuration has already been created.
    */
   public static void Create(String[] args, PrintStream out) throws InvalidConfigurationException {
     if (Config.config != null) {
@@ -174,6 +180,8 @@ public class Config {
 
   /**
    * Returns a summary of all set options.
+   *
+   * @return the configuration synopsis
    */
   private String getReport() {
     return "CONFIGURATION\n\n  verbose: " + verbose + "\n  linear program solver: "

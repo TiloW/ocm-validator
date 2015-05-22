@@ -26,8 +26,8 @@ public class Graph {
    * Creates a new graph with the exact number of nodes and edges.
    *
    * @param numberOfNodes The number of nodes
-   *
    * @param numberOfEdges The number of edges
+   * @param claimedLowerBound The claimed minimum of realized crossings
    */
   public Graph(int numberOfNodes, int numberOfEdges, int claimedLowerBound) {
     immutable = false;

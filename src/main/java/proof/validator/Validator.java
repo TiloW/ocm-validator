@@ -8,6 +8,8 @@ import proof.exception.InvalidProofException;
  *
  * Used to define validators for certain sections of the JSON log file.
  *
+ * @param <T> The type of object this validator can handle
+ *
  * @author Tilo Wiedera
  */
 public interface Validator<T> {

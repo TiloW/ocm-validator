@@ -32,7 +32,7 @@ public class LinearProgramGenerator {
   /**
    * Initializes a new generator.
    *
-   * @param graph The graph to work on.
+   * @param graph The graph to work with.
    */
   public LinearProgramGenerator(Graph graph) {
     this.graph = graph;

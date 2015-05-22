@@ -77,6 +77,7 @@ public class Statistics extends HashMap<String, Integer> {
    *
    * @param title A description of the value
    * @param number The integer value
+   * @return The formatted number
    */
   private String formatNumber(String title, int number) {
     return String.format(
