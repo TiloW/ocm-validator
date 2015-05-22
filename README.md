@@ -7,7 +7,7 @@ This program aims to validate the correctness of [crossing numbers](http://en.wi
 ## Purpose
 Given a graph `G` and a set of [Kuratowski subdivisions](http://en.wikipedia.org/wiki/Kuratowski%27s_theorem) it can be shown that the crossing number of `G` exceeds some lower bound using linear programming. Existing algorithms are able to identify a small subset of the exponentially large set of Kuratowski subdivisions, such that the bound grows tight. However, all implementations lack the required readability to comprehend the supposed proof.
 
-The Validator will be used to track down bugs in the existing implementations and to validate generated proofs. Sufficient readability is a major objective.
+The validator will be used to track down bugs in the existing implementations and to validate generated proofs. Sufficient readability is a major objective.
 
 ## Requirements
 You need one of the following linear program solvers available on your command line:
@@ -26,4 +26,4 @@ and [A New Approach to Exact Crossing Minimization](http://ls11-www.cs.uni-dortm
 ## License
 Copyright (c) 2015 Tilo Wiedera
 
-This program is released unter the [MIT License](https://github.com/TiloW/ocm-validator/blob/master/LICENSE.txt).
+This program is released under the [MIT License](https://github.com/TiloW/ocm-validator/blob/master/LICENSE.txt).
