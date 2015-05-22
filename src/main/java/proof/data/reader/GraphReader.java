@@ -5,7 +5,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import proof.data.Graph;
-import proof.data.reader.base.ObjectReader;
 import proof.exception.ExceptionHelper;
 import proof.exception.InvalidGraphException;
 
@@ -15,7 +14,7 @@ import proof.exception.InvalidGraphException;
  * @author Tilo Wiedera
  *
  */
-public class GraphReader implements ObjectReader {
+public class GraphReader implements Reader<JSONObject> {
 
   /**
    * Constructs a graph with the specified number of nodes and edges. Nodes and edges must be
