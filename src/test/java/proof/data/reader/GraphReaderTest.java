@@ -5,8 +5,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.io.IOException;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Before;
@@ -16,10 +14,12 @@ import proof.ResourceBasedTest;
 import proof.data.Graph;
 import proof.exception.InvalidGraphException;
 
+import java.io.IOException;
+
 /**
  * Tests for {@link GraphReader}.
  *
- * @author Tilo Wiedera <tilo@wiedera.de>
+ * @author <a href="mailto:tilo@wiedera.de">Tilo Wiedera</a>
  */
 public class GraphReaderTest extends ResourceBasedTest {
   private JSONObject resource;
@@ -32,7 +32,7 @@ public class GraphReaderTest extends ResourceBasedTest {
 
   @Before
   public void init() {
-    resource = loadJSON("simple");
+    resource = loadJson("simple");
   }
 
   @Test(expected = InvalidGraphException.class)

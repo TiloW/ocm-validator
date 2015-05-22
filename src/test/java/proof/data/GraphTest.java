@@ -12,7 +12,7 @@ import proof.exception.InvalidGraphException;
 /**
  * Tests for {@link Graph}
  *
- * @author Tilo Wiedera <tilo@wiedera.de>
+ * @author <a href="mailto:tilo@wiedera.de">Tilo Wiedera</a>
  */
 public class GraphTest {
 

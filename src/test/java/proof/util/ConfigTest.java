@@ -5,26 +5,28 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.io.File;
-import java.io.OutputStream;
-import java.io.PrintStream;
-
 import org.junit.Test;
 
 import proof.exception.InvalidConfigurationException;
 import proof.exception.UnsupportedSolverException;
 import proof.solver.SolverFactory;
 
+import java.io.File;
+import java.io.OutputStream;
+import java.io.PrintStream;
+
 /**
  * Tests for {@link Config}.
  *
- * @author Tilo Wiedera <tilo@wiedera.de>
+ * @author <a href="mailto:tilo@wiedera.de">Tilo Wiedera</a>
  */
 public class ConfigTest {
-  private final static String FILE = "src/test/resources/log/invalid/empty.json";
+  private static final String FILE = "src/test/resources/log/invalid/empty.json";
   private final PrintStream out = new PrintStream(new OutputStream() {
     @Override
-    public void write(int b) {}
+    public void write(int data) {
+      // don't write anything
+    }
   });
 
   @Test
@@ -116,7 +118,7 @@ public class ConfigTest {
     try {
       assertTrue(Config.get() instanceof Config);
       String[] args = {"-f", FILE};
-      Config.Create(args, out);
+      Config.create(args, out);
       fail("Configuration must be unique.");
     } catch (InvalidConfigurationException | RuntimeException expected) {
       // this is supposed to happen

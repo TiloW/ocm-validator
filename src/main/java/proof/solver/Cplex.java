@@ -5,7 +5,7 @@ import proof.exception.LinearProgramException;
 /**
  * Wrapper class for calling the CPLEX optimization suite linear program solver.
  *
- * @author Tilo Wiedera <tilo@wiedera.de>
+ * @author <a href="mailto:tilo@wiedera.de">Tilo Wiedera</a>
  */
 class Cplex extends Solver {
   @Override

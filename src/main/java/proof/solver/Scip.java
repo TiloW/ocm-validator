@@ -7,7 +7,7 @@ import proof.exception.LinearProgramException;
  * Simple wrapper for executing the SCIP optimization suite linear program solver. This requires the
  * scip command to be available on the console.
  *
- * @author Tilo Wiedera <tilo@wiedera.de>
+ * @author <a href="mailto:tilo@wiedera.de">Tilo Wiedera</a>
  */
 class Scip extends Solver {
   private boolean isFeasible;

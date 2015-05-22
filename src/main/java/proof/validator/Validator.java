@@ -4,17 +4,13 @@ import proof.exception.InvalidProofException;
 
 
 /**
- * Generic JSON Validator.
- *
- * Used to define validators for certain sections of the JSON log file.
+ * Generic JSON Validator. Used to define validators for certain sections of the JSON log file.
  *
  * @param <T> The type of object this validator can handle
  *
- * @author Tilo Wiedera <tilo@wiedera.de>
+ * @author <a href="mailto:tilo@wiedera.de">Tilo Wiedera</a>
  */
 public interface Validator<T> {
-  static int level = 0;
-
   /**
    * Validates the given portion of the log file.
    *

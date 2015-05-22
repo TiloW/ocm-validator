@@ -1,20 +1,18 @@
 package proof.util;
 
+import proof.solver.LinearProgramGenerator;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-import proof.solver.LinearProgramGenerator;
-
 /**
  * Class for collecting integer values. Used by {@link LinearProgramGenerator} to print information
- * about the generated program.
+ * about the generated program. All values contained in the map can be returned in a well readable
+ * format (see @link {@link #format()}.
  *
- * All values contained in the map can be returned in a well readable format (see @link
- * {@link #format()}.
- *
- * @author Tilo Wiedera <tilo@wiedera.de>
+ * @author <a href="mailto:tilo@wiedera.de">Tilo Wiedera</a>
  */
 public class Statistics extends HashMap<String, Integer> {
   int maxTitleLength;
@@ -81,7 +79,7 @@ public class Statistics extends HashMap<String, Integer> {
    */
   private String formatNumber(String title, int number) {
     return String.format(
-        "# %-" + (maxTitleLength + 1) + "s %" + ((int) Math.log10(Math.abs(maxValue)) + 2) + "d",
-        title + ":", number);
+        "# %-" + (maxTitleLength + 1) + "s %"
+            + ((int) Math.log10(Math.abs(maxValue)) + 2) + "d", title + ":", number);
   }
 }

@@ -11,16 +11,14 @@ import proof.exception.InvalidGraphException;
 /**
  * Reader for reading graph objects.
  *
- * @author Tilo Wiedera <tilo@wiedera.de>
+ * @author <a href="mailto:tilo@wiedera.de">Tilo Wiedera</a>
  */
 public class GraphReader implements Reader<JSONObject> {
 
   /**
    * Constructs a graph with the specified number of nodes and edges. Nodes and edges must be
-   * indexed continuously from 1 to the corresponding number.
-   *
-   * A Graph is stored as a list of edges. Each edge has an associated cost which defaults to 1 if
-   * not present.
+   * indexed continuously from 1 to the corresponding number. A Graph is stored as a list of edges.
+   * Each edge has an associated cost which defaults to 1 if not present.
    */
   @Override
   public Graph read(JSONObject input) {

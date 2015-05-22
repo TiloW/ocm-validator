@@ -3,7 +3,7 @@ package proof.data;
 /**
  * Represents a single segment on a single edge.
  *
- * @author Tilo Wiedera <tilo@wiedera.de>
+ * @author <a href="mailto:tilo@wiedera.de">Tilo Wiedera</a>
  */
 public class SegmentIndex {
   public final int edge;
@@ -34,8 +34,8 @@ public class SegmentIndex {
     if (result) {
       result &= getClass().equals(other.getClass());
       if (result) {
-        SegmentIndex otherSI = (SegmentIndex) other;
-        result = edge == otherSI.edge && segment == otherSI.segment;
+        SegmentIndex otherSegment = (SegmentIndex) other;
+        result = edge == otherSegment.edge && segment == otherSegment.segment;
       }
     }
 

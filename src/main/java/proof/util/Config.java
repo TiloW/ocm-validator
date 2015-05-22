@@ -1,20 +1,20 @@
 package proof.util;
 
-import java.io.File;
-import java.io.PrintStream;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
 import proof.exception.ExceptionHelper;
 import proof.exception.InvalidConfigurationException;
 import proof.exception.UnsupportedSolverException;
 import proof.solver.Solver;
 import proof.solver.SolverFactory;
 
+import java.io.File;
+import java.io.PrintStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 /**
  * Singleton configuration object. Parses command line arguments and provides global information.
  *
- * @author Tilo Wiedera <tilo@wiedera.de>
+ * @author <a href="mailto:tilo@wiedera.de">Tilo Wiedera</a>
  */
 public class Config {
   private static Config config = null;
@@ -22,10 +22,11 @@ public class Config {
   /**
    * Usage synopsis to be given to the user.
    */
-  public static final String usage = "SYNOPSIS\n" + "  validator -f <file> [-v] [-s <solver>]\n\n"
-      + "OPTIONS\n\n" + "  -f <file>, --file <file>\n"
-      + "\tValidate the proof contained in <file>.\n\n" + "  -v, --verbose\n"
-      + "\tPrint verbose information during validation.\n\n" + "  -s <solver>, --solver <solver>\n"
+  public static final String usage = "SYNOPSIS\n"
+      + "  validator -f <file> [-v] [-s <solver>]\n\n" + "OPTIONS\n\n"
+      + "  -f <file>, --file <file>\n" + "\tValidate the proof contained in <file>.\n\n"
+      + "  -v, --verbose\n" + "\tPrint verbose information during validation.\n\n"
+      + "  -s <solver>, --solver <solver>\n"
       + "\tUse <solver> as the linear program solver for validating lower bounds.\n"
       + "\tValid choices are {scip,cplex,gurobi}.";
 
@@ -61,12 +62,12 @@ public class Config {
    * @param args The command line arguments as given to the main method.
    * @throws InvalidConfigurationException If any arguments do not comply with the {@link #usage}.
    */
-  public static void Create(String[] args) throws InvalidConfigurationException {
-    Create(args, System.out);
+  public static void create(String[] args) throws InvalidConfigurationException {
+    create(args, System.out);
   }
 
   /**
-   * Method for specifying an output stream during testing. See {@link #Create(String[])}.
+   * Method for specifying an output stream during testing. See {@link #create(String[])}.
    *
    * @param args The command line arguments as given to the main method.
    * @param out The output stream to be used.
@@ -74,16 +75,18 @@ public class Config {
    *
    * @throws InvalidConfigurationException if the configuration has already been created.
    */
-  public static void Create(String[] args, PrintStream out) throws InvalidConfigurationException {
+  public static void create(String[] args, PrintStream out)
+      throws InvalidConfigurationException {
     if (Config.config != null) {
-      throw new InvalidConfigurationException("Configuration has already been initialized.");
+      throw new InvalidConfigurationException(
+          "Configuration has already been initialized.");
     }
 
     Config.config = new Config(args, out);
   }
 
   /**
-   * Returns the configuration. Assumes that {@link #Create(String[])} has already been called.
+   * Returns the configuration. Assumes that {@link #create(String[])} has already been called.
    *
    * @return The configuration instance
    */
@@ -136,7 +139,8 @@ public class Config {
           break;
 
         default:
-          throw new InvalidConfigurationException("Unknown command line parameter: " + args[i]);
+          throw new InvalidConfigurationException("Unknown command line parameter: "
+              + args[i]);
       }
     }
 

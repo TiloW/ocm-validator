@@ -5,7 +5,7 @@ import proof.exception.UnsupportedSolverException;
 /**
  * Used for instantiating a linear program solver based on the given command line arguments.
  *
- * @author Tilo Wiedera <tilo@wiedera.de>
+ * @author <a href="mailto:tilo@wiedera.de">Tilo Wiedera</a>
  */
 public class SolverFactory {
 
@@ -55,12 +55,14 @@ public class SolverFactory {
     try {
       result = new Gurobi();
     } catch (UnsupportedSolverException e) {
+      result = null;
     }
 
     if (result == null) {
       try {
         result = new Cplex();
       } catch (UnsupportedSolverException e) {
+        result = null;
       }
     }
 

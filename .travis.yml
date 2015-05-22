@@ -23,6 +23,7 @@ install:
 script:
   - gradle check
   - ./script/javadoc.sh
+  - ./script/checkstyle.sh
 
 after_success:
   - gradle jacoco coveralls

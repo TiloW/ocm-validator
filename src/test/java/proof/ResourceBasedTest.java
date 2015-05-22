@@ -2,16 +2,16 @@ package proof;
 
 import static org.junit.Assert.fail;
 
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import org.json.JSONObject;
-
 /**
  * Base class for tests that require JSON resources.
  *
- * @author Tilo Wiedera <tilo@wiedera.de>
+ * @author <a href="mailto:tilo@wiedera.de">Tilo Wiedera</a>
  */
 public abstract class ResourceBasedTest extends GraphBasedTest {
 
@@ -31,7 +31,7 @@ public abstract class ResourceBasedTest extends GraphBasedTest {
    * @param filename The name of the file to be loaded (relative to the base {@link #directory}).
    * @return The parsed JSON object
    */
-  protected JSONObject loadJSON(String filename) {
+  protected JSONObject loadJson(String filename) {
     String result = null;
 
     if (!filename.substring(filename.length() - 5).equals(".json")) {

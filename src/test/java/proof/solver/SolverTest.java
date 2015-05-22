@@ -12,7 +12,7 @@ import proof.exception.UnsupportedSolverException;
 /**
  * Abstract base class for all linear program solver tests.
  *
- * @author Tilo Wiedera <tilo@wiedera.de>
+ * @author <a href="mailto:tilo@wiedera.de">Tilo Wiedera</a>
  */
 public abstract class SolverTest {
 
@@ -20,19 +20,23 @@ public abstract class SolverTest {
    * Wrapper class for initializing the requested solver. This is necessary since the constructor of
    * the solver might throw an {@link UnsupportedSolverException}.
    *
-   * @author Tilo Wiedera <tilo@wiedera.de>
+   * @author <a href="mailto:tilo@wiedera.de">Tilo Wiedera</a>
    */
-  public static abstract class Initializer {
+  public abstract static class Initializer {
     public abstract Solver initialize();
   }
 
   private Solver solver = null;
-  private Initializer initializer;
+  private final Initializer initializer;
 
   public SolverTest(Initializer initializer) {
     this.initializer = initializer;
   }
 
+  /**
+   * Called before each test. Tries initializing the requested solver. If initialization fails (i.e.
+   * the solver is not available on this system) the respective tests are skipped.
+   */
   @Before
   public void setUp() {
     try {

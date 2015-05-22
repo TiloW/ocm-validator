@@ -1,7 +1,5 @@
 package proof.data.reader;
 
-import java.util.Set;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -10,10 +8,12 @@ import proof.data.Graph;
 import proof.data.Path;
 import proof.exception.InvalidPathException;
 
+import java.util.Set;
+
 /**
  * Used for reading Kuratowski paths.
  *
- * @author Tilo Wiedera <tilo@wiedera.de>
+ * @author <a href="mailto:tilo@wiedera.de">Tilo Wiedera</a>
  */
 public class PathReader implements Reader<JSONArray> {
   private final Graph graph;
@@ -31,9 +31,7 @@ public class PathReader implements Reader<JSONArray> {
   }
 
   /**
-   * Reads the Kuratowski {@link Path}.
-   *
-   * A path is a list of directed segment ranges.
+   * Reads the Kuratowski {@link Path}. A path is a list of directed segment ranges.
    */
   @Override
   public Path read(JSONArray input) {

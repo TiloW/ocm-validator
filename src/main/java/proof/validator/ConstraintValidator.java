@@ -1,10 +1,5 @@
 package proof.validator;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -18,14 +13,18 @@ import proof.exception.InvalidConstraintException;
 import proof.exception.InvalidPathException;
 import proof.util.Config;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 /**
- * Validates a single Kuratwoski Constraint.
+ * Validates a single Kuratwoski Constraint. The only type of constraints included in the log are
+ * Kuratwoski constraints. These constraints will be validated by proving the respective paths do
+ * form a Kuratowski-subdivision. Valid Kuratowski subdivisions in this context are the K3,3 and the
+ * K5.
  *
- * The only type of constraints included in the log are Kuratwoski constraints. These constraints
- * will be validated by proving the respective paths do form a Kuratowski-subdivision. Valid
- * Kuratowski subdivisions in this context are the K3,3 and the K5.
- *
- * @author Tilo Wiedera <tilo@wiedera.de>
+ * @author <a href="mailto:tilo@wiedera.de">Tilo Wiedera</a>
  */
 public class ConstraintValidator implements Validator<JSONObject> {
   private final CrossingReader crossingReader;
@@ -42,9 +41,8 @@ public class ConstraintValidator implements Validator<JSONObject> {
   }
 
   /**
-   * Validates a single Kuratwoski constraint.
-   *
-   * Investigates all paths and asserts the constraint represents a valid K3,3 or K5.
+   * Validates a single Kuratwoski constraint. Investigates all paths and asserts the constraint
+   * represents a valid K3,3 or K5.
    */
   @Override
   public void validate(JSONObject object) throws InvalidConstraintException {
@@ -65,7 +63,7 @@ public class ConstraintValidator implements Validator<JSONObject> {
     PathReader reader = new PathReader(graph, requiredCrossings);
 
     JSONArray jsonPaths = object.getJSONArray("paths");
-    Path paths[] = new Path[jsonPaths.length()];
+    Path[] paths = new Path[jsonPaths.length()];
 
     for (int i = 0; i < paths.length; i++) {
       try {
@@ -226,7 +224,7 @@ public class ConstraintValidator implements Validator<JSONObject> {
    * @param paths The paths to be investigated
    * @return a map containing the number of times each endpoint was found in any path
    */
-  private Map<Object, Integer> collectEndpoints(Path paths[]) {
+  private Map<Object, Integer> collectEndpoints(Path[] paths) {
     Map<Object, Integer> result = new HashMap<Object, Integer>();
     int counter = 0;
 

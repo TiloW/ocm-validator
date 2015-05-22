@@ -1,9 +1,5 @@
 package proof.solver;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -17,11 +13,15 @@ import proof.exception.InvalidProofException;
 import proof.util.Config;
 import proof.util.Statistics;
 
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 /**
  * Class for generating the linear program used to prove the lower bound. The program is returned in
  * CPLEX LP file format.
  *
- * @author Tilo Wiedera <tilo@wiedera.de>
+ * @author <a href="mailto:tilo@wiedera.de">Tilo Wiedera</a>
  */
 public class LinearProgramGenerator {
   private final Graph graph;
@@ -48,9 +48,9 @@ public class LinearProgramGenerator {
    * @return The generated linear program in CPLEX LP file format
    * @throws InvalidProofException if the number of expansions on any edge is negative
    */
-  public String createLinearProgram(Map<CrossingIndex, Boolean> fixedVariables, JSONObject leaf)
-      throws InvalidProofException {
-    StringBuilder result = new StringBuilder();
+  public String createLinearProgram(Map<CrossingIndex, Boolean> fixedVariables,
+      JSONObject leaf) throws InvalidProofException {
+    final StringBuilder result = new StringBuilder();
 
     JSONArray jsonConstraints = leaf.getJSONArray("constraints");
     JSONObject jsonExpansions = leaf.getJSONObject("expansions");
@@ -64,7 +64,8 @@ public class LinearProgramGenerator {
       expansions[e] = jsonExpansions.getInt(String.valueOf(e));
 
       if (expansions[e] < 0) {
-        throw new InvalidProofException("The amount of additional segments must not be negative.");
+        throw new InvalidProofException(
+            "The amount of additional segments must not be negative.");
       }
     }
 
@@ -117,7 +118,7 @@ public class LinearProgramGenerator {
    * @return A CPLEX LP file format compliant description of the constraint
    */
   private String generateKuratowski(JSONObject constraint) {
-    StringBuilder result = new StringBuilder();
+    final StringBuilder result = new StringBuilder();
     Set<CrossingIndex> requiredCrossings = new HashSet<>();
     CrossingReader crossReader = new CrossingReader(graph);
 
@@ -216,7 +217,7 @@ public class LinearProgramGenerator {
    * @return A CPLEX LP file format compliant description of all bounds
    */
   private String generateBounds(Map<CrossingIndex, Boolean> fixedVariables) {
-    StringBuilder result = new StringBuilder();
+    final StringBuilder result = new StringBuilder();
 
     for (CrossingIndex var : variables) {
       int min = 0;
@@ -245,7 +246,7 @@ public class LinearProgramGenerator {
    * @return the objective function in CPLEX LP file format
    */
   private String generateObjective() {
-    StringBuilder result = new StringBuilder();
+    final StringBuilder result = new StringBuilder();
     boolean first = true;
     variables.clear();
 
@@ -294,7 +295,7 @@ public class LinearProgramGenerator {
    *         variables
    */
   private String sumVariables(int edge, int segment, boolean substract) {
-    StringBuilder result = new StringBuilder();
+    final StringBuilder result = new StringBuilder();
     boolean first = true;
 
     for (int e = 0; e < graph.getNumberOfEdges(); e++) {

@@ -1,18 +1,18 @@
 package proof.data.reader;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import proof.data.CrossingIndex;
 import proof.data.Graph;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Reads all variables fixed on a single branch.
  *
- * @author Tilo Wiedera <tilo@wiedera.de>
+ * @author <a href="mailto:tilo@wiedera.de">Tilo Wiedera</a>
  */
 public class VariablesReader implements Reader<JSONArray> {
   private final Graph graph;

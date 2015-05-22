@@ -4,19 +4,19 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.junit.Before;
 import org.junit.Test;
 
 import proof.GraphBasedTest;
 import proof.exception.InvalidPathException;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Tests for {@link Path}.
  *
- * @author Tilo Wiedera <tilo@wiedera.de>
+ * @author <a href="mailto:tilo@wiedera.de">Tilo Wiedera</a>
  */
 public class PathTest extends GraphBasedTest {
   private Path path;

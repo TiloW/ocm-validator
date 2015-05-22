@@ -1,12 +1,5 @@
 package proof.validator;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -15,15 +8,21 @@ import proof.data.Graph;
 import proof.data.reader.VariablesReader;
 import proof.exception.InvalidCoverageException;
 
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
 /**
- * Validates the fixed variables of all leaves.
+ * Validates the fixed variables of all leaves. The set of all leaves must completely cover the
+ * problem at hand. This means, every possible configuration of variables must be met. The
+ * {@code BranchCoverage}-Validator will ensure that no variable configuration is missing and that
+ * there are no ambiguities caused by multiple leaves reporting the same or overlapping
+ * configurations.
  *
- * The set of all leaves must completely cover the problem at hand. This means, every possible
- * configuration of variables must be met. The {@code BranchCoverage}-Validator will ensure that no
- * variable configuration is missing and that there are no ambiguities caused by multiple leaves
- * reporting the same or overlapping configurations.
- *
- * @author Tilo Wiedera <tilo@wiedera.de>
+ * @author <a href="mailto:tilo@wiedera.de">Tilo Wiedera</a>
  */
 public class BranchCoverageValidator implements Validator<JSONArray> {
   private final VariablesReader variablesReader;
@@ -40,20 +39,18 @@ public class BranchCoverageValidator implements Validator<JSONArray> {
   /**
    * Used to sort the leaves in descending number of branching variables.
    */
-  final static Comparator<Map<CrossingIndex, Boolean>> LEAF_COMPARATOR =
+  static final Comparator<Map<CrossingIndex, Boolean>> LEAF_COMPARATOR =
       new Comparator<Map<CrossingIndex, Boolean>>() {
-        @Override
-        public int compare(Map<CrossingIndex, Boolean> vars1, Map<CrossingIndex, Boolean> vars2) {
-          return vars2.size() - vars1.size();
-        }
-      };
+    @Override
+    public int compare(Map<CrossingIndex, Boolean> vars1, Map<CrossingIndex, Boolean> vars2) {
+      return vars2.size() - vars1.size();
+    }
+  };
 
   /**
-   * Validates the array of leaves.
-   *
-   * Inspects the fixed variables within each leaf. Tries to merge matching leaves until there is
-   * only one leaf with no fixed variables left. If this can not be achieved, the leaves are either
-   * overlapping or not all of the variables are covered.
+   * Validates the array of leaves. Inspects the fixed variables within each leaf. Tries to merge
+   * matching leaves until there is only one leaf with no fixed variables left. If this can not be
+   * achieved, the leaves are either overlapping or not all of the variables are covered.
    */
   @Override
   public void validate(JSONArray leaves) throws InvalidCoverageException {
@@ -109,14 +106,15 @@ public class BranchCoverageValidator implements Validator<JSONArray> {
    * alter the other one upon success.
    *
    * @param leaves The list of all leaves
-   * @param i The first leaf index
-   * @param j The second leaf index
+   * @param firstLeaf The first leaf index
+   * @param secondLeaf The second leaf index
    * @return True iff the leaves were successfully merged
    */
-  private boolean mergeIfPossible(List<Map<CrossingIndex, Boolean>> leaves, int i, int j) {
+  private boolean mergeIfPossible(List<Map<CrossingIndex, Boolean>> leaves, int firstLeaf,
+      int secondLeaf) {
     boolean result = true;
-    Map<CrossingIndex, Boolean> varsA = leaves.get(i);
-    Map<CrossingIndex, Boolean> varsB = leaves.get(j);
+    Map<CrossingIndex, Boolean> varsA = leaves.get(firstLeaf);
+    Map<CrossingIndex, Boolean> varsB = leaves.get(secondLeaf);
     CrossingIndex branchVariable = null;
     Iterator<CrossingIndex> it = varsA.keySet().iterator();
 
