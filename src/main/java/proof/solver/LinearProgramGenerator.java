@@ -21,7 +21,7 @@ import proof.util.Statistics;
  * Class for generating the linear program used to prove the lower bound. The program is returned in
  * CPLEX LP file format.
  *
- * @author Tilo Wiedera
+ * @author Tilo Wiedera <tilo@wiedera.de>
  */
 public class LinearProgramGenerator {
   private final Graph graph;

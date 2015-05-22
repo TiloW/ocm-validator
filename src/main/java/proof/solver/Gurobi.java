@@ -5,7 +5,7 @@ import proof.exception.LinearProgramException;
 /**
  * Wrapper class for performing calls to the Gurobi linear program solver.
  *
- * @author Tilo Wiedera
+ * @author Tilo Wiedera <tilo@wiedera.de>
  */
 class Gurobi extends Solver {
   @Override

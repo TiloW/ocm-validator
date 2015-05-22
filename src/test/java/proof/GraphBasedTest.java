@@ -5,7 +5,7 @@ import proof.data.Graph;
 /**
  * Base class for tests that require a graph.
  *
- * @author Tilo Wiedera
+ * @author Tilo Wiedera <tilo@wiedera.de>
  */
 public abstract class GraphBasedTest {
 

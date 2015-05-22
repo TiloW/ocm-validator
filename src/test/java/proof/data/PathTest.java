@@ -16,7 +16,7 @@ import proof.exception.InvalidPathException;
 /**
  * Tests for {@link Path}.
  *
- * @author Tilo Wiedera
+ * @author Tilo Wiedera <tilo@wiedera.de>
  */
 public class PathTest extends GraphBasedTest {
   private Path path;

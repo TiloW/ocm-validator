@@ -14,7 +14,7 @@ import proof.validator.MainValidator;
 /**
  * Main class for running the application.
  *
- * @author Tilo Wiedera
+ * @author Tilo Wiedera <tilo@wiedera.de>
  */
 public class Main {
 

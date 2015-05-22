@@ -14,7 +14,7 @@ import proof.solver.LinearProgramGenerator;
  * All values contained in the map can be returned in a well readable format (see @link
  * {@link #format()}.
  *
- * @author Tilo Wiedera
+ * @author Tilo Wiedera <tilo@wiedera.de>
  */
 public class Statistics extends HashMap<String, Integer> {
   int maxTitleLength;

@@ -14,7 +14,7 @@ import proof.exception.UnsupportedSolverException;
 /**
  * Common interface for all linear program solvers.
  *
- * @author Tilo Wiedera
+ * @author Tilo Wiedera <tilo@wiedera.de>
  */
 public abstract class Solver {
   private Double result;

@@ -15,7 +15,7 @@ import org.junit.runners.Parameterized;
 /**
  * Tests for {@link ProgressLogger}.
  *
- * @author Tilo Wiedera
+ * @author Tilo Wiedera <tilo@wiedera.de>
  */
 @RunWith(Parameterized.class)
 public class ProgressLoggerTest {

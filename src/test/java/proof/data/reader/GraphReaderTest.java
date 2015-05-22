@@ -18,12 +18,10 @@ import proof.exception.InvalidGraphException;
 
 /**
  * Tests for {@link GraphReader}.
- * 
- * @author Tilo Wiedera
  *
+ * @author Tilo Wiedera <tilo@wiedera.de>
  */
 public class GraphReaderTest extends ResourceBasedTest {
-
   private JSONObject resource;
 
   public GraphReaderTest() {
@@ -118,9 +116,9 @@ public class GraphReaderTest extends ResourceBasedTest {
     assertTrue(graph.edgeExists(0, 2));
     assertTrue(graph.edgeExists(1, 2));
 
-    assertEquals(30, (int) graph.getEdgeCost(0, 2));
-    assertEquals(30, (int) graph.getEdgeCost(0, 2));
-    assertEquals(78, (int) graph.getEdgeCost(1, 2));
+    assertEquals(30, graph.getEdgeCost(0, 2));
+    assertEquals(30, graph.getEdgeCost(0, 2));
+    assertEquals(78, graph.getEdgeCost(1, 2));
 
     try {
       graph.getEdgeCost(0, 3);

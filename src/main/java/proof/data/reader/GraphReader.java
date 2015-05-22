@@ -11,8 +11,7 @@ import proof.exception.InvalidGraphException;
 /**
  * Reader for reading graph objects.
  *
- * @author Tilo Wiedera
- *
+ * @author Tilo Wiedera <tilo@wiedera.de>
  */
 public class GraphReader implements Reader<JSONObject> {
 

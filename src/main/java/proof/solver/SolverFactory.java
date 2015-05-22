@@ -4,6 +4,8 @@ import proof.exception.UnsupportedSolverException;
 
 /**
  * Used for instantiating a linear program solver based on the given command line arguments.
+ *
+ * @author Tilo Wiedera <tilo@wiedera.de>
  */
 public class SolverFactory {
 

@@ -17,8 +17,12 @@ import proof.data.Graph;
 import proof.data.SegmentIndex;
 import proof.exception.InvalidPathException;
 
+/**
+ * Tests for {@link PathReader}.
+ *
+ * @author Tilo Wiedera <tilo@wiedera.de>
+ */
 public class PathReaderTest extends ResourceBasedTest {
-
   private Graph graph;
   private PathReader reader;
   private HashSet<CrossingIndex> crossings;

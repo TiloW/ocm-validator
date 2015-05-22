@@ -5,8 +5,7 @@ import java.util.Arrays;
 /**
  * Represents a single crossing by two edge segments.
  *
- * @author Tilo Wiedera
- *
+ * @author Tilo Wiedera <tilo@wiedera.de>
  */
 public class CrossingIndex {
 

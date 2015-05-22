@@ -5,7 +5,7 @@ package proof.data.reader;
  *
  * @param <T> The type of object this reader can parse
  *
- * @author Tilo Wiedera
+ * @author Tilo Wiedera <tilo@wiedera.de>
  */
 public interface Reader<T> {
 

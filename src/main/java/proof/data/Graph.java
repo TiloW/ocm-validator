@@ -7,11 +7,9 @@ import proof.exception.InvalidGraphException;
  *
  * Represents a graph by an adjacency matrix. Requires nodes to be indexed continuously.
  *
- * @author Tilo Wiedera
- *
+ * @author Tilo Wiedera <tilo@wiedera.de>
  */
 public class Graph {
-
   private final int[][] edgeIndices;
   private final int[] sources;
   private final int[] targets;

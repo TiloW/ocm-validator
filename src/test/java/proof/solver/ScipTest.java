@@ -3,8 +3,7 @@ package proof.solver;
 /**
  * Tests class for the {@link Scip} linear program solver.
  *
- * @author Tilo Wiedera
- *
+ * @author Tilo Wiedera <tilo@wiedera.de>
  */
 public class ScipTest extends SolverTest {
   public ScipTest() {

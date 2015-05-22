@@ -11,7 +11,7 @@ import org.json.JSONObject;
 /**
  * Base class for tests that require JSON resources.
  *
- * @author Tilo Wiedera
+ * @author Tilo Wiedera <tilo@wiedera.de>
  */
 public abstract class ResourceBasedTest extends GraphBasedTest {
 

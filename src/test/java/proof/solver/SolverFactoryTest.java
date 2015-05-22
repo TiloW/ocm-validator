@@ -10,7 +10,7 @@ import proof.exception.UnsupportedSolverException;
 /**
  * Basic tests for the {@link SolverFactory}.
  *
- * @author Tilo Wiedera
+ * @author Tilo Wiedera <tilo@wiedera.de>
  */
 public class SolverFactoryTest {
   private SolverFactory solverFactory;

@@ -12,11 +12,9 @@ import proof.util.Config;
 /**
  * The main validator for validating a complete log file.
  *
- * @author Tilo Wiedera
- *
+ * @author Tilo Wiedera <tilo@wiedera.de>
  */
 public class MainValidator implements Validator<JSONObject> {
-
   private final static GraphReader graphReader = new GraphReader();
 
   /**

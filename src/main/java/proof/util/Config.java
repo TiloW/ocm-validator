@@ -14,7 +14,7 @@ import proof.solver.SolverFactory;
 /**
  * Singleton configuration object. Parses command line arguments and provides global information.
  *
- * @author Tilo Wiedera
+ * @author Tilo Wiedera <tilo@wiedera.de>
  */
 public class Config {
   private static Config config = null;

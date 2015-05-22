@@ -7,8 +7,7 @@ import proof.data.SegmentIndex;
 
 /**
  *
- * @author tilo
- *
+ * @author Tilo Wiedera <tilo@wiedera.de>
  */
 public class SegmentReader implements Reader<JSONObject> {
   private final Graph graph;

@@ -9,7 +9,7 @@ import proof.exception.InvalidPathException;
 /**
  * Represents a Kuratowski path.
  *
- * @author Tilo Wiedera
+ * @author Tilo Wiedera <tilo@wiedera.de>
  */
 public class Path {
 

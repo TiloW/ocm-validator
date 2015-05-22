@@ -12,7 +12,7 @@ import proof.data.Graph;
 /**
  * Reads all variables fixed on a single branch.
  *
- * @author Tilo Wiedera
+ * @author Tilo Wiedera <tilo@wiedera.de>
  */
 public class VariablesReader implements Reader<JSONArray> {
   private final Graph graph;

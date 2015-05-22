@@ -10,7 +10,7 @@ import proof.exception.InvalidProofException;
  *
  * @param <T> The type of object this validator can handle
  *
- * @author Tilo Wiedera
+ * @author Tilo Wiedera <tilo@wiedera.de>
  */
 public interface Validator<T> {
   static int level = 0;

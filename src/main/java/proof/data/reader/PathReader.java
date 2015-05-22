@@ -13,8 +13,7 @@ import proof.exception.InvalidPathException;
 /**
  * Used for reading Kuratowski paths.
  *
- * @author Tilo Wiedera
- *
+ * @author Tilo Wiedera <tilo@wiedera.de>
  */
 public class PathReader implements Reader<JSONArray> {
   private final Graph graph;

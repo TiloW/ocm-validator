@@ -25,8 +25,7 @@ import proof.util.Config;
  * will be validated by proving the respective paths do form a Kuratowski-subdivision. Valid
  * Kuratowski subdivisions in this context are the K3,3 and the K5.
  *
- * @author Tilo Wiedera
- *
+ * @author Tilo Wiedera <tilo@wiedera.de>
  */
 public class ConstraintValidator implements Validator<JSONObject> {
   private final CrossingReader crossingReader;

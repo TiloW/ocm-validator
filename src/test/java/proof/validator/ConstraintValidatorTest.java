@@ -10,12 +10,12 @@ import proof.exception.InvalidConfigurationException;
 import proof.exception.InvalidConstraintException;
 
 /**
- * Tests for {@link ConstraintValidator}.
+ * Tests for the {@link ConstraintValidator}.
  *
  * Tests are run either on a mocked {@ConstraintValidator} that assumes each
  * path to be valid or on a K100 with a fully functional {@PathValidator}.
  *
- * @author Tilo Wiedera
+ * @author Tilo Wiedera <tilo@wiedera.de>
  */
 public class ConstraintValidatorTest extends ValidatorTest {
   private ConstraintValidator validator;
@@ -116,7 +116,7 @@ public class ConstraintValidatorTest extends ValidatorTest {
   public void testValidate_invalidColoringK33() throws InvalidConstraintException {
     JSONObject resource = loadJSON("k33-simple");
     resource.getJSONArray("paths").getJSONArray(0).getJSONObject(0).getJSONObject("edge")
-    .put("target", 1);
+        .put("target", 1);
 
     validator.validate(resource);
   }

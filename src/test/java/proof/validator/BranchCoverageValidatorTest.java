@@ -11,8 +11,12 @@ import proof.ValidatorTest;
 import proof.exception.InvalidConfigurationException;
 import proof.exception.InvalidCoverageException;
 
+/**
+ * Tests for the {@link BranchCoverageValidator}.
+ *
+ * @author Tilo Wiedera <tilo@wiedera.de>
+ */
 public class BranchCoverageValidatorTest extends ValidatorTest {
-
   private JSONArray simpleResource;
 
   public BranchCoverageValidatorTest() throws InvalidConfigurationException {
@@ -51,7 +55,7 @@ public class BranchCoverageValidatorTest extends ValidatorTest {
   @Test(expected = InvalidCoverageException.class)
   public void testValidate_invalidMultipleVariables() throws InvalidCoverageException, IOException {
     simpleResource.getJSONObject(0).getJSONArray("fixedVariables").getJSONObject(0)
-    .getJSONArray("crossing").getJSONObject(0).getJSONObject("edge").put("source", 123);
+        .getJSONArray("crossing").getJSONObject(0).getJSONObject("edge").put("source", 123);
 
     coverageValidator.validate(simpleResource);
   }
