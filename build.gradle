@@ -26,6 +26,10 @@ run {
   }
 }
 
+javadoc{
+  options.memberLevel = JavadocMemberLevel.PRIVATE
+}
+
 buildscript {
     repositories {
         mavenCentral()
