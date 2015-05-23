@@ -5,6 +5,7 @@ import org.json.JSONObject;
 
 import proof.data.CrossingIndex;
 import proof.data.Graph;
+import proof.exception.ReaderException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,7 +23,7 @@ public class VariablesReader implements Reader<JSONArray> {
   }
 
   @Override
-  public Map<CrossingIndex, Boolean> read(JSONArray fixedVariables) {
+  public Map<CrossingIndex, Boolean> read(JSONArray fixedVariables) throws ReaderException {
     Map<CrossingIndex, Boolean> result = new HashMap<CrossingIndex, Boolean>();
     CrossingReader crossingReader = new CrossingReader(graph);
 
@@ -30,17 +31,15 @@ public class VariablesReader implements Reader<JSONArray> {
       JSONObject variable = fixedVariables.getJSONObject(j);
 
       CrossingIndex crossing = crossingReader.read(variable.getJSONArray("crossing"));
-      boolean value = variable.getInt("value") == 1;
+      boolean crossingRealized = variable.getInt("value") == 1;
 
-      if (value) {
-        for (CrossingIndex cross : result.keySet()) {
-          if (result.get(cross) && crossing.conflicting(cross)) {
-            throw new RuntimeException("Conflicting fixed variables: " + cross + " VS " + crossing);
-          }
+      for (CrossingIndex cross : result.keySet()) {
+        if (crossingRealized && result.get(cross) && crossing.conflicting(cross)) {
+          throw new ReaderException("Conflicting fixed variables: " + cross + " VS " + crossing);
         }
       }
 
-      result.put(crossing, value);
+      result.put(crossing, crossingRealized);
     }
 
     return result;

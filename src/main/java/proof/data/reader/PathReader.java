@@ -32,9 +32,11 @@ public class PathReader implements Reader<JSONArray> {
 
   /**
    * Reads the Kuratowski {@link Path}. A path is a list of directed segment ranges.
+   *
+   * @throws InvalidPathException if the sequence of segments does not constitute a path.
    */
   @Override
-  public Path read(JSONArray input) {
+  public Path read(JSONArray input) throws InvalidPathException {
     Path result = new Path(graph, crossings);
 
     if (input.length() == 0) {

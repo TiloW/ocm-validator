@@ -7,7 +7,7 @@ import proof.data.Path;
  *
  * @author <a href="mailto:tilo@wiedera.de">Tilo Wiedera</a>
  */
-public class InvalidPathException extends RuntimeException {
+public class InvalidPathException extends ReaderException {
 
   public InvalidPathException(String description) {
     super(description);

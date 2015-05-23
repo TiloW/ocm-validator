@@ -8,7 +8,7 @@ import proof.data.Graph;
  *
  * @author <a href="mailto:tilo@wiedera.de">Tilo Wiedera</a>
  */
-public class InvalidGraphException extends RuntimeException {
+public class InvalidGraphException extends ReaderException {
 
   public InvalidGraphException(String description) {
     super(description);

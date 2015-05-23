@@ -66,8 +66,7 @@ public class Graph {
    * @return {@code true} iff the edge exist
    */
   public boolean edgeExists(int source, int target) {
-    return source >= 0 && source < edgeIndices.length && target >= 0 && target < edgeIndices.length
-        && edgeIndices[source][target] != NO_EDGE;
+    return nodeExists(source) && nodeExists(target) && edgeIndices[source][target] != NO_EDGE;
   }
 
   /**
@@ -77,10 +76,11 @@ public class Graph {
    * @param target The index of the second node
    *
    * @return The index of the edge
+   * @throws InvalidGraphException if the edge does not exist
    */
-  public int getEdgeId(int source, int target) {
+  public int getEdgeId(int source, int target) throws InvalidGraphException {
     if (!edgeExists(source, target)) {
-      throw new IllegalArgumentException("Edge does not exist: (" + source + "," + target + ")");
+      throw new InvalidGraphException("Edge does not exist: (" + source + "," + target + ")");
     }
 
     return edgeIndices[source][target];
@@ -93,8 +93,9 @@ public class Graph {
    * @param target The index of the second node
    *
    * @return The cost
+   * @throws InvalidGraphException if the edge does not exist
    */
-  public int getEdgeCost(int source, int target) {
+  public int getEdgeCost(int source, int target) throws InvalidGraphException {
     return getEdgeCost(getEdgeId(source, target));
   }
 
@@ -117,8 +118,9 @@ public class Graph {
    * @param source The index of the first node
    * @param target The index of the second node
    * @param cost The cost of the edge
+   * @throws InvalidGraphException
    */
-  public void addEdge(int edgeId, int source, int target, int cost) {
+  public void addEdge(int edgeId, int source, int target, int cost) throws InvalidGraphException {
     assertIsMutable();
 
     if (edgeExists(source, target)) {
@@ -133,11 +135,11 @@ public class Graph {
       throw new IllegalArgumentException("Edge index out of bounds: " + edgeId);
     }
 
-    if (source < 0 || source >= edgeIndices.length) {
+    if (!nodeExists(source)) {
       throw new IllegalArgumentException("Source index out of bounds: " + source);
     }
 
-    if (target < 0 || target >= edgeIndices.length) {
+    if (!nodeExists(target)) {
       throw new IllegalArgumentException("Target index out of bounds: " + target);
     }
 
@@ -154,8 +156,6 @@ public class Graph {
   /**
    * Makes this graph immutable. Future calls of {@code addEdge} will throw an
    * {@link UnsupportedOperationException}.
-   *
-   * @throws InvalidGraphException Iff not all edges have been set
    */
   public void makeImmutable() throws InvalidGraphException {
     immutable = true;
@@ -193,10 +193,23 @@ public class Graph {
 
   /**
    * Called before modifying the graph.
+   *
+   * @throws InvalidGraphException if the graph is immutable
    */
-  private void assertIsMutable() {
+  private void assertIsMutable() throws InvalidGraphException {
     if (immutable) {
-      throw new UnsupportedOperationException("Can not modify immutable graph");
+      throw new InvalidGraphException("Can not modify immutable graph");
     }
+  }
+
+  /**
+   * Checks whether a single node exists.
+   *
+   * @param source The index of the supposed node
+   *
+   * @return {@code true} iff the node exist
+   */
+  private boolean nodeExists(int node) {
+    return node >= 0 && node < edgeIndices.length;
   }
 }

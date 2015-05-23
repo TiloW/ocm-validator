@@ -19,9 +19,11 @@ public class GraphReader implements Reader<JSONObject> {
    * Constructs a graph with the specified number of nodes and edges. Nodes and edges must be
    * indexed continuously from 1 to the corresponding number. A Graph is stored as a list of edges.
    * Each edge has an associated cost which defaults to 1 if not present.
+   *
+   * @throws InvalidGraphException if the graph contains too few or conflicting edges
    */
   @Override
-  public Graph read(JSONObject input) {
+  public Graph read(JSONObject input) throws InvalidGraphException {
     try {
       int numberOfNodes = input.getInt("numberOfNodes");
 

@@ -6,7 +6,9 @@ import org.json.JSONObject;
 import proof.data.CrossingIndex;
 import proof.data.Graph;
 import proof.data.reader.VariablesReader;
+import proof.exception.ExceptionHelper;
 import proof.exception.InvalidCoverageException;
+import proof.exception.ReaderException;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -28,15 +30,6 @@ public class BranchCoverageValidator implements Validator<JSONArray> {
   private final VariablesReader variablesReader;
 
   /**
-   * Creates a new coverage validator.
-   *
-   * @param graph The underlying {@link Graph}
-   */
-  public BranchCoverageValidator(Graph graph) {
-    variablesReader = new VariablesReader(graph);
-  }
-
-  /**
    * Used to sort the leaves in descending number of branching variables.
    */
   static final Comparator<Map<CrossingIndex, Boolean>> LEAF_COMPARATOR =
@@ -48,9 +41,16 @@ public class BranchCoverageValidator implements Validator<JSONArray> {
   };
 
   /**
-   * Validates the array of leaves. Inspects the fixed variables within each leaf. Tries to merge
-   * matching leaves until there is only one leaf with no fixed variables left. If this can not be
-   * achieved, the leaves are either overlapping or not all of the variables are covered.
+   * Creates a new coverage validator.
+   *
+   * @param graph The underlying {@link Graph}
+   */
+  public BranchCoverageValidator(Graph graph) {
+    variablesReader = new VariablesReader(graph);
+  }
+
+  /**
+   * Validates the array of leaves. Inspects the fixed variables within each leaf.
    */
   @Override
   public void validate(JSONArray leaves) throws InvalidCoverageException {
@@ -65,17 +65,30 @@ public class BranchCoverageValidator implements Validator<JSONArray> {
       try {
         Map<CrossingIndex, Boolean> variablesOfLeaf = variablesReader.read(jsonVars);
         parsedVariables.add(variablesOfLeaf);
-      } catch (IllegalArgumentException e) {
-        throw new InvalidCoverageException("Encountered invalid variable indices.");
+      } catch (ReaderException e) {
+        throw ExceptionHelper.wrap(e, new InvalidCoverageException(
+            "Encountered invalid variable indices."));
       }
     }
-
-    // sort the leaves by number of variables
-    Collections.sort(parsedVariables, LEAF_COMPARATOR);
 
     if (parsedVariables.isEmpty()) {
       throw new InvalidCoverageException("Could not find any leaves.");
     }
+
+    mergeAllLeaves(parsedVariables);
+  }
+
+  /**
+   * Tries to merge matching leaves until there is only one leaf with no fixed variables left. If
+   * this can not be achieved, the leaves are either overlapping or not all of the variables are
+   * covered.
+   *
+   * @param parsedVariables the fixed variables of each branch
+   */
+  private void mergeAllLeaves(List<Map<CrossingIndex, Boolean>> parsedVariables)
+      throws InvalidCoverageException {
+    // sort the leaves by number of variables
+    Collections.sort(parsedVariables, LEAF_COMPARATOR);
 
     // merge all leaves that differ by the value of a single variable
     while (parsedVariables.size() > 1) {

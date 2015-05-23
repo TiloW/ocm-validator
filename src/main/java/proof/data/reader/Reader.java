@@ -1,5 +1,7 @@
 package proof.data.reader;
 
+import proof.exception.ReaderException;
+
 /**
  * Common interface for all data readers.
  *
@@ -14,6 +16,7 @@ public interface Reader<T> {
    *
    * @param input The JSON to be parsed
    * @return The constructed object
+   * @throws ReaderException iff the read data is inconsistent
    */
-  public Object read(T input);
+  public Object read(T input) throws ReaderException;
 }

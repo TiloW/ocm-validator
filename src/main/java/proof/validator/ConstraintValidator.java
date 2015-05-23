@@ -11,6 +11,7 @@ import proof.data.reader.PathReader;
 import proof.exception.ExceptionHelper;
 import proof.exception.InvalidConstraintException;
 import proof.exception.InvalidPathException;
+import proof.exception.ReaderException;
 import proof.util.Config;
 
 import java.util.HashMap;
@@ -57,11 +58,15 @@ public class ConstraintValidator implements Validator<JSONObject> {
     JSONArray crossings = object.getJSONArray("requiredCrossings");
 
     for (int i = 0; relevant && i < crossings.length(); i++) {
-      requiredCrossings.add(crossingReader.read(crossings.getJSONArray(i)));
+      try {
+        requiredCrossings.add(crossingReader.read(crossings.getJSONArray(i)));
+      } catch (ReaderException e) {
+        throw ExceptionHelper.wrap(e, new InvalidConstraintException(
+            "Encountered infeasible crossing!"));
+      }
     }
 
     PathReader reader = new PathReader(graph, requiredCrossings);
-
     JSONArray jsonPaths = object.getJSONArray("paths");
     Path[] paths = new Path[jsonPaths.length()];
 
@@ -85,9 +90,9 @@ public class ConstraintValidator implements Validator<JSONObject> {
 
     String constraintType = object.getString("type");
 
-    if (constraintType.equals("K33")) {
+    if ("K33".equals(constraintType)) {
       validateK33(paths);
-    } else if (constraintType.equals("K5")) {
+    } else if ("K5".equals(constraintType)) {
       validateK5(paths);
     } else {
       throw new InvalidConstraintException("Invalid type of Kuratowski constraint: "
@@ -107,11 +112,11 @@ public class ConstraintValidator implements Validator<JSONObject> {
           + paths.length);
     }
 
-    Map<Object, Integer> endpoints = collectEndpoints(paths);
+    Map<Object, Integer> nodes = collectNodes(paths);
 
-    if (endpoints.size() != 5) {
+    if (nodes.size() != 5) {
       throw new InvalidConstraintException("Supposed K5 has an invalid number of nodes: "
-          + endpoints.size());
+          + nodes.size());
     }
 
     // find all paths
@@ -123,8 +128,8 @@ public class ConstraintValidator implements Validator<JSONObject> {
     }
 
     for (Path path : paths) {
-      int u = endpoints.get(path.getSource());
-      int v = endpoints.get(path.getTarget());
+      int u = nodes.get(path.getSource());
+      int v = nodes.get(path.getTarget());
 
       foundPaths[u][v] = foundPaths[v][u] = true;
     }
@@ -157,11 +162,11 @@ public class ConstraintValidator implements Validator<JSONObject> {
           + paths.length);
     }
 
-    Map<Object, Integer> endpoints = collectEndpoints(paths);
+    Map<Object, Integer> nodes = collectNodes(paths);
 
-    if (endpoints.size() != 6) {
+    if (nodes.size() != 6) {
       throw new InvalidConstraintException("Supposed K33 has an invalid number of nodes ("
-          + endpoints.size() + "): " + endpoints);
+          + nodes.size() + "): " + nodes);
     }
 
     // classify nodes (2-coloring)
@@ -171,8 +176,8 @@ public class ConstraintValidator implements Validator<JSONObject> {
     }
 
     for (Path path : paths) {
-      int u = endpoints.get(path.getSource());
-      int v = endpoints.get(path.getTarget());
+      int u = nodes.get(path.getSource());
+      int v = nodes.get(path.getTarget());
 
       if (u == 0) {
         color[v] = true;
@@ -198,8 +203,8 @@ public class ConstraintValidator implements Validator<JSONObject> {
       int edgeCounter = 0;
 
       for (Path path : paths) {
-        int v = endpoints.get(path.getSource());
-        int w = endpoints.get(path.getTarget());
+        int v = nodes.get(path.getSource());
+        int w = nodes.get(path.getTarget());
 
         if (color[v] == color[w]) {
           throw new InvalidConstraintException(
@@ -222,9 +227,9 @@ public class ConstraintValidator implements Validator<JSONObject> {
    * Collects all nodes and crossings which represent a start or end of any of the given paths.
    *
    * @param paths The paths to be investigated
-   * @return a map containing the number of times each endpoint was found in any path
+   * @return a mapping of of encountered nodes to a continuous index
    */
-  private Map<Object, Integer> collectEndpoints(Path[] paths) {
+  private Map<Object, Integer> collectNodes(Path[] paths) {
     Map<Object, Integer> result = new HashMap<Object, Integer>();
     int counter = 0;
 

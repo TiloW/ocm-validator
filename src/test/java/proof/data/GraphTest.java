@@ -17,7 +17,7 @@ import proof.exception.InvalidGraphException;
 public class GraphTest {
 
   @Test
-  public void testAddEdge_single() {
+  public void testAddEdge_single() throws InvalidGraphException {
     Graph graph = new Graph(10, 20, 5);
 
     graph.addEdge(0, 0, 1, 20);
@@ -32,7 +32,7 @@ public class GraphTest {
   }
 
   @Test
-  public void testAddEdge_many() {
+  public void testAddEdge_many() throws InvalidGraphException {
     Graph graph = new Graph(4, 3, 0);
 
     graph.addEdge(0, 0, 1, 10);
@@ -47,15 +47,15 @@ public class GraphTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void testAddEdge_redundant() {
+  public void testAddEdge_redundant() throws InvalidGraphException {
     Graph graph = new Graph(4, 3, 0);
 
     graph.addEdge(0, 0, 1, 10);
     graph.addEdge(1, 1, 0, 100);
   }
 
-  @Test(expected = UnsupportedOperationException.class)
-  public void testMakeImmutable_valid() {
+  @Test(expected = InvalidGraphException.class)
+  public void testMakeImmutable_valid() throws InvalidGraphException {
     Graph graph = new Graph(4, 3, 0);
 
     graph.addEdge(0, 0, 1, 10);
@@ -68,7 +68,7 @@ public class GraphTest {
   }
 
   @Test(expected = InvalidGraphException.class)
-  public void testMakeImmutable_invalid() {
+  public void testMakeImmutable_invalid() throws InvalidGraphException {
     Graph graph = new Graph(4, 3, 0);
 
     graph.addEdge(0, 0, 1, 10);
@@ -78,7 +78,7 @@ public class GraphTest {
   }
 
   @Test
-  public void testEdgeExists() {
+  public void testEdgeExists() throws InvalidGraphException {
     Graph graph = new Graph(4, 3, 0);
 
     graph.addEdge(0, 0, 1, 10);
@@ -97,7 +97,7 @@ public class GraphTest {
   }
 
   @Test
-  public void testEdgeExists_bounds() {
+  public void testEdgeExists_bounds() throws InvalidGraphException {
     Graph graph = new Graph(4, 3, 0);
 
     graph.addEdge(0, 0, 1, 10);
@@ -137,7 +137,7 @@ public class GraphTest {
   }
 
   @Test
-  public void testGetEdgeCost() {
+  public void testGetEdgeCost() throws InvalidGraphException {
     Graph graph = new Graph(4, 3, 0);
 
     graph.addEdge(0, 0, 1, 10);
@@ -150,7 +150,7 @@ public class GraphTest {
   }
 
   @Test
-  public void testGetEdgeTarget() {
+  public void testGetEdgeTarget() throws InvalidGraphException {
     Graph graph = new Graph(100, 3, 0);
 
     graph.addEdge(0, 42, 1, 10);
@@ -163,7 +163,7 @@ public class GraphTest {
   }
 
   @Test
-  public void testEdgesAreAdjacent() {
+  public void testEdgesAreAdjacent() throws InvalidGraphException {
     Graph graph = new Graph(100, 3, 0);
 
     graph.addEdge(0, 42, 1, 10);

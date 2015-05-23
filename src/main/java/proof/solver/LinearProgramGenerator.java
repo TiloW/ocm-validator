@@ -9,7 +9,10 @@ import proof.data.Path;
 import proof.data.SegmentIndex;
 import proof.data.reader.CrossingReader;
 import proof.data.reader.PathReader;
+import proof.exception.ExceptionHelper;
+import proof.exception.InvalidGraphException;
 import proof.exception.InvalidProofException;
+import proof.exception.ReaderException;
 import proof.util.Config;
 import proof.util.Statistics;
 
@@ -48,8 +51,8 @@ public class LinearProgramGenerator {
    * @return The generated linear program in CPLEX LP file format
    * @throws InvalidProofException if the number of expansions on any edge is negative
    */
-  public String createLinearProgram(Map<CrossingIndex, Boolean> fixedVariables,
-      JSONObject leaf) throws InvalidProofException {
+  public String createLinearProgram(Map<CrossingIndex, Boolean> fixedVariables, JSONObject leaf)
+      throws InvalidProofException {
     final StringBuilder result = new StringBuilder();
 
     JSONArray jsonConstraints = leaf.getJSONArray("constraints");
@@ -64,8 +67,7 @@ public class LinearProgramGenerator {
       expansions[e] = jsonExpansions.getInt(String.valueOf(e));
 
       if (expansions[e] < 0) {
-        throw new InvalidProofException(
-            "The amount of additional segments must not be negative.");
+        throw new InvalidProofException("The amount of additional segments must not be negative.");
       }
     }
 
@@ -116,17 +118,22 @@ public class LinearProgramGenerator {
    *
    * @param constraint A JSON structure containing all paths and required crossings
    * @return A CPLEX LP file format compliant description of the constraint
+   * @throws InvalidProofException if a required crossing turns out to be infeasible
    */
-  private String generateKuratowski(JSONObject constraint) {
+  private String generateKuratowski(JSONObject constraint) throws InvalidProofException {
     final StringBuilder result = new StringBuilder();
     Set<CrossingIndex> requiredCrossings = new HashSet<>();
     CrossingReader crossReader = new CrossingReader(graph);
 
     // collect required crossings
     for (int i = 0; i < constraint.getJSONArray("requiredCrossings").length(); i++) {
-      CrossingIndex crossing =
-          crossReader.read(constraint.getJSONArray("requiredCrossings").getJSONArray(i));
-      requiredCrossings.add(crossing);
+      try {
+        CrossingIndex crossing =
+            crossReader.read(constraint.getJSONArray("requiredCrossings").getJSONArray(i));
+        requiredCrossings.add(crossing);
+      } catch (ReaderException e) {
+        throw ExceptionHelper.wrap(e, new InvalidProofException("Ecounterd infeasible crossing!"));
+      }
     }
 
     boolean first = true;
@@ -142,6 +149,7 @@ public class LinearProgramGenerator {
         JSONArray path2 = paths.getJSONArray(k);
         Path p1 = pathReader.read(path1);
         Path p2 = pathReader.read(path2);
+
 
         // crossing adjacent paths do not resolve the subdivision
         if (!p1.isAdjacentTo(p2)) {
@@ -170,8 +178,10 @@ public class LinearProgramGenerator {
    * @param path1 The first path
    * @param path2 The second path
    * @return the set of feasible crossings
+   * @throws InvalidProofException if any required edge does not exist
    */
-  private Set<CrossingIndex> collectFeasibleCrossings(JSONArray path1, JSONArray path2) {
+  private Set<CrossingIndex> collectFeasibleCrossings(JSONArray path1, JSONArray path2)
+      throws InvalidProofException {
     Set<CrossingIndex> result = new HashSet<>();
 
     for (int i = 0; i < path1.length(); i++) {
@@ -179,28 +189,32 @@ public class LinearProgramGenerator {
         JSONObject segRange1 = path1.getJSONObject(i);
         JSONObject segRange2 = path2.getJSONObject(k);
 
-        int edge1 =
-            graph.getEdgeId(segRange1.getJSONObject("edge").getInt("source"), segRange1
-                .getJSONObject("edge").getInt("target"));
+        try {
+          int edge1 =
+              graph.getEdgeId(segRange1.getJSONObject("edge").getInt("source"), segRange1
+                  .getJSONObject("edge").getInt("target"));
 
-        int edge2 =
-            graph.getEdgeId(segRange2.getJSONObject("edge").getInt("source"), segRange2
-                .getJSONObject("edge").getInt("target"));
+          int edge2 =
+              graph.getEdgeId(segRange2.getJSONObject("edge").getInt("source"), segRange2
+                  .getJSONObject("edge").getInt("target"));
 
-        int startSeg1 = Math.max(0, segRange1.getInt("start"));
-        int startSeg2 = Math.max(0, segRange2.getInt("start"));
+          int startSeg1 = Math.max(0, segRange1.getInt("start"));
+          int startSeg2 = Math.max(0, segRange2.getInt("start"));
 
-        int endSeg1 = Math.min(expansions[edge1], segRange1.getInt("end"));
-        int endSeg2 = Math.min(expansions[edge2], segRange2.getInt("end"));
+          int endSeg1 = Math.min(expansions[edge1], segRange1.getInt("end"));
+          int endSeg2 = Math.min(expansions[edge2], segRange2.getInt("end"));
 
-        // since the first segment might participate in multiple paths this condition could
-        // be false
-        if (!graph.areEdgesAdjacent(edge1, edge2)) {
-          for (int s1 = startSeg1; s1 <= endSeg1; s1++) {
-            for (int s2 = startSeg2; s2 <= endSeg2; s2++) {
-              result.add(new CrossingIndex(edge1, s1, edge2, s2));
+          // since the first segment might participate in multiple paths this condition could
+          // be false
+          if (!graph.areEdgesAdjacent(edge1, edge2)) {
+            for (int s1 = startSeg1; s1 <= endSeg1; s1++) {
+              for (int s2 = startSeg2; s2 <= endSeg2; s2++) {
+                result.add(new CrossingIndex(edge1, s1, edge2, s2));
+              }
             }
           }
+        } catch (InvalidGraphException e) {
+          throw ExceptionHelper.wrap(e, new InvalidProofException("Edge does not exist."));
         }
       }
     }
