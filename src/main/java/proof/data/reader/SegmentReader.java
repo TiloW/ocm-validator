@@ -29,7 +29,7 @@ public class SegmentReader implements Reader<JSONObject> {
       int edgeId = graph.getEdgeId(source, target);
       return new SegmentIndex(edgeId, input.getInt("segment"));
     } catch (InvalidGraphException e) {
-      throw ExceptionHelper.wrap(e, new ReaderException("Required edge does not exist"));
+      throw ExceptionHelper.wrap(e, new ReaderException("Required edge does not exist."));
     }
   }
 }

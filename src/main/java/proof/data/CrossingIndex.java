@@ -30,7 +30,7 @@ public class CrossingIndex {
    */
   public CrossingIndex(SegmentIndex segment, SegmentIndex otherSegment) {
     if (segment.edge == otherSegment.edge) {
-      throw new IllegalArgumentException("Edge is crossing itself");
+      throw new IllegalArgumentException("Edge is crossing itself.");
     }
 
     if (segment.edge > otherSegment.edge) {

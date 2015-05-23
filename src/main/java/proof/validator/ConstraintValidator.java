@@ -62,7 +62,7 @@ public class ConstraintValidator implements Validator<JSONObject> {
         requiredCrossings.add(crossingReader.read(crossings.getJSONArray(i)));
       } catch (ReaderException e) {
         throw ExceptionHelper.wrap(e, new InvalidConstraintException(
-            "Encountered infeasible crossing!"));
+            "Encountered infeasible crossing."));
       }
     }
 
@@ -75,7 +75,7 @@ public class ConstraintValidator implements Validator<JSONObject> {
         Config.get().logger.print("    path " + i);
         paths[i] = reader.read(jsonPaths.getJSONArray(i));
       } catch (InvalidPathException e) {
-        throw ExceptionHelper.wrap(e, new InvalidConstraintException("Path " + i + " is invalid!"));
+        throw ExceptionHelper.wrap(e, new InvalidConstraintException("Path " + i + " is invalid."));
       }
     }
 
@@ -139,11 +139,11 @@ public class ConstraintValidator implements Validator<JSONObject> {
       for (int ii = 0; ii < 5; ii++) {
         if (i == ii) {
           if (foundPaths[i][ii]) {
-            throw new InvalidConstraintException("Self loop in supposed Kuratowski path");
+            throw new InvalidConstraintException("Self loop in supposed Kuratowski path.");
           }
         } else {
           if (!foundPaths[i][ii]) {
-            throw new InvalidConstraintException("Missing Kuratowski path in supposed K5");
+            throw new InvalidConstraintException("Missing Kuratowski path in supposed K5.");
           }
         }
       }
@@ -195,7 +195,7 @@ public class ConstraintValidator implements Validator<JSONObject> {
     }
 
     if (counter != 3) {
-      throw new InvalidConstraintException("Supposed K33 has invalid 2-coloring");
+      throw new InvalidConstraintException("Supposed K33 has invalid 2-coloring.");
     }
 
     // validate each node is connected to exactly three nodes (of different color)
@@ -208,7 +208,7 @@ public class ConstraintValidator implements Validator<JSONObject> {
 
         if (color[v] == color[w]) {
           throw new InvalidConstraintException(
-              "Connected nodes in supposed K33 have the same color");
+              "Connected nodes in supposed K33 have the same color.");
         }
 
         if (node == v || node == w) {
@@ -218,7 +218,7 @@ public class ConstraintValidator implements Validator<JSONObject> {
 
       if (edgeCounter != 3) {
         throw new InvalidConstraintException(
-            "Node of supposed K33 is not connected to the right number of nodes");
+            "Node of supposed K33 is not connected to the right number of nodes.");
       }
     }
   }

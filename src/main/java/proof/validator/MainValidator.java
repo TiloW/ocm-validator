@@ -72,8 +72,8 @@ public class MainValidator implements Validator<JSONObject> {
         try {
           leafValidator.validate(leaves.getJSONObject(i));
         } catch (InvalidProofException e) {
-          throw ExceptionHelper
-              .wrap(e, new InvalidProofException("Could not validate branch " + i));
+          throw ExceptionHelper.wrap(e, new InvalidProofException("Could not validate branch " + i
+              + "."));
         }
       }
     }

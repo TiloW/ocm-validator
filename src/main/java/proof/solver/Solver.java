@@ -50,8 +50,7 @@ public abstract class Solver {
 
     try {
       process = Runtime.getRuntime().exec(getCommand(filename));
-      BufferedReader reader =
-          new BufferedReader(new InputStreamReader(process.getInputStream()));
+      BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
       BufferedReader errorReader =
           new BufferedReader(new InputStreamReader(process.getErrorStream()));
 
@@ -72,8 +71,7 @@ public abstract class Solver {
     }
 
     if (result == null) {
-      throw new LinearProgramException(this, filename,
-          "output is missing some information.");
+      throw new LinearProgramException(this, filename, "Output is missing some information.");
     }
 
     return result;
@@ -94,7 +92,7 @@ public abstract class Solver {
    * @throws LinearProgramException since the linear program is declared infeasible
    */
   protected void returnInfeasiblity() throws LinearProgramException {
-    throw new LinearProgramException(this, filename, "linear program is infeasible.");
+    throw new LinearProgramException(this, filename, "Linear program is infeasible.");
   }
 
   /**

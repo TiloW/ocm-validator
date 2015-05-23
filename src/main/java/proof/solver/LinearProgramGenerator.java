@@ -132,7 +132,8 @@ public class LinearProgramGenerator {
             crossReader.read(constraint.getJSONArray("requiredCrossings").getJSONArray(i));
         requiredCrossings.add(crossing);
       } catch (ReaderException e) {
-        throw ExceptionHelper.wrap(e, new InvalidProofException("Ecounterd infeasible crossing!"));
+        throw ExceptionHelper
+            .wrap(e, new InvalidProofException("Encountered infeasible crossing."));
       }
     }
 

@@ -80,7 +80,7 @@ public class Graph {
    */
   public int getEdgeId(int source, int target) throws InvalidGraphException {
     if (!edgeExists(source, target)) {
-      throw new InvalidGraphException("Edge does not exist: (" + source + "," + target + ")");
+      throw new InvalidGraphException("Edge does not exist: (" + source + "," + target + ").");
     }
 
     return edgeIndices[source][target];
@@ -124,11 +124,11 @@ public class Graph {
     assertIsMutable();
 
     if (edgeExists(source, target)) {
-      throw new IllegalArgumentException("Can not override existing edge!");
+      throw new IllegalArgumentException("Can not override existing edge.");
     }
 
     if (edgeExists(target, source)) {
-      throw new IllegalArgumentException("Inverted edge already exists!");
+      throw new IllegalArgumentException("Inverted edge already exists.");
     }
 
     if (edgeId < 0 || edgeId >= costs.length) {
@@ -144,7 +144,7 @@ public class Graph {
     }
 
     if (costs[edgeId] != NO_EDGE_COST) {
-      throw new IllegalArgumentException("Edge ID already exists!");
+      throw new IllegalArgumentException("Edge index already exists.");
     }
 
     costs[edgeId] = cost;
@@ -171,7 +171,7 @@ public class Graph {
     }
 
     if (counter != costs.length) {
-      throw new InvalidGraphException("Can not make incomplete graph immutable");
+      throw new InvalidGraphException("Can not make partially read graph immutable.");
     }
   }
 
@@ -198,7 +198,7 @@ public class Graph {
    */
   private void assertIsMutable() throws InvalidGraphException {
     if (immutable) {
-      throw new InvalidGraphException("Can not modify immutable graph");
+      throw new InvalidGraphException("Can not modify immutable graph.");
     }
   }
 

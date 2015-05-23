@@ -78,7 +78,7 @@ public class Config {
         case "-s":
         case "--solver":
           if (i == args.length - 1) {
-            throw new InvalidConfigurationException("No solver specified for " + args[i]);
+            throw new InvalidConfigurationException("No solver specified.");
           } else {
             assertUniqueness(args[i], finalSolver);
             finalSolver = args[++i];
@@ -88,7 +88,7 @@ public class Config {
         case "-f":
         case "--file":
           if (i == args.length - 1) {
-            throw new InvalidConfigurationException("No file specified for " + args[i]);
+            throw new InvalidConfigurationException("No input file specified.");
           } else {
             assertUniqueness(args[i], finalFile);
             finalFile = args[++i];
@@ -105,7 +105,7 @@ public class Config {
     }
 
     if (finalFile == null) {
-      throw new InvalidConfigurationException("No input file specified");
+      throw new InvalidConfigurationException("No input file specified.");
     }
 
     File f = new File(finalFile);

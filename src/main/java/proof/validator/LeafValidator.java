@@ -65,8 +65,8 @@ public class LeafValidator implements Validator<JSONObject> {
         Config.get().logger.progress("  Kuratowski constraint " + j);
         constraintValidator.validate(constraints.getJSONObject(j));
       } catch (InvalidProofException e) {
-        throw ExceptionHelper.wrap(e, new InvalidProofException(
-            "Could not validate constraint " + j));
+        throw ExceptionHelper.wrap(e, new InvalidProofException("Could not validate constraint "
+            + j + "."));
       }
     }
 
@@ -86,8 +86,8 @@ public class LeafValidator implements Validator<JSONObject> {
       double lowerBound = solver.solve(file);
 
       if (Math.ceil(lowerBound) < expected) {
-        throw new LinearProgramException(solver, file, "Lower bound is too small: "
-            + lowerBound + " instead of " + expected);
+        throw new LinearProgramException(solver, file, "Lower bound is too small: " + lowerBound
+            + " instead of " + expected + ".");
       }
     } catch (IOException e) {
       throw ExceptionHelper.wrap(e, new LinearProgramException(solver, file));

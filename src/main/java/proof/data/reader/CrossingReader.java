@@ -46,7 +46,7 @@ public class CrossingReader implements Reader<JSONArray> {
     int target2 = graph.getEdgeTarget(seg2.edge);
 
     if (source1 == source2 || source1 == target2 || target1 == source2 || target1 == target2) {
-      throw new ReaderException("Adjacent edges never cross: " + result);
+      throw new ReaderException("Crossing of adjacent edges: " + result + ".");
     }
 
     return result;

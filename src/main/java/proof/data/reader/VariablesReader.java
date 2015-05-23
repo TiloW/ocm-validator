@@ -35,7 +35,8 @@ public class VariablesReader implements Reader<JSONArray> {
 
       for (CrossingIndex cross : result.keySet()) {
         if (crossingRealized && result.get(cross) && crossing.conflicting(cross)) {
-          throw new ReaderException("Conflicting fixed variables: " + cross + " VS " + crossing);
+          throw new ReaderException("Conflicting fixed variables: " + cross + " and " + crossing
+              + ".");
         }
       }
 

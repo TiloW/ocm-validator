@@ -17,10 +17,10 @@ public class SegmentIndex {
    */
   public SegmentIndex(int edge, int segment) {
     if (edge < 0) {
-      throw new IllegalArgumentException("Invalid edge index");
+      throw new IllegalArgumentException("Invalid edge index.");
     }
     if (segment < 0) {
-      throw new IllegalArgumentException("Invalid segment index");
+      throw new IllegalArgumentException("Invalid segment index.");
     }
 
     this.edge = edge;

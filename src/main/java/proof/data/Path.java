@@ -64,14 +64,10 @@ public class Path {
     section.end = end;
     section.keepDirection = keepDirection;
 
-    if (!graph.edgeExists(source, target)) {
-      throw new InvalidPathException("Edge does not exist");
-    }
-
     try {
       section.edge = graph.getEdgeId(source, target);
     } catch (InvalidGraphException e) {
-      throw ExceptionHelper.wrap(e, new InvalidPathException("Edge does not exist"));
+      throw ExceptionHelper.wrap(e, new InvalidPathException("Edge does not exist."));
     }
 
     if (!sections.isEmpty()) {
@@ -82,7 +78,8 @@ public class Path {
       sections.remove(0);
 
       if (!connected) {
-        throw new InvalidPathException("Path is disconnected: " + sourceObj + " != " + targetObj);
+        throw new InvalidPathException("Path is disconnected: " + sourceObj + " != " + targetObj
+            + ".");
       }
     }
 
@@ -93,7 +90,7 @@ public class Path {
     getDummyNode(sections.size() - 1, false);
 
     if (collectNodes().size() != sections.size() - 1) {
-      throw new InvalidPathException("Path contains duplicate nodes");
+      throw new InvalidPathException("Path contains duplicate nodes.");
     }
   }
 

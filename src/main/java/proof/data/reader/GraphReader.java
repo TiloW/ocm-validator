@@ -44,7 +44,7 @@ public class GraphReader implements Reader<JSONObject> {
       return result;
 
     } catch (IllegalArgumentException | JSONException e) {
-      throw ExceptionHelper.wrap(e, new InvalidGraphException("Could not parse JSON"));
+      throw ExceptionHelper.wrap(e, new InvalidGraphException("Could not parse JSON."));
     }
   }
 }

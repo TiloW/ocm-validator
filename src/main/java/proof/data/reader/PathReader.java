@@ -40,7 +40,7 @@ public class PathReader implements Reader<JSONArray> {
     Path result = new Path(graph, crossings);
 
     if (input.length() == 0) {
-      throw new InvalidPathException("Path is empty");
+      throw new InvalidPathException("Path is empty.");
     }
 
     for (int i = 0; i < input.length(); i++) {
