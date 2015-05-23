@@ -13,10 +13,10 @@ public class CrossingIndex {
   /**
    * Creates a new crossing.
    *
-   * @param edgeA the edge of the first segment
-   * @param segmentA the index of the first segment
-   * @param edgeB the the edge of the other segment
-   * @param segmentB the index of the other segment
+   * @param edgeA edge of the first segment
+   * @param segmentA index of the first segment
+   * @param edgeB the edge of the second segment
+   * @param segmentB index of the second segment
    */
   public CrossingIndex(int edgeA, int segmentA, int edgeB, int segmentB) {
     this(new SegmentIndex(edgeA, segmentA), new SegmentIndex(edgeB, segmentB));
@@ -25,8 +25,8 @@ public class CrossingIndex {
   /**
    * Creates a new crossing.
    *
-   * @param segment The first segment
-   * @param otherSegment The other segment
+   * @param segment first segment
+   * @param otherSegment second segment
    */
   public CrossingIndex(SegmentIndex segment, SegmentIndex otherSegment) {
     if (segment.edge == otherSegment.edge) {
@@ -46,8 +46,8 @@ public class CrossingIndex {
    * Returns true iff the other crossing can not exist with this crossing. (i.e. both crossings
    * share a single segment).
    *
-   * @param other The possibly conflicting segment
-   * @return True iff the segments do conflict
+   * @param other possibly conflicting segment
+   * @return {@code true} iff the segments do conflict
    */
   public boolean conflicting(CrossingIndex other) {
     boolean includesFirstSegment =

@@ -21,7 +21,7 @@ public abstract class Main {
   /**
    * Validates a proof for the crossing number of a single graph.
    *
-   * @param args The command line arguments
+   * @param args command line arguments
    * @throws InvalidProofException if the claimed proof is invalid
    */
   public static void main(String[] args) throws InvalidProofException {

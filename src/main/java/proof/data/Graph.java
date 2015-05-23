@@ -21,9 +21,9 @@ public class Graph {
   /**
    * Creates a new graph with the exact number of nodes and edges.
    *
-   * @param numberOfNodes The number of nodes
-   * @param numberOfEdges The number of edges
-   * @param claimedLowerBound The claimed minimum of realized crossings
+   * @param numberOfNodes number of nodes
+   * @param numberOfEdges number of edges
+   * @param claimedLowerBound claimed minimum of realized crossings (to be proven)
    */
   public Graph(int numberOfNodes, int numberOfEdges, int claimedLowerBound) {
     immutable = false;
@@ -60,8 +60,8 @@ public class Graph {
   /**
    * Checks whether a single edge exists (or its directed counterpart).
    *
-   * @param source The index of the first node
-   * @param target The index of the second node
+   * @param source index of the first node
+   * @param target index of the second node
    *
    * @return {@code true} iff the edge exist
    */
@@ -72,10 +72,10 @@ public class Graph {
   /**
    * Returns the id of any single edge.
    *
-   * @param source The index of the first node
-   * @param target The index of the second node
+   * @param source index of the first node
+   * @param target index of the second node
    *
-   * @return The index of the edge
+   * @return the index of the edge
    * @throws InvalidGraphException if the edge does not exist
    */
   public int getEdgeId(int source, int target) throws InvalidGraphException {
@@ -89,10 +89,10 @@ public class Graph {
   /**
    * Returns the cost of a single edge.
    *
-   * @param source The index of the first node
-   * @param target The index of the second node
+   * @param source index of the first node
+   * @param target index of the second node
    *
-   * @return The cost
+   * @return the cost
    * @throws InvalidGraphException if the edge does not exist
    */
   public int getEdgeCost(int source, int target) throws InvalidGraphException {
@@ -114,11 +114,11 @@ public class Graph {
   /**
    * Creates a new edge. Will fail if the index is already in use or the edge already exists.
    *
-   * @param edgeId The edge index to be used
-   * @param source The index of the first node
-   * @param target The index of the second node
-   * @param cost The cost of the edge
-   * @throws InvalidGraphException
+   * @param edgeId edge index to be used
+   * @param source index of the first node
+   * @param target index of the second node
+   * @param cost cost of the edge
+   * @throws InvalidGraphException if the edge already exists
    */
   public void addEdge(int edgeId, int source, int target, int cost) throws InvalidGraphException {
     assertIsMutable();
@@ -178,9 +178,9 @@ public class Graph {
   /**
    * Returns true iff both edges have a common incident node.
    *
-   * @param e1 The index of the first edge
-   * @param e2 The index of the second edge
-   * @return true iff the edges are adjacent
+   * @param e1 index of the first edge
+   * @param e2 index of the second edge
+   * @return {@code true} iff the edges are adjacent
    */
   public boolean areEdgesAdjacent(int e1, int e2) {
     int s1 = getEdgeSource(e1);
@@ -205,8 +205,7 @@ public class Graph {
   /**
    * Checks whether a single node exists.
    *
-   * @param source The index of the supposed node
-   *
+   * @param node index of the supposed node
    * @return {@code true} iff the node exist
    */
   private boolean nodeExists(int node) {

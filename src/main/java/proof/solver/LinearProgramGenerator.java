@@ -35,7 +35,7 @@ public class LinearProgramGenerator {
   /**
    * Initializes a new generator.
    *
-   * @param graph The graph to work with.
+   * @param graph graph to work with
    */
   public LinearProgramGenerator(Graph graph) {
     this.graph = graph;
@@ -46,9 +46,9 @@ public class LinearProgramGenerator {
    * Returns a linear program based on the expanded graph and all given Kuratowski subdivisions. The
    * program is returned in CPLEX LP file format.
    *
-   * @param fixedVariables The currently fixed branching variables
-   * @param leaf A JSON object containing all relevant information for this leaf
-   * @return The generated linear program in CPLEX LP file format
+   * @param fixedVariables currently fixed branching variables
+   * @param leaf JSON object containing all relevant information for this leaf
+   * @return the generated linear program in CPLEX LP file format
    * @throws InvalidProofException if the number of expansions on any edge is negative
    */
   public String createLinearProgram(Map<CrossingIndex, Boolean> fixedVariables, JSONObject leaf)
@@ -116,8 +116,8 @@ public class LinearProgramGenerator {
   /**
    * Generates and returns a single Kuratowski constraint.
    *
-   * @param constraint A JSON structure containing all paths and required crossings
-   * @return A CPLEX LP file format compliant description of the constraint
+   * @param constraint JSON structure containing all paths and required crossings
+   * @return CPLEX LP file format compliant description of the constraint
    * @throws InvalidProofException if a required crossing turns out to be infeasible
    */
   private String generateKuratowski(JSONObject constraint) throws InvalidProofException {
@@ -176,8 +176,8 @@ public class LinearProgramGenerator {
   /**
    * Collects all feasible {@link #variables} over all segments of two paths.
    *
-   * @param path1 The first path
-   * @param path2 The second path
+   * @param path1 first path
+   * @param path2 second path
    * @return the set of feasible crossings
    * @throws InvalidProofException if any required edge does not exist
    */
@@ -228,8 +228,8 @@ public class LinearProgramGenerator {
    * interval {@code [0,1]}. However, some variables might be fixed to either {@code 1} or {@code 0}
    * due to branching.
    *
-   * @param fixedVariables The currently fixed branching variables
-   * @return A CPLEX LP file format compliant description of all bounds
+   * @param fixedVariables currently fixed branching variables
+   * @return CPLEX LP file format compliant description of all bounds
    */
   private String generateBounds(Map<CrossingIndex, Boolean> fixedVariables) {
     final StringBuilder result = new StringBuilder();
@@ -291,9 +291,9 @@ public class LinearProgramGenerator {
    * Returns the positive sum over all feasible variables (i.e. crossings) including the given
    * segment.
    *
-   * @param edge The edge
-   * @param segment The segment
-   * @return string a CPLEX LP file format compliant representation of the sum over all feasible
+   * @param edge edge index
+   * @param segment segment index
+   * @return string CPLEX LP file format compliant representation of the sum over all feasible
    *         variables
    */
   private String sumVariables(int edge, int segment) {
@@ -306,8 +306,7 @@ public class LinearProgramGenerator {
    * @param edge The edge
    * @param segment The segment
    * @param substract Whether to return the negative sum
-   * @return string a CPLEX LP file format compliant representation of the sum over all feasible
-   *         variables
+   * @return a CPLEX LP file format compliant representation of the sum over all feasible variables
    */
   private String sumVariables(int edge, int segment, boolean substract) {
     final StringBuilder result = new StringBuilder();
@@ -334,8 +333,8 @@ public class LinearProgramGenerator {
    * Returns the name of the variable associated with the crossing. Note that the crossing ensures
    * the uniqueness of each name.
    *
-   * @param crossing The crossing which should be named
-   * @return A label for the crossing
+   * @param crossing crossing which should be named
+   * @return a unique label for the crossing
    */
   private String createVarName(CrossingIndex crossing) {
     SegmentIndex s1 = crossing.segments[0];

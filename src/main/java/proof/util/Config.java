@@ -58,8 +58,8 @@ public class Config {
   /**
    * Initializes a new configuration based on the given command line arguments.
    *
-   * @param args The command line arguments as given to the main method.
-   * @param out The output stream for the global logger.
+   * @param args command line arguments as given to the main method
+   * @param out output stream for the global logger
    * @throws InvalidConfigurationException If any arguments do not comply with the {@link #USAGE}.
    */
   Config(String[] args, PrintStream out) throws InvalidConfigurationException {
@@ -134,8 +134,9 @@ public class Config {
   /**
    * Creates a new configuration. Must be called exactly once.
    *
-   * @param args The command line arguments as given to the main method.
-   * @throws InvalidConfigurationException If any arguments do not comply with the {@link #USAGE}.
+   * @param args command line arguments as given to the main method
+   * @throws InvalidConfigurationException if any arguments do not comply with the {@link #USAGE} or
+   *         the configuration has already been created
    */
   public static void create(String[] args) throws InvalidConfigurationException {
     create(args, System.out);
@@ -144,11 +145,10 @@ public class Config {
   /**
    * Method for specifying an output stream during testing. See {@link #create(String[])}.
    *
-   * @param args The command line arguments as given to the main method.
-   * @param out The output stream to be used.
-   * @throws InvalidConfigurationException If any arguments do not comply with the {@link #USAGE}.
-   *
-   * @throws InvalidConfigurationException if the configuration has already been created.
+   * @param args command line arguments as given to the main method
+   * @param out output stream to be used
+   * @throws InvalidConfigurationException if any arguments do not comply with the {@link #USAGE} or
+   *         the configuration has already been created
    */
   public static void create(String[] args, PrintStream out) throws InvalidConfigurationException {
     if (Config.config != null) {
@@ -161,7 +161,7 @@ public class Config {
   /**
    * Returns the configuration. Assumes that {@link #create(String[])} has already been called.
    *
-   * @return The configuration instance
+   * @return configuration instance
    * @throws RuntimeException if the configuration has not been created yet
    */
   public static Config get() {

@@ -35,8 +35,8 @@ public class Path {
   /**
    * Initializes a new Kuratowski path.
    *
-   * @param graph The underlying {@link Graph}
-   * @param crossings The currently realized crossings
+   * @param graph underlying non-expanded graph
+   * @param crossings currently realized crossings
    */
   public Path(Graph graph, Set<CrossingIndex> crossings) {
     this.crossings = crossings;
@@ -47,11 +47,11 @@ public class Path {
   /**
    * Adds a new section to this path and ensures the path is valid.
    *
-   * @param source The source of the edge
-   * @param target The target of the edge
-   * @param start The start index on this edge
-   * @param end The end index on this edge
-   * @param keepDirection Whether to traverse the edge in order
+   * @param source source of the edge
+   * @param target target of the edge
+   * @param start start index on this edge
+   * @param end end index on this edge
+   * @param keepDirection whether to traverse the edge in order
    * @throws InvalidPathException if the edge does not exist, the path is disconnected or visits any
    *         node twice
    */
@@ -98,7 +98,7 @@ public class Path {
    * Returns the source of this path. This can either be an Integer (node index) or a
    * {@link CrossingIndex}.
    *
-   * @return The source
+   * @return the first (dummy) node of this path
    */
   public Object getSource() {
     try {
@@ -113,7 +113,7 @@ public class Path {
    * Returns the target of this path. This can either be an Integer (node index) or a
    * {@link CrossingIndex}.
    *
-   * @return The target
+   * @return the last (dummy) node of this path
    */
   public Object getTarget() {
     try {
@@ -127,8 +127,8 @@ public class Path {
   /**
    * Will test whether the two paths are disjoint (except for their source and target).
    *
-   * @param path The path to be tested against this path
-   * @return True iff the paths are disjoint
+   * @param path path to be tested against this path
+   * @return {@code true} iff the paths are disjoint
    */
   public boolean isDisjointTo(Path path) {
     try {
@@ -160,7 +160,7 @@ public class Path {
    * Returns a set of all (dummy) nodes incident to segments along this path except for the source
    * and target of this path.
    *
-   * @return The set of nodes
+   * @return the set of nodes
    * @throws InvalidPathException if any required crossing is not realized
    */
   private Set<Object> collectNodes() throws InvalidPathException {
@@ -176,8 +176,8 @@ public class Path {
   /**
    * Returns whether this path shares a common start or end with the other one.
    *
-   * @param other The other path
-   * @return true iff the paths are adjacent to each other
+   * @param other the other path
+   * @return {@code true} iff the paths are adjacent to each other
    */
   public boolean isAdjacentTo(Path other) {
     return getSource().equals(other.getSource()) || getSource().equals(other.getTarget())
@@ -187,9 +187,9 @@ public class Path {
   /**
    * Returns the node or crossing at the end (or start) of the given segment range.
    *
-   * @param pos The position of the segment range in this path
-   * @param getSource Whether to return the source instead of the target
-   * @return The node or crossing
+   * @param pos position of the segment range in this path
+   * @param getSource whether to return the source instead of the target
+   * @return the node or crossing
    * @throws InvalidPathException if any required crossing is not realized
    */
   private Object getDummyNode(int pos, boolean getSource) throws InvalidPathException {

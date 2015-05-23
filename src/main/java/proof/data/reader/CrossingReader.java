@@ -19,7 +19,7 @@ public class CrossingReader implements Reader<JSONArray> {
   /**
    * Creates a new crossing reader.
    *
-   * @param graph The underlying {@link Graph}.
+   * @param graph underlying non-expanded graph
    */
   public CrossingReader(Graph graph) {
     this.graph = graph;

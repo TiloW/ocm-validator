@@ -34,7 +34,7 @@ public class ConstraintValidator implements Validator<JSONObject> {
   /**
    * Creates a new constraint validator.
    *
-   * @param graph The original graph we are working on (without any crossings)
+   * @param graph underlying non-expanded graph
    */
   public ConstraintValidator(Graph graph) {
     this.graph = graph;
@@ -103,8 +103,8 @@ public class ConstraintValidator implements Validator<JSONObject> {
   /**
    * Asserts that all five nodes are connected to one another.
    *
-   * @param paths The ten paths
-   * @throws InvalidConstraintException If one of the paths has no defined source or target
+   * @param paths set of supposed Kuratowski paths
+   * @throws InvalidConstraintException if one of the paths has no defined source or target
    */
   private void validateK5(Path[] paths) throws InvalidConstraintException {
     if (paths.length != 10) {
@@ -153,8 +153,8 @@ public class ConstraintValidator implements Validator<JSONObject> {
   /**
    * Asserts a valid K33, i.e. a bipartite Graph with three nodes in each of the two subsets.
    *
-   * @param paths The 9 paths
-   * @throws InvalidConstraintException If one of the paths has no defined source or target
+   * @param paths set of supposed Kuratowski paths
+   * @throws InvalidConstraintException if one of the paths has no defined source or target
    */
   private void validateK33(Path[] paths) throws InvalidConstraintException {
     if (paths.length != 9) {
@@ -226,7 +226,7 @@ public class ConstraintValidator implements Validator<JSONObject> {
   /**
    * Collects all nodes and crossings which represent a start or end of any of the given paths.
    *
-   * @param paths The paths to be investigated
+   * @param paths all paths to be investigated
    * @return a mapping of of encountered nodes to a continuous index
    */
   private Map<Object, Integer> collectNodes(Path[] paths) {

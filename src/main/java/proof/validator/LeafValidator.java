@@ -34,7 +34,7 @@ public class LeafValidator implements Validator<JSONObject> {
   /**
    * Initializes a new leaf validator.
    *
-   * @param graph The graph to work with.
+   * @param graph underlying non-expanded graph
    */
   public LeafValidator(Graph graph) {
     this.graph = graph;

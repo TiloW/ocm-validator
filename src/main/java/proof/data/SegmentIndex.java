@@ -12,8 +12,8 @@ public class SegmentIndex {
   /**
    * Creates a new segment index.
    *
-   * @param edge The edge index
-   * @param segment The segment index
+   * @param edge edge index
+   * @param segment segment index
    */
   public SegmentIndex(int edge, int segment) {
     if (edge < 0) {

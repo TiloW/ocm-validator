@@ -13,8 +13,8 @@ public class SolverFactory {
    * Returns the solver to be used for validating the results of all linear programs. The parameter
    * is respected only if the solver is requested for the first time.
    *
-   * @param param The command line argument to specify the solver
-   * @return A wrapper for the chosen linear program solver
+   * @param param command line argument to specify the solver
+   * @return a wrapper for the chosen linear program solver
    *
    * @throws UnsupportedSolverException if the requested solver is not supported
    */
@@ -46,7 +46,7 @@ public class SolverFactory {
   /**
    * Detects which linear program solvers are available and chooses one.
    *
-   * @return The chosen solver
+   * @return the chosen solver
    * @throws UnsupportedSolverException if no solver is available
    */
   private Solver chooseSolver() {

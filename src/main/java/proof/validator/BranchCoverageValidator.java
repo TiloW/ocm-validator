@@ -43,7 +43,7 @@ public class BranchCoverageValidator implements Validator<JSONArray> {
   /**
    * Creates a new coverage validator.
    *
-   * @param graph The underlying {@link Graph}
+   * @param graph underlying non-expanded graph
    */
   public BranchCoverageValidator(Graph graph) {
     variablesReader = new VariablesReader(graph);
@@ -83,7 +83,7 @@ public class BranchCoverageValidator implements Validator<JSONArray> {
    * this can not be achieved, the leaves are either overlapping or not all of the variables are
    * covered.
    *
-   * @param parsedVariables the fixed variables of each branch
+   * @param parsedVariables fixed variables of each branch
    */
   private void mergeAllLeaves(List<Map<CrossingIndex, Boolean>> parsedVariables)
       throws InvalidCoverageException {
@@ -118,10 +118,10 @@ public class BranchCoverageValidator implements Validator<JSONArray> {
    * they differ by the assignment of a single variable. Will remove one of the merged leaves and
    * alter the other one upon success.
    *
-   * @param leaves The list of all leaves
-   * @param firstLeaf The first leaf index
-   * @param secondLeaf The second leaf index
-   * @return True iff the leaves were successfully merged
+   * @param leaves list of all leaves
+   * @param firstLeaf first leaf index
+   * @param secondLeaf second leaf index
+   * @return {@code true} iff the leaves were successfully merged
    */
   private boolean mergeIfPossible(List<Map<CrossingIndex, Boolean>> leaves, int firstLeaf,
       int secondLeaf) {

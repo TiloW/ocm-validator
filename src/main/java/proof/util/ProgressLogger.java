@@ -17,8 +17,8 @@ public class ProgressLogger {
   /**
    * Creates a new logger.
    *
-   * @param out The output stream to use
-   * @param verbose Whether to print everything
+   * @param out output stream to use
+   * @param verbose whether to print everything
    */
   public ProgressLogger(PrintStream out, boolean verbose) {
     this.out = out;
@@ -28,7 +28,7 @@ public class ProgressLogger {
   /**
    * Resets the progress to zero.
    *
-   * @param maxProgress The progress to reach until finished
+   * @param maxProgress progress to reach until finished
    */
   public void reset(int maxProgress) {
     if (maxProgress < 1) {
@@ -40,9 +40,9 @@ public class ProgressLogger {
   }
 
   /**
-   * Prints a message even when {@link #verbose} is disabled.
+   * Prints a (multi-line) message even when {@link #verbose} is disabled.
    *
-   * @param message The message to be printed
+   * @param message message to be printed
    */
   public void println(String message) {
     out.println("\r" + message);
@@ -51,7 +51,7 @@ public class ProgressLogger {
   /**
    * Prints out a single line message. The message is skipped if {@link #verbose} is disabled.
    *
-   * @param message The line to be printed
+   * @param message line to be printed
    */
   public void print(String message) {
     if (verbose) {
@@ -66,7 +66,7 @@ public class ProgressLogger {
   /**
    * Increases the current progress by one and prints a single line message.
    *
-   * @param message The line to be printed
+   * @param message line to be printed
    */
   public void progress(String message) {
     progress();
