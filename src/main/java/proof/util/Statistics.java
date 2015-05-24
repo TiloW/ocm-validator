@@ -28,7 +28,7 @@ public class Statistics extends HashMap<String, Integer> {
   /**
    * Increases the value of some name by one. The empty value is assumed to be zero.
    *
-   * @param name The identifier of the variable to be increased
+   * @param name identifier of the variable to be increased
    */
   public void increase(String name) {
     if (!containsKey(name)) {
@@ -73,9 +73,9 @@ public class Statistics extends HashMap<String, Integer> {
   /**
    * Formats a number according to the current statistics.
    *
-   * @param title A description of the value
-   * @param number The integer value
-   * @return The formatted number
+   * @param title description of the value
+   * @param number integer value
+   * @return the formatted number
    */
   private String formatNumber(String title, int number) {
     return String.format(

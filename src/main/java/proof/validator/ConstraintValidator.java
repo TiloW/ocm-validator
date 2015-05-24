@@ -11,6 +11,7 @@ import proof.data.reader.PathReader;
 import proof.exception.ExceptionHelper;
 import proof.exception.InvalidConstraintException;
 import proof.exception.InvalidPathException;
+import proof.exception.ReaderException;
 import proof.util.Config;
 
 import java.util.HashMap;
@@ -33,7 +34,7 @@ public class ConstraintValidator implements Validator<JSONObject> {
   /**
    * Creates a new constraint validator.
    *
-   * @param graph The original graph we are working on (without any crossings)
+   * @param graph underlying non-expanded graph
    */
   public ConstraintValidator(Graph graph) {
     this.graph = graph;
@@ -57,11 +58,15 @@ public class ConstraintValidator implements Validator<JSONObject> {
     JSONArray crossings = object.getJSONArray("requiredCrossings");
 
     for (int i = 0; relevant && i < crossings.length(); i++) {
-      requiredCrossings.add(crossingReader.read(crossings.getJSONArray(i)));
+      try {
+        requiredCrossings.add(crossingReader.read(crossings.getJSONArray(i)));
+      } catch (ReaderException e) {
+        throw ExceptionHelper.wrap(e, new InvalidConstraintException(
+            "Encountered infeasible crossing."));
+      }
     }
 
     PathReader reader = new PathReader(graph, requiredCrossings);
-
     JSONArray jsonPaths = object.getJSONArray("paths");
     Path[] paths = new Path[jsonPaths.length()];
 
@@ -70,7 +75,7 @@ public class ConstraintValidator implements Validator<JSONObject> {
         Config.get().logger.print("    path " + i);
         paths[i] = reader.read(jsonPaths.getJSONArray(i));
       } catch (InvalidPathException e) {
-        throw ExceptionHelper.wrap(e, new InvalidConstraintException("Path " + i + " is invalid!"));
+        throw ExceptionHelper.wrap(e, new InvalidConstraintException("Path " + i + " is invalid."));
       }
     }
 
@@ -85,9 +90,9 @@ public class ConstraintValidator implements Validator<JSONObject> {
 
     String constraintType = object.getString("type");
 
-    if (constraintType.equals("K33")) {
+    if ("K33".equals(constraintType)) {
       validateK33(paths);
-    } else if (constraintType.equals("K5")) {
+    } else if ("K5".equals(constraintType)) {
       validateK5(paths);
     } else {
       throw new InvalidConstraintException("Invalid type of Kuratowski constraint: "
@@ -98,8 +103,8 @@ public class ConstraintValidator implements Validator<JSONObject> {
   /**
    * Asserts that all five nodes are connected to one another.
    *
-   * @param paths The ten paths
-   * @throws InvalidConstraintException If one of the paths has no defined source or target
+   * @param paths set of supposed Kuratowski paths
+   * @throws InvalidConstraintException if one of the paths has no defined source or target
    */
   private void validateK5(Path[] paths) throws InvalidConstraintException {
     if (paths.length != 10) {
@@ -107,11 +112,11 @@ public class ConstraintValidator implements Validator<JSONObject> {
           + paths.length);
     }
 
-    Map<Object, Integer> endpoints = collectEndpoints(paths);
+    Map<Object, Integer> nodes = collectNodes(paths);
 
-    if (endpoints.size() != 5) {
+    if (nodes.size() != 5) {
       throw new InvalidConstraintException("Supposed K5 has an invalid number of nodes: "
-          + endpoints.size());
+          + nodes.size());
     }
 
     // find all paths
@@ -123,8 +128,8 @@ public class ConstraintValidator implements Validator<JSONObject> {
     }
 
     for (Path path : paths) {
-      int u = endpoints.get(path.getSource());
-      int v = endpoints.get(path.getTarget());
+      int u = nodes.get(path.getSource());
+      int v = nodes.get(path.getTarget());
 
       foundPaths[u][v] = foundPaths[v][u] = true;
     }
@@ -134,11 +139,11 @@ public class ConstraintValidator implements Validator<JSONObject> {
       for (int ii = 0; ii < 5; ii++) {
         if (i == ii) {
           if (foundPaths[i][ii]) {
-            throw new InvalidConstraintException("Self loop in supposed Kuratowski path");
+            throw new InvalidConstraintException("Self loop in supposed Kuratowski path.");
           }
         } else {
           if (!foundPaths[i][ii]) {
-            throw new InvalidConstraintException("Missing Kuratowski path in supposed K5");
+            throw new InvalidConstraintException("Missing Kuratowski path in supposed K5.");
           }
         }
       }
@@ -148,8 +153,8 @@ public class ConstraintValidator implements Validator<JSONObject> {
   /**
    * Asserts a valid K33, i.e. a bipartite Graph with three nodes in each of the two subsets.
    *
-   * @param paths The 9 paths
-   * @throws InvalidConstraintException If one of the paths has no defined source or target
+   * @param paths set of supposed Kuratowski paths
+   * @throws InvalidConstraintException if one of the paths has no defined source or target
    */
   private void validateK33(Path[] paths) throws InvalidConstraintException {
     if (paths.length != 9) {
@@ -157,11 +162,11 @@ public class ConstraintValidator implements Validator<JSONObject> {
           + paths.length);
     }
 
-    Map<Object, Integer> endpoints = collectEndpoints(paths);
+    Map<Object, Integer> nodes = collectNodes(paths);
 
-    if (endpoints.size() != 6) {
+    if (nodes.size() != 6) {
       throw new InvalidConstraintException("Supposed K33 has an invalid number of nodes ("
-          + endpoints.size() + "): " + endpoints);
+          + nodes.size() + "): " + nodes);
     }
 
     // classify nodes (2-coloring)
@@ -171,8 +176,8 @@ public class ConstraintValidator implements Validator<JSONObject> {
     }
 
     for (Path path : paths) {
-      int u = endpoints.get(path.getSource());
-      int v = endpoints.get(path.getTarget());
+      int u = nodes.get(path.getSource());
+      int v = nodes.get(path.getTarget());
 
       if (u == 0) {
         color[v] = true;
@@ -190,7 +195,7 @@ public class ConstraintValidator implements Validator<JSONObject> {
     }
 
     if (counter != 3) {
-      throw new InvalidConstraintException("Supposed K33 has invalid 2-coloring");
+      throw new InvalidConstraintException("Supposed K33 has invalid 2-coloring.");
     }
 
     // validate each node is connected to exactly three nodes (of different color)
@@ -198,12 +203,12 @@ public class ConstraintValidator implements Validator<JSONObject> {
       int edgeCounter = 0;
 
       for (Path path : paths) {
-        int v = endpoints.get(path.getSource());
-        int w = endpoints.get(path.getTarget());
+        int v = nodes.get(path.getSource());
+        int w = nodes.get(path.getTarget());
 
         if (color[v] == color[w]) {
           throw new InvalidConstraintException(
-              "Connected nodes in supposed K33 have the same color");
+              "Connected nodes in supposed K33 have the same color.");
         }
 
         if (node == v || node == w) {
@@ -213,7 +218,7 @@ public class ConstraintValidator implements Validator<JSONObject> {
 
       if (edgeCounter != 3) {
         throw new InvalidConstraintException(
-            "Node of supposed K33 is not connected to the right number of nodes");
+            "Node of supposed K33 is not connected to the right number of nodes.");
       }
     }
   }
@@ -221,10 +226,10 @@ public class ConstraintValidator implements Validator<JSONObject> {
   /**
    * Collects all nodes and crossings which represent a start or end of any of the given paths.
    *
-   * @param paths The paths to be investigated
-   * @return a map containing the number of times each endpoint was found in any path
+   * @param paths all paths to be investigated
+   * @return a mapping of of encountered nodes to a continuous index
    */
-  private Map<Object, Integer> collectEndpoints(Path[] paths) {
+  private Map<Object, Integer> collectNodes(Path[] paths) {
     Map<Object, Integer> result = new HashMap<Object, Integer>();
     int counter = 0;
 

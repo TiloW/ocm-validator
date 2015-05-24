@@ -12,15 +12,15 @@ public class SegmentIndex {
   /**
    * Creates a new segment index.
    *
-   * @param edge The edge index
-   * @param segment The segment index
+   * @param edge edge index
+   * @param segment segment index
    */
   public SegmentIndex(int edge, int segment) {
     if (edge < 0) {
-      throw new IllegalArgumentException("Invalid edge index");
+      throw new IllegalArgumentException("Invalid edge index.");
     }
     if (segment < 0) {
-      throw new IllegalArgumentException("Invalid segment index");
+      throw new IllegalArgumentException("Invalid segment index.");
     }
 
     this.edge = edge;

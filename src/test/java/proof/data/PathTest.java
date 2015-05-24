@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import proof.GraphBasedTest;
+import proof.exception.InvalidGraphException;
 import proof.exception.InvalidPathException;
 
 import java.util.HashSet;
@@ -29,7 +30,7 @@ public class PathTest extends GraphBasedTest {
   }
 
   @Test
-  public void testGetSource() {
+  public void testGetSource() throws InvalidPathException {
     path.addSection(1, 2, -1, 42, true);
 
     assertEquals(1, path.getSource());
@@ -37,7 +38,7 @@ public class PathTest extends GraphBasedTest {
   }
 
   @Test
-  public void testGetSource_direction() {
+  public void testGetSource_direction() throws InvalidPathException {
     path.addSection(1, 2, -1, 42, false);
 
     assertEquals(1, path.getTarget());
@@ -45,7 +46,7 @@ public class PathTest extends GraphBasedTest {
   }
 
   @Test
-  public void testAddSection() {
+  public void testAddSection() throws InvalidPathException {
     path.addSection(1, 2, -1, 42, false);
     path.addSection(1, 5, -1, 42, true);
     path.addSection(4, 5, -1, 42, false);
@@ -55,7 +56,7 @@ public class PathTest extends GraphBasedTest {
   }
 
   @Test
-  public void testAddSection_crossing() {
+  public void testAddSection_crossing() throws InvalidPathException, InvalidGraphException {
     Set<CrossingIndex> crossings = new HashSet<>();
     crossings.add(new CrossingIndex(graph.getEdgeId(0, 1), 5, graph.getEdgeId(2, 3), 7));
     path = new Path(graph, crossings);
@@ -68,18 +69,18 @@ public class PathTest extends GraphBasedTest {
   }
 
   @Test(expected = InvalidPathException.class)
-  public void testAddSection_invalidCrossing() {
+  public void testAddSection_invalidCrossing() throws InvalidPathException {
     path.addSection(1, 2, -1, 5, true);
   }
 
   @Test(expected = InvalidPathException.class)
-  public void testAddSection_disconnected() {
+  public void testAddSection_disconnected() throws InvalidPathException {
     path.addSection(1, 2, -1, 5, true);
     path.addSection(3, 1, -1, 5, true);
   }
 
   @Test
-  public void testIsDisjointTo() {
+  public void testIsDisjointTo() throws InvalidPathException {
     path.addSection(1, 10, -1, 42, true);
     path.addSection(2, 10, -1, 42, false);
 
@@ -101,7 +102,7 @@ public class PathTest extends GraphBasedTest {
   }
 
   @Test
-  public void testIsAdjacentTo() {
+  public void testIsAdjacentTo() throws InvalidPathException {
     path.addSection(1, 2, -1, 42, true);
 
     Path path2 = new Path(graph, new HashSet<CrossingIndex>());

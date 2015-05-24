@@ -12,6 +12,7 @@ import proof.ResourceBasedTest;
 import proof.data.CrossingIndex;
 import proof.data.Graph;
 import proof.data.SegmentIndex;
+import proof.exception.InvalidGraphException;
 import proof.exception.InvalidPathException;
 
 import java.util.HashSet;
@@ -86,7 +87,8 @@ public class PathReaderTest extends ResourceBasedTest {
   }
 
   @Test
-  public void testValidate_crossing() throws InvalidPathException, JSONException {
+  public void testValidate_crossing() throws InvalidPathException, JSONException,
+  InvalidGraphException {
     JSONArray path = loadJson("crossing").getJSONArray("path");
 
     assertInvalid(path);
@@ -98,7 +100,8 @@ public class PathReaderTest extends ResourceBasedTest {
   }
 
   @Test
-  public void testValidate_crossingExtended() throws InvalidPathException, JSONException {
+  public void testValidate_crossingExtended() throws InvalidPathException, JSONException,
+      InvalidGraphException {
     Set<CrossingIndex> crossings = new HashSet<CrossingIndex>();
     JSONArray path = loadJson("crossing-2").getJSONArray("path");
 

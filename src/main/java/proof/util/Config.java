@@ -22,11 +22,10 @@ public class Config {
   /**
    * Usage synopsis to be given to the user.
    */
-  public static final String usage = "SYNOPSIS\n"
-      + "  validator -f <file> [-v] [-s <solver>]\n\n" + "OPTIONS\n\n"
-      + "  -f <file>, --file <file>\n" + "\tValidate the proof contained in <file>.\n\n"
-      + "  -v, --verbose\n" + "\tPrint verbose information during validation.\n\n"
-      + "  -s <solver>, --solver <solver>\n"
+  public static final String USAGE = "SYNOPSIS\n" + "  validator -f <file> [-v] [-s <solver>]\n\n"
+      + "OPTIONS\n\n" + "  -f <file>, --file <file>\n"
+      + "\tValidate the proof contained in <file>.\n\n" + "  -v, --verbose\n"
+      + "\tPrint verbose information during validation.\n\n" + "  -s <solver>, --solver <solver>\n"
       + "\tUse <solver> as the linear program solver for validating lower bounds.\n"
       + "\tValid choices are {scip,cplex,gurobi}.";
 
@@ -57,53 +56,11 @@ public class Config {
   public final ProgressLogger logger;
 
   /**
-   * Creates a new configuration. Must be called exactly once.
-   *
-   * @param args The command line arguments as given to the main method.
-   * @throws InvalidConfigurationException If any arguments do not comply with the {@link #usage}.
-   */
-  public static void create(String[] args) throws InvalidConfigurationException {
-    create(args, System.out);
-  }
-
-  /**
-   * Method for specifying an output stream during testing. See {@link #create(String[])}.
-   *
-   * @param args The command line arguments as given to the main method.
-   * @param out The output stream to be used.
-   * @throws InvalidConfigurationException If any arguments do not comply with the {@link #usage}.
-   *
-   * @throws InvalidConfigurationException if the configuration has already been created.
-   */
-  public static void create(String[] args, PrintStream out)
-      throws InvalidConfigurationException {
-    if (Config.config != null) {
-      throw new InvalidConfigurationException(
-          "Configuration has already been initialized.");
-    }
-
-    Config.config = new Config(args, out);
-  }
-
-  /**
-   * Returns the configuration. Assumes that {@link #create(String[])} has already been called.
-   *
-   * @return The configuration instance
-   */
-  public static Config get() {
-    if (Config.config == null) {
-      throw new RuntimeException("Configuration not yet initialized.");
-    }
-
-    return Config.config;
-  }
-
-  /**
    * Initializes a new configuration based on the given command line arguments.
    *
-   * @param args The command line arguments as given to the main method.
-   * @param out The output stream for the global logger.
-   * @throws InvalidConfigurationException If any arguments do not comply with the {@link #usage}.
+   * @param args command line arguments as given to the main method
+   * @param out output stream for the global logger
+   * @throws InvalidConfigurationException If any arguments do not comply with the {@link #USAGE}.
    */
   Config(String[] args, PrintStream out) throws InvalidConfigurationException {
     Boolean finalVerbose = null;
@@ -121,7 +78,7 @@ public class Config {
         case "-s":
         case "--solver":
           if (i == args.length - 1) {
-            throw new InvalidConfigurationException("No solver specified for " + args[i]);
+            throw new InvalidConfigurationException("No solver specified.");
           } else {
             assertUniqueness(args[i], finalSolver);
             finalSolver = args[++i];
@@ -131,7 +88,7 @@ public class Config {
         case "-f":
         case "--file":
           if (i == args.length - 1) {
-            throw new InvalidConfigurationException("No file specified for " + args[i]);
+            throw new InvalidConfigurationException("No input file specified.");
           } else {
             assertUniqueness(args[i], finalFile);
             finalFile = args[++i];
@@ -139,8 +96,7 @@ public class Config {
           break;
 
         default:
-          throw new InvalidConfigurationException("Unknown command line parameter: "
-              + args[i]);
+          throw new InvalidConfigurationException("Unknown command line parameter: " + args[i]);
       }
     }
 
@@ -149,7 +105,7 @@ public class Config {
     }
 
     if (finalFile == null) {
-      throw new InvalidConfigurationException("No input file specified");
+      throw new InvalidConfigurationException("No input file specified.");
     }
 
     File f = new File(finalFile);
@@ -173,6 +129,47 @@ public class Config {
     report = getReport();
 
     logger = new ProgressLogger(out, verbose);
+  }
+
+  /**
+   * Creates a new configuration. Must be called exactly once.
+   *
+   * @param args command line arguments as given to the main method
+   * @throws InvalidConfigurationException if any arguments do not comply with the {@link #USAGE} or
+   *         the configuration has already been created
+   */
+  public static void create(String[] args) throws InvalidConfigurationException {
+    create(args, System.out);
+  }
+
+  /**
+   * Method for specifying an output stream during testing. See {@link #create(String[])}.
+   *
+   * @param args command line arguments as given to the main method
+   * @param out output stream to be used
+   * @throws InvalidConfigurationException if any arguments do not comply with the {@link #USAGE} or
+   *         the configuration has already been created
+   */
+  public static void create(String[] args, PrintStream out) throws InvalidConfigurationException {
+    if (Config.config != null) {
+      throw new InvalidConfigurationException("Configuration has already been initialized.");
+    }
+
+    Config.config = new Config(args, out);
+  }
+
+  /**
+   * Returns the configuration. Assumes that {@link #create(String[])} has already been called.
+   *
+   * @return configuration instance
+   * @throws RuntimeException if the configuration has not been created yet
+   */
+  public static Config get() {
+    if (Config.config == null) {
+      throw new RuntimeException("Configuration not yet initialized.");
+    }
+
+    return Config.config;
   }
 
   private void assertUniqueness(String name, Object currentValue)

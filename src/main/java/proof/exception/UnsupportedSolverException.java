@@ -11,7 +11,7 @@ public class UnsupportedSolverException extends RuntimeException {
   /**
    * Initializes a new unsupported solver exception.
    *
-   * @param description The description should include the unsupported solvers.
+   * @param description description of the problem, should name the unsupported solvers
    */
   public UnsupportedSolverException(String description) {
     super(description);

@@ -16,12 +16,12 @@ import java.nio.file.Files;
  *
  * @author <a href="mailto:tilo@wiedera.de">Tilo Wiedera</a>
  */
-public class Main {
+public abstract class Main {
 
   /**
    * Validates a proof for the crossing number of a single graph.
    *
-   * @param args The command line arguments
+   * @param args command line arguments
    * @throws InvalidProofException if the claimed proof is invalid
    */
   public static void main(String[] args) throws InvalidProofException {
@@ -29,7 +29,7 @@ public class Main {
       Config.create(args);
     } catch (InvalidConfigurationException e) {
       System.out.println(e.getMessage() + "\n");
-      System.out.println(Config.usage);
+      System.out.println(Config.USAGE);
       System.exit(1);
     }
 

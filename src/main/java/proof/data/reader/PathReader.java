@@ -22,8 +22,8 @@ public class PathReader implements Reader<JSONArray> {
   /**
    * Constructs a new {@link Path} reader.
    *
-   * @param graph The underlying {@link Graph}
-   * @param crossings The currently realized crossings
+   * @param graph underlying non-expanded graph
+   * @param crossings currently realized crossings
    */
   public PathReader(Graph graph, Set<CrossingIndex> crossings) {
     this.crossings = crossings;
@@ -32,13 +32,15 @@ public class PathReader implements Reader<JSONArray> {
 
   /**
    * Reads the Kuratowski {@link Path}. A path is a list of directed segment ranges.
+   *
+   * @throws InvalidPathException if the sequence of segments does not constitute a path.
    */
   @Override
-  public Path read(JSONArray input) {
+  public Path read(JSONArray input) throws InvalidPathException {
     Path result = new Path(graph, crossings);
 
     if (input.length() == 0) {
-      throw new InvalidPathException("Path is empty");
+      throw new InvalidPathException("Path is empty.");
     }
 
     for (int i = 0; i < input.length(); i++) {

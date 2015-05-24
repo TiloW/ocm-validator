@@ -5,6 +5,7 @@ import org.json.JSONArray;
 import proof.data.CrossingIndex;
 import proof.data.Graph;
 import proof.data.SegmentIndex;
+import proof.exception.ReaderException;
 
 /**
  * Used for reading a single {@link CrossingIndex}.
@@ -18,7 +19,7 @@ public class CrossingReader implements Reader<JSONArray> {
   /**
    * Creates a new crossing reader.
    *
-   * @param graph The underlying {@link Graph}.
+   * @param graph underlying non-expanded graph
    */
   public CrossingReader(Graph graph) {
     this.graph = graph;
@@ -26,11 +27,13 @@ public class CrossingReader implements Reader<JSONArray> {
   }
 
   /**
-   * Reads a single {@link CrossingIndex}. Such an index is an array of {@link SegmentIndex}
-   * containing exactly two elements.
+   * Reads a single {@link CrossingIndex}. A crossing is denoted by two {@link SegmentIndex segment
+   * indices}.
+   *
+   * @throws ReaderException if the crossing is infeasible
    */
   @Override
-  public CrossingIndex read(JSONArray input) {
+  public CrossingIndex read(JSONArray input) throws ReaderException {
     SegmentIndex seg1 = segmentReader.read(input.getJSONObject(0));
     SegmentIndex seg2 = segmentReader.read(input.getJSONObject(1));
 
@@ -43,7 +46,7 @@ public class CrossingReader implements Reader<JSONArray> {
     int target2 = graph.getEdgeTarget(seg2.edge);
 
     if (source1 == source2 || source1 == target2 || target1 == source2 || target1 == target2) {
-      throw new IllegalArgumentException("Adjacent edges never cross: " + result);
+      throw new ReaderException("Crossing of adjacent edges: " + result + ".");
     }
 
     return result;

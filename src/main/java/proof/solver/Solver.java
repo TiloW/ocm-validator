@@ -35,8 +35,8 @@ public abstract class Solver {
    * Solves the linear program contained in the given file. The file must contain a problem
    * described in CPLEX LP format. Will return 0 if the given file is empty.
    *
-   * @param filename The file containing the problem
-   * @return The optimal objective value
+   * @param filename name of the file containing the problem
+   * @return the optimal objective value
    *
    * @throws LinearProgramException if the generated program could not be solved or the optimal
    *         solution is too low
@@ -50,8 +50,7 @@ public abstract class Solver {
 
     try {
       process = Runtime.getRuntime().exec(getCommand(filename));
-      BufferedReader reader =
-          new BufferedReader(new InputStreamReader(process.getInputStream()));
+      BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
       BufferedReader errorReader =
           new BufferedReader(new InputStreamReader(process.getErrorStream()));
 
@@ -72,8 +71,7 @@ public abstract class Solver {
     }
 
     if (result == null) {
-      throw new LinearProgramException(this, filename,
-          "output is missing some information.");
+      throw new LinearProgramException(this, filename, "Output is missing some information.");
     }
 
     return result;
@@ -82,7 +80,7 @@ public abstract class Solver {
   /**
    * Sets the result of the current computation.
    *
-   * @param value The optimal objective value
+   * @param value parsed optimal objective value
    */
   protected void setResult(double value) {
     result = value;
@@ -94,7 +92,7 @@ public abstract class Solver {
    * @throws LinearProgramException since the linear program is declared infeasible
    */
   protected void returnInfeasiblity() throws LinearProgramException {
-    throw new LinearProgramException(this, filename, "linear program is infeasible.");
+    throw new LinearProgramException(this, filename, "Linear program is infeasible.");
   }
 
   /**
@@ -105,8 +103,8 @@ public abstract class Solver {
   /**
    * Parses the last double value contained in the line.
    *
-   * @param line The line containing the double, typically the optimal objective value.
-   * @return The parsed value
+   * @param line line containing the double, typically the optimal objective value.
+   * @return the parsed value
    */
   protected double parseDouble(String line) {
     StringTokenizer st = new StringTokenizer(line);
@@ -122,8 +120,8 @@ public abstract class Solver {
   /**
    * Returns the command used to execute this solver via command line.
    *
-   * @param filename The file containing the linear program to be solved
-   * @return The string used to execute the solver
+   * @param filename name of the file containing the linear program to be solved
+   * @return the string used to execute the solver
    */
   protected abstract String getCommand(String filename);
 
@@ -131,7 +129,7 @@ public abstract class Solver {
    * Called for each line in the solvers output. This method must be overridden to parse the actual
    * results.
    *
-   * @param line The currently investigated line from the solvers output
+   * @param line currently investigated line from the solvers output
    * @throws LinearProgramException if the line indicates the solver has failed
    */
   protected abstract void handleLine(String line) throws LinearProgramException;
@@ -140,7 +138,7 @@ public abstract class Solver {
    * Returns true if this solver is available on the command line. Availability is tested by solving
    * a tiny linear program.
    *
-   * @return true if this solver can be used
+   * @return {@code true} if this solver can be used
    */
   private boolean isAvailable() {
     Integer opt = null;

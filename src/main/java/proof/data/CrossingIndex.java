@@ -8,16 +8,15 @@ import java.util.Arrays;
  * @author <a href="mailto:tilo@wiedera.de">Tilo Wiedera</a>
  */
 public class CrossingIndex {
-
   public final SegmentIndex[] segments = new SegmentIndex[2];
 
   /**
    * Creates a new crossing.
    *
-   * @param edgeA the edge of the first segment
-   * @param segmentA the index of the first segment
-   * @param edgeB the the edge of the other segment
-   * @param segmentB the index of the other segment
+   * @param edgeA edge of the first segment
+   * @param segmentA index of the first segment
+   * @param edgeB the edge of the second segment
+   * @param segmentB index of the second segment
    */
   public CrossingIndex(int edgeA, int segmentA, int edgeB, int segmentB) {
     this(new SegmentIndex(edgeA, segmentA), new SegmentIndex(edgeB, segmentB));
@@ -26,37 +25,39 @@ public class CrossingIndex {
   /**
    * Creates a new crossing.
    *
-   * @param segment The first segment
-   * @param otherSegment The other segment
+   * @param segment first segment
+   * @param otherSegment second segment
    */
   public CrossingIndex(SegmentIndex segment, SegmentIndex otherSegment) {
     if (segment.edge == otherSegment.edge) {
-      throw new IllegalArgumentException("Edge is crossing itself");
+      throw new IllegalArgumentException("Edge is crossing itself.");
     }
 
     if (segment.edge > otherSegment.edge) {
-      SegmentIndex tmp = segment;
-      segment = otherSegment;
-      otherSegment = tmp;
+      segments[0] = otherSegment;
+      segments[1] = segment;
+    } else {
+      segments[0] = segment;
+      segments[1] = otherSegment;
     }
-
-    segments[0] = segment;
-    segments[1] = otherSegment;
   }
 
   /**
    * Returns true iff the other crossing can not exist with this crossing. (i.e. both crossings
    * share a single segment).
    *
-   * @param other The possibly conflicting segment
-   * @return True iff the segments do conflict
+   * @param other possibly conflicting segment
+   * @return {@code true} iff the segments do conflict
    */
   public boolean conflicting(CrossingIndex other) {
-    return (other.segments[0].equals(segments[0]) || other.segments[0].equals(segments[1])
-        || other.segments[1].equals(segments[0]) || other.segments[1].equals(segments[1]))
-        && !equals(other)
-        && (segments[0].segment * segments[1].segment * other.segments[0].segment
-            * other.segments[1].segment != 0);
+    boolean includesFirstSegment =
+        segments[0].segment * segments[1].segment * other.segments[0].segment
+            * other.segments[1].segment == 0;
+    boolean sameSegment =
+        other.segments[0].equals(segments[0]) || other.segments[0].equals(segments[1])
+            || other.segments[1].equals(segments[0]) || other.segments[1].equals(segments[1]);
+
+    return !includesFirstSegment && sameSegment && !equals(other);
   }
 
   @Override
@@ -69,7 +70,7 @@ public class CrossingIndex {
         CrossingIndex otherCrossing = (CrossingIndex) other;
         result =
             segments[0].equals(otherCrossing.segments[0])
-            && segments[1].equals(otherCrossing.segments[1]);
+                && segments[1].equals(otherCrossing.segments[1]);
       }
     }
 

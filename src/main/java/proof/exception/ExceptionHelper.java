@@ -10,8 +10,8 @@ public abstract class ExceptionHelper {
    * Initializes the cause of {@code outerException} with {@code innerException}. Can be used
    * directly in a {@code throw} statement since it returns the {@code outerException}.
    *
-   * @param innerException The exception to be wrapped
-   * @param outerException The wrapping exception
+   * @param innerException exception to be wrapped
+   * @param outerException wrapping exception
    *
    * @return the wrapping exception
    */

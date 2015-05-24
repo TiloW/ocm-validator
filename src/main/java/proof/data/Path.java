@@ -1,7 +1,10 @@
 package proof.data;
 
+import proof.exception.ExceptionHelper;
+import proof.exception.InvalidGraphException;
 import proof.exception.InvalidPathException;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -32,8 +35,8 @@ public class Path {
   /**
    * Initializes a new Kuratowski path.
    *
-   * @param graph The underlying {@link Graph}
-   * @param crossings The currently realized crossings
+   * @param graph underlying non-expanded graph
+   * @param crossings currently realized crossings
    */
   public Path(Graph graph, Set<CrossingIndex> crossings) {
     this.crossings = crossings;
@@ -44,13 +47,16 @@ public class Path {
   /**
    * Adds a new section to this path and ensures the path is valid.
    *
-   * @param source The source of the edge
-   * @param target The target of the edge
-   * @param start The start index on this edge
-   * @param end The end index on this edge
-   * @param keepDirection Whether to traverse the edge in order
+   * @param source source of the edge
+   * @param target target of the edge
+   * @param start start index on this edge
+   * @param end end index on this edge
+   * @param keepDirection whether to traverse the edge in order
+   * @throws InvalidPathException if the edge does not exist, the path is disconnected or visits any
+   *         node twice
    */
-  public void addSection(int source, int target, int start, int end, boolean keepDirection) {
+  public void addSection(int source, int target, int start, int end, boolean keepDirection)
+      throws InvalidPathException {
     Section section = new Section();
     section.source = source;
     section.target = target;
@@ -58,13 +64,13 @@ public class Path {
     section.end = end;
     section.keepDirection = keepDirection;
 
-    if (!graph.edgeExists(source, target)) {
-      throw new InvalidPathException("Edge does not exist");
+    try {
+      section.edge = graph.getEdgeId(source, target);
+    } catch (InvalidGraphException e) {
+      throw ExceptionHelper.wrap(e, new InvalidPathException("Edge does not exist."));
     }
 
-    section.edge = graph.getEdgeId(source, target);
-
-    if (sections.size() > 0) {
+    if (!sections.isEmpty()) {
       sections.add(0, section);
       Object sourceObj = getSource();
       Object targetObj = getTarget();
@@ -72,66 +78,96 @@ public class Path {
       sections.remove(0);
 
       if (!connected) {
-        throw new InvalidPathException("Path is disconnected: " + sourceObj + " != " + targetObj);
+        throw new InvalidPathException("Path is disconnected: " + sourceObj + " != " + targetObj
+            + ".");
       }
     }
 
     sections.add(section);
 
-    // validate the current source and target
-    getSource();
-    getTarget();
+    // validate all (dummy) vertices
+    getDummyNode(0, true);
+    getDummyNode(sections.size() - 1, false);
+
+    if (collectNodes().size() != sections.size() - 1) {
+      throw new InvalidPathException("Path contains duplicate nodes.");
+    }
   }
 
   /**
    * Returns the source of this path. This can either be an Integer (node index) or a
    * {@link CrossingIndex}.
    *
-   * @return The source
+   * @return the first (dummy) node of this path
    */
   public Object getSource() {
-    return getEndpoint(0, true);
+    try {
+      return getDummyNode(0, true);
+    } catch (InvalidPathException e) {
+      // this should never happen since each path is validated upon construction
+      throw ExceptionHelper.wrap(e, new RuntimeException());
+    }
   }
 
   /**
    * Returns the target of this path. This can either be an Integer (node index) or a
    * {@link CrossingIndex}.
    *
-   * @return The target
+   * @return the last (dummy) node of this path
    */
   public Object getTarget() {
-    return getEndpoint(sections.size() - 1, false);
+    try {
+      return getDummyNode(sections.size() - 1, false);
+    } catch (InvalidPathException e) {
+      // this should never happen since each path is validated upon construction
+      throw ExceptionHelper.wrap(e, new RuntimeException());
+    }
   }
 
   /**
    * Will test whether the two paths are disjoint (except for their source and target).
    *
-   * @param path The path to be tested against this path
-   * @return True iff the paths are disjoint
+   * @param path path to be tested against this path
+   * @return {@code true} iff the paths are disjoint
    */
   public boolean isDisjointTo(Path path) {
-    boolean result = true;
+    try {
+      Set<Object> nodes = collectNodes();
+      nodes.add(getSource());
+      nodes.add(getTarget());
+      nodes.addAll(path.collectNodes());
 
-    for (int i = 0; result && i <= sections.size(); i++) {
-      for (int j = 0; result && j <= path.sections.size(); j++) {
-        if ((i > 0 && i < sections.size()) || (j > 0 && j < path.sections.size())) {
-          Object p1;
-          if (i < sections.size()) {
-            p1 = getEndpoint(i, true);
-          } else {
-            p1 = getEndpoint(i - 1, false);
-          }
+      int expectedSize = sections.size() + path.sections.size();
+      boolean result = nodes.size() == expectedSize;
 
-          Object p2;
-          if (j < path.sections.size()) {
-            p2 = path.getEndpoint(j, true);
-          } else {
-            p2 = path.getEndpoint(j - 1, false);
-          }
+      if (result) {
+        nodes = collectNodes();
+        nodes.add(path.getSource());
+        nodes.add(path.getTarget());
+        nodes.addAll(path.collectNodes());
 
-          result = !p1.equals(p2);
-        }
+        result = nodes.size() == expectedSize;
       }
+
+      return result;
+    } catch (InvalidPathException e) {
+      // this should never happen since each path is validated upon construction
+      throw ExceptionHelper.wrap(e, new RuntimeException());
+    }
+  }
+
+  /**
+   * Returns a set of all (dummy) nodes incident to segments along this path except for the source
+   * and target of this path.
+   *
+   * @return the set of nodes
+   * @throws InvalidPathException if any required crossing is not realized
+   */
+  private Set<Object> collectNodes() throws InvalidPathException {
+    Set<Object> result = new HashSet<>();
+
+    for (int i = 1; i < sections.size(); i++) {
+      result.add(getDummyNode(i, true));
     }
 
     return result;
@@ -140,8 +176,8 @@ public class Path {
   /**
    * Returns whether this path shares a common start or end with the other one.
    *
-   * @param other The other path
-   * @return true iff the paths are ajacent to each other
+   * @param other the other path
+   * @return {@code true} iff the paths are adjacent to each other
    */
   public boolean isAdjacentTo(Path other) {
     return getSource().equals(other.getSource()) || getSource().equals(other.getTarget())
@@ -151,11 +187,12 @@ public class Path {
   /**
    * Returns the node or crossing at the end (or start) of the given segment range.
    *
-   * @param pos The position of the segment range in this path
-   * @param getSource Whether to return the source instead of the target
-   * @return The node or crossing
+   * @param pos position of the segment range in this path
+   * @param getSource whether to return the source instead of the target
+   * @return the node or crossing
+   * @throws InvalidPathException if any required crossing is not realized
    */
-  private Object getEndpoint(int pos, boolean getSource) {
+  private Object getDummyNode(int pos, boolean getSource) throws InvalidPathException {
     Object result = null;
     Section section = sections.get(pos);
 
