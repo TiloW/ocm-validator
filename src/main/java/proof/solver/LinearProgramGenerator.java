@@ -269,14 +269,14 @@ public class LinearProgramGenerator {
       for (int e2 = e1 + 1; e2 < graph.getNumberOfEdges(); e2++) {
         if (!graph.areEdgesAdjacent(e1, e2)) {
           int cost = graph.getEdgeCost(e1) * graph.getEdgeCost(e2);
+          String weight = cost == 1 ? "" : (Integer.toString(cost) + " ");
+
           for (int s1 = 0; s1 <= expansions[e1]; s1++) {
             for (int s2 = 0; s2 <= expansions[e2]; s2++) {
-              String weight = cost == 1 ? "" : (Integer.toString(cost) + " ");
               CrossingIndex crossing = new CrossingIndex(e1, s1, e2, s2);
               String prefix = first ? " " : " + ";
               result.append(prefix + weight + createVarName(crossing));
               variables.add(crossing);
-              stats.increase("variables");
               first = false;
             }
           }
