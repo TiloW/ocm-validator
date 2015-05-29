@@ -78,12 +78,12 @@ public class LinearProgramGenerator {
 
     result.append("\nSubject To");
 
-    // note that simplicity is not required on the first segment
+    // note that simplicity is not enforced on the first segment
     result.append("\n\\ Simplicity Constraints");
 
     for (int e = 0; e < graph.getNumberOfEdges(); e++) {
-      for (int s = 1; s <= expansions[e]; s++) {
-        result.append("\n" + sumVariables(e, s) + " <= 1");
+      if (expansions[e] > 0) {
+        result.append("\n" + sumVariables(e, 1) + " <= 1");
         stats.increase("simplicity constraints");
       }
     }
