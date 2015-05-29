@@ -159,13 +159,23 @@ public class ConstraintValidatorTest extends ValidatorTest {
   }
 
   @Test
+  public void testValidate_crossingAsNodeK33() throws InvalidConstraintException {
+    validator.validate(loadJson("k33-crossing-as-node"));
+  }
+
+  @Test
   public void testValidate_simpleK5() throws InvalidConstraintException {
     validator.validate(loadJson("k5-simple"));
   }
 
   @Test
-  public void testValidate_crossingAsNode() throws InvalidConstraintException {
-    validator.validate(loadJson("k5-crossing-as-node"));
+  public void testValidate_crossingAsNodeK5() throws InvalidConstraintException {
+    validator.validate(loadJson("k5-required-crossing"));
+  }
+
+  @Test(expected = InvalidConstraintException.class)
+  public void testValidate_overlappingSegmentsK5() throws InvalidConstraintException {
+    validator.validate(loadJson("k5-overlapping-segments"));
   }
 
   @Test

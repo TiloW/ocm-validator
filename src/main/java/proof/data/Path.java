@@ -132,22 +132,29 @@ public class Path {
    */
   public boolean isDisjointTo(Path path) {
     try {
+      Set<SegmentIndex> segments = collectSegments();
+      Set<SegmentIndex> otherSegments = path.collectSegments();
+
+      int totalNumberOfSegments = segments.size() + otherSegments.size();
+      segments.addAll(otherSegments);
+
+      boolean result = true;
+      result &= segments.size() == totalNumberOfSegments;
+
       Set<Object> nodes = collectNodes();
       nodes.add(getSource());
       nodes.add(getTarget());
       nodes.addAll(path.collectNodes());
 
-      int expectedSize = sections.size() + path.sections.size();
-      boolean result = nodes.size() == expectedSize;
+      int totalNumberOfNodes = sections.size() + path.sections.size();
+      result &= nodes.size() == totalNumberOfNodes;
 
-      if (result) {
-        nodes = collectNodes();
-        nodes.add(path.getSource());
-        nodes.add(path.getTarget());
-        nodes.addAll(path.collectNodes());
+      nodes = collectNodes();
+      nodes.add(path.getSource());
+      nodes.add(path.getTarget());
+      nodes.addAll(path.collectNodes());
 
-        result = nodes.size() == expectedSize;
-      }
+      result &= nodes.size() == totalNumberOfNodes;
 
       return result;
     } catch (InvalidPathException e) {
@@ -157,7 +164,24 @@ public class Path {
   }
 
   /**
-   * Returns a set of all (dummy) nodes incident to segments along this path except for the source
+   * Returns the set of all segments along this path.
+   *
+   * @return the set of segments
+   */
+  private Set<SegmentIndex> collectSegments() {
+    Set<SegmentIndex> result = new HashSet<>();
+
+    for (Section section : sections) {
+      for (int s = section.start + 1; s <= section.end; s++) {
+        result.add(new SegmentIndex(section.edge, s));
+      }
+    }
+
+    return result;
+  }
+
+  /**
+   * Returns the set of all (dummy) nodes incident to segments along this path except for the source
    * and target of this path.
    *
    * @return the set of nodes

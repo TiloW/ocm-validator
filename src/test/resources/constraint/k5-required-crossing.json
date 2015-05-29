@@ -1,0 +1,121 @@
+{
+	"type": "K5",
+	"paths": [
+		[{
+			"edge": {
+				"source": 0,
+				"target": 10
+			},
+			"keepDirection": true,
+			"start": -1,
+			"end": 3
+		},{
+			"edge": {
+				"source": 1,
+				"target": 11
+			},
+			"keepDirection": false,
+			"start": -1,
+			"end": 9
+		}],
+		[{
+			"edge": {
+				"source": 0,
+				"target": 2
+			},
+			"keepDirection": true,
+			"start": -1,
+			"end": 42
+		}],
+		[{
+			"edge": {
+				"source": 0,
+				"target": 3
+			},
+			"keepDirection": true,
+			"start": -1,
+			"end": 42
+		}],
+		[{
+			"edge": {
+				"source": 0,
+				"target": 4
+			},
+			"keepDirection": true,
+			"start": -1,
+			"end": 42
+		}],
+		[{
+			"edge": {
+				"source": 1,
+				"target": 2
+			},
+			"keepDirection": false,
+			"start": -1,
+			"end": 42
+		}],
+		[{
+			"edge": {
+				"source": 1,
+				"target": 3
+			},
+			"keepDirection": true,
+			"start": -1,
+			"end": 42
+		}],
+		[{
+			"edge": {
+				"source": 1,
+				"target": 4
+			},
+			"keepDirection": true,
+			"start": -1,
+			"end": 42
+		}],
+		[{
+			"edge": {
+				"source": 2,
+				"target": 3
+			},
+			"keepDirection": false,
+			"start": -1,
+			"end": 42
+		}],
+		[{
+			"edge": {
+				"source": 2,
+				"target": 4
+			},
+			"keepDirection": false,
+			"start": -1,
+			"end": 42
+		}],
+		[{
+			"edge": {
+				"source": 3,
+				"target": 4
+			},
+			"keepDirection": true,
+			"start": -1,
+			"end": 42
+		}]
+	],
+	"requiredCrossings": [
+		[
+			{
+				"edge": {
+					"source": 0,
+					"target": 10
+				},
+				"segment": 3
+			},
+			{
+				"edge": {
+					"source": 1,
+					"target": 11
+				},
+				"segment": 9
+			}
+		]
+	]
+}

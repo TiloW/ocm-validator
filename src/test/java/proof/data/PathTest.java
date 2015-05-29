@@ -102,6 +102,23 @@ public class PathTest extends GraphBasedTest {
   }
 
   @Test
+  public void testIsDisjoint_overlappingSegments() throws InvalidPathException,
+  InvalidGraphException {
+    path.addSection(1, 10, -1, 42, true);
+    path.addSection(2, 10, -1, 42, false);
+
+    Set<CrossingIndex> crossings = new HashSet<>();
+    crossings.add(new CrossingIndex(graph.getEdgeId(1, 10), 5, graph.getEdgeId(3, 4), 0));
+    crossings.add(new CrossingIndex(graph.getEdgeId(1, 10), 10, graph.getEdgeId(6, 7), 0));
+    Path path2 = new Path(graph, crossings);
+    path2.addSection(3, 4, -1, 0, true);
+    path2.addSection(1, 10, 5, 10, true);
+    path2.addSection(6, 7, -1, 0, false);
+
+    assertFalse(path.isDisjointTo(path2));
+  }
+
+  @Test
   public void testIsAdjacentTo() throws InvalidPathException {
     path.addSection(1, 2, -1, 42, true);
 
