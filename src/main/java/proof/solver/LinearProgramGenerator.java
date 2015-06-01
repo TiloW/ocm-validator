@@ -97,6 +97,27 @@ public class LinearProgramGenerator {
       }
     }
 
+    result.append("\n\\ First Segment Constraints");
+
+    // first segment constraints are generated for fully expanded edges only
+    // note that an edge will cross with at most every non-adjacent edge once
+    for (int e = 0; e < graph.getNumberOfEdges(); e++) {
+      int maxExpansions = graph.getNumberOfEdges();
+
+      for (int f = 0; f < graph.getNumberOfEdges(); f++) {
+        if (graph.areEdgesAdjacent(e, f)) {
+          maxExpansions--;
+        }
+      }
+
+      maxExpansions = Math.min(maxExpansions, graph.getClaimedLowerBound() - 2);
+
+      if (maxExpansions > 0 && expansions[e] == maxExpansions) {
+        result.append("\n" + sumVariables(e, expansions[e]) + sumVariables(e, 0, true) + " >= 0");
+        stats.increase("first segment constraints");
+      }
+    }
+
     for (int i = 0; i < jsonConstraints.length(); i++) {
       result.append("\n\\ Kuratowski Constraint " + i + "\n");
       result.append(generateKuratowski(jsonConstraints.getJSONObject(i)));
