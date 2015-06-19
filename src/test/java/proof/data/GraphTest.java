@@ -149,6 +149,13 @@ public class GraphTest {
     assertEquals(100, graph.getEdgeCost(1, 2));
   }
 
+  @Test(expected = IllegalArgumentException.class)
+  public void testAddEdge_null() throws InvalidGraphException {
+    Graph graph = new Graph(2, 1, 0);
+
+    graph.addEdge(0, 0, 1, 0);
+  }
+
   @Test
   public void testGetEdgeTarget() throws InvalidGraphException {
     Graph graph = new Graph(100, 3, 0);

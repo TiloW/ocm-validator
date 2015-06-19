@@ -44,7 +44,7 @@ public class MainValidator implements Validator<JSONObject> {
       } else if (graph.getClaimedLowerBound() == (int) Math.ceil(Math.pow(graph.getNumberOfEdges(),
           3) / (33.75 * Math.pow(graph.getNumberOfNodes(), 2)) - 3 * graph.getNumberOfNodes())) {
         valid = true;
-        Config.get().logger.progress("bound follows from the formula by Pach & Todt");
+        Config.get().logger.progress("bound follows from the formula by Pach, Spencer, and Tóth");
       }
 
       if (!valid) {

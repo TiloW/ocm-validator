@@ -147,6 +147,10 @@ public class Graph {
       throw new IllegalArgumentException("Edge index already exists.");
     }
 
+    if (cost < 1) {
+      throw new IllegalArgumentException("Minimum weight of edges is 1.");
+    }
+
     costs[edgeId] = cost;
     sources[edgeId] = source;
     targets[edgeId] = target;
