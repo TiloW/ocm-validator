@@ -189,4 +189,18 @@ public class GraphTest {
     assertTrue(graph.areEdgesAdjacent(2, 1));
     assertTrue(graph.areEdgesAdjacent(2, 2));
   }
+
+  @Test
+  public void testIsConnected() throws InvalidGraphException {
+    Graph graph = new Graph(3, 1, 0);
+    graph.addEdge(0, 0, 1, 1);
+
+    assertFalse(graph.isConnected());
+
+    graph = new Graph(3, 2, 0);
+    graph.addEdge(0, 0, 1, 1);
+    graph.addEdge(1, 2, 1, 1);
+
+    assertTrue(graph.isConnected());
+  }
 }

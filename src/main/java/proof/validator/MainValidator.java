@@ -32,6 +32,10 @@ public class MainValidator implements Validator<JSONObject> {
       Config.get().logger.reset(1);
       Config.get().logger.print("lower bound is claimed to be trivial");
 
+      if (!graph.isConnected()) {
+        throw new InvalidProofException("Lower bound is invalid since the graph is disconnected");
+      }
+
       boolean valid = false;
 
       if (graph.getClaimedLowerBound() <= 1) {

@@ -2,6 +2,9 @@ package proof.data;
 
 import proof.exception.InvalidGraphException;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Represents a graph by an adjacency matrix. Requires nodes to be indexed continuously.
  *
@@ -177,6 +180,47 @@ public class Graph {
     if (counter != costs.length) {
       throw new InvalidGraphException("Can not make partially read graph immutable.");
     }
+  }
+
+  /**
+   * Tests whether the graph is connected.
+   *
+   * @return true iff the graph is connected
+   */
+  public boolean isConnected() {
+    boolean[] visited = new boolean[getNumberOfNodes()];
+
+    for (int i = 0; i < visited.length; i++) {
+      visited[i] = false;
+    }
+
+    List<Integer> nodes = new ArrayList<>(visited.length);
+    nodes.add(0);
+    visited[0] = true;
+
+    while (!nodes.isEmpty()) {
+      int v = nodes.remove(0);
+
+      for (int i = 0; i < getNumberOfEdges(); i++) {
+        int s = getEdgeSource(i);
+        int t = getEdgeTarget(i);
+
+        int w = s == v ? t : t == v ? s : -1;
+
+        if (w != -1 && !visited[w]) {
+          visited[w] = true;
+          nodes.add(w);
+        }
+      }
+    }
+
+    boolean result = true;
+
+    for (boolean element : visited) {
+      result &= element;
+    }
+
+    return result;
   }
 
   /**
