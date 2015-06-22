@@ -131,30 +131,39 @@ public class Path {
    * @return {@code true} iff the paths are disjoint
    */
   public boolean isDisjointTo(Path path) {
+    if (graph != path.graph) {
+      throw new IllegalArgumentException("Can't compare paths from different graphs");
+    }
+
+    if (!crossings.equals(path.crossings)) {
+      throw new IllegalArgumentException("Can't compare paths with different realized crossings");
+    }
+
     try {
-      Set<SegmentIndex> segments = collectSegments();
-      Set<SegmentIndex> otherSegments = path.collectSegments();
-
-      int totalNumberOfSegments = segments.size() + otherSegments.size();
-      segments.addAll(otherSegments);
-
-      boolean result = true;
-      result &= segments.size() == totalNumberOfSegments;
-
       Set<Object> nodes = collectNodes();
+      nodes.addAll(collectDummies());
       nodes.add(getSource());
       nodes.add(getTarget());
-      nodes.addAll(path.collectNodes());
 
-      int totalNumberOfNodes = sections.size() + path.sections.size();
-      result &= nodes.size() == totalNumberOfNodes;
+      int expected = nodes.size();
 
-      nodes = collectNodes();
+      nodes.removeAll(path.collectNodes());
+      nodes.removeAll(path.collectDummies());
+
+      boolean result = true;
+      result &= nodes.size() == expected;
+
+      nodes = path.collectNodes();
+      nodes.addAll(path.collectDummies());
       nodes.add(path.getSource());
       nodes.add(path.getTarget());
-      nodes.addAll(path.collectNodes());
 
-      result &= nodes.size() == totalNumberOfNodes;
+      expected = nodes.size();
+
+      nodes.removeAll(collectNodes());
+      nodes.removeAll(collectDummies());
+
+      result &= nodes.size() == expected;
 
       return result;
     } catch (InvalidPathException e) {
@@ -164,18 +173,24 @@ public class Path {
   }
 
   /**
-   * Returns the set of all segments along this path.
+   * Returns the set of all crossings along this path, excluding the source and target of the path.
    *
    * @return the set of segments
    */
-  private Set<SegmentIndex> collectSegments() {
-    Set<SegmentIndex> result = new HashSet<>();
+  private Set<CrossingIndex> collectDummies() {
+    Set<CrossingIndex> result = new HashSet<>();
 
     for (Section section : sections) {
       for (int s = section.start + 1; s <= section.end; s++) {
-        result.add(new SegmentIndex(section.edge, s));
+        CrossingIndex crossing = findCrossing(section.edge, s);
+        if (crossing != null) {
+          result.add(crossing);
+        }
       }
     }
+
+    result.remove(getSource());
+    result.remove(getTarget());
 
     return result;
   }
